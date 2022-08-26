@@ -217,7 +217,7 @@ public class BuyUI {
 	protected void shopList() {
 		System.out.println("\n[매입처 조회] 현재 계약중인 매입처 리스트");
 		
-		System.out.println("매입처코드\t사업자등록번호\t상호명\t\t대표명\t전화번호\t\t우편번호\t주소\t\t\t\t등록일자");
+		System.out.println("매입처코드\t사업자등록번호\t상호명\t\t대표명\t전화번호\t\t우편번호\t주소\t\t\t등록일자\t");
 		System.out.println("------------------------------------------------------------------------------------------------------------------");
 		
 		List<BuyDTO> list = buydao.listShop();
@@ -228,7 +228,7 @@ public class BuyUI {
 			System.out.print(buydto.getShop_Boss()+ "\t");
 			System.out.print(buydto.getShop_Tel()+ "\t");
 			System.out.print(buydto.getShop_Post()+ "\t");
-			System.out.print(buydto.getShop_addr()+ "\t\t");
+			System.out.print(buydto.getShop_addr()+ "\t");
 			System.out.println(buydto.getShop_Reg()+ "\t");
 
 		}

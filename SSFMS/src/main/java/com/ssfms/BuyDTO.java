@@ -24,6 +24,7 @@ public class BuyDTO {
 	private String partNo;
 	private String part_name;
 	private String part_price;
+	private String part_stock;
 	
 	public String getBuy_No() {
 		return buy_No;
@@ -144,6 +145,12 @@ public class BuyDTO {
 	}
 	public void setPart_price(String part_price) {
 		this.part_price = part_price;
+	}
+	public String getPart_stock() {
+		return part_stock;
+	}
+	public void setPart_stock(String part_stock) {
+		this.part_stock = part_stock;
 	}
 	
 	

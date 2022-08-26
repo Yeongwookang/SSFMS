@@ -5,12 +5,15 @@ public class AccDTO {
 	private String empNo;
 	private String accountNo;
 	private String accountSubNo;
+	private String name;
 	private String categNo;
+	private String categName;
 	private String amount;
 	private String detail;
 	private String cancellation;
 	private String stateCon;
 	private String stateDate;
+	
 	
 	public String getStateNum() {
 		return stateNum;
@@ -36,11 +39,23 @@ public class AccDTO {
 	public void setAccountSubNo(String accountSubNo) {
 		this.accountSubNo = accountSubNo;
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public String getCategNo() {
 		return categNo;
 	}
 	public void setCategNo(String categNo) {
 		this.categNo = categNo;
+	}
+	public String getCategName() {
+		return categName;
+	}
+	public void setCategName(String categName) {
+		this.categName = categName;
 	}
 	public String getAmount() {
 		return amount;

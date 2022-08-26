@@ -1,7 +1,8 @@
 package com.ssfms;
 
 public class EmpDTO {
-	private String id;
+	// 사원리스트
+	private String empNo;
 	private String pwd;
 	private String name;
 	private String tel;
@@ -11,12 +12,40 @@ public class EmpDTO {
 	private String edu;
 	private String account;
 	private String hire_class;
-	
-	public String getId() {
-		return id;
+	// 부서
+	private String depNo;
+	private String dep;
+	// 직급
+	private String rankNo;
+	private String rank;
+	// 경력사항
+	private String carNo;
+	private String cDiv;
+	private String car_date;
+	private String cNote;
+	// 연봉
+	private String asalNo;
+	private String sal_date;
+	private int asal;
+	// 급여관리
+	private String settleNo;
+	private int sal;
+	private int tax;
+	private int bonus;
+	private int pay;
+	private String pay_date;
+	// 근태관리
+	private String attNo;
+	private String aDiv;
+	private String sTime;
+	private String eTime;
+	private int wTime;
+	private String aNote;
+	public String getEmpNo() {
+		return empNo;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setEmpNo(String empNo) {
+		this.empNo = empNo;
 	}
 	public String getPwd() {
 		return pwd;
@@ -72,5 +101,150 @@ public class EmpDTO {
 	public void setHire_class(String hire_class) {
 		this.hire_class = hire_class;
 	}
+	public String getDepNo() {
+		return depNo;
+	}
+	public void setDepNo(String depNo) {
+		this.depNo = depNo;
+	}
+	public String getDep() {
+		return dep;
+	}
+	public void setDep(String dep) {
+		this.dep = dep;
+	}
+	public String getRankNo() {
+		return rankNo;
+	}
+	public void setRankNo(String rankNo) {
+		this.rankNo = rankNo;
+	}
+	public String getRank() {
+		return rank;
+	}
+	public void setRank(String rank) {
+		this.rank = rank;
+	}
+	public String getCarNo() {
+		return carNo;
+	}
+	public void setCarNo(String carNo) {
+		this.carNo = carNo;
+	}
+	public String getcDiv() {
+		return cDiv;
+	}
+	public void setcDiv(String cDiv) {
+		this.cDiv = cDiv;
+	}
+	public String getCar_date() {
+		return car_date;
+	}
+	public void setCar_date(String car_date) {
+		this.car_date = car_date;
+	}
+	public String getcNote() {
+		return cNote;
+	}
+	public void setcNote(String cNote) {
+		this.cNote = cNote;
+	}
+	public String getAsalNo() {
+		return asalNo;
+	}
+	public void setAsalNo(String asalNo) {
+		this.asalNo = asalNo;
+	}
+	public String getSal_date() {
+		return sal_date;
+	}
+	public void setSal_date(String sal_date) {
+		this.sal_date = sal_date;
+	}
+	public int getAsal() {
+		return asal;
+	}
+	public void setAsal(int asal) {
+		this.asal = asal;
+	}
+	public String getSettleNo() {
+		return settleNo;
+	}
+	public void setSettleNo(String settleNo) {
+		this.settleNo = settleNo;
+	}
+	public int getSal() {
+		return sal;
+	}
+	public void setSal(int sal) {
+		this.sal = sal;
+	}
+	public int getTax() {
+		return tax;
+	}
+	public void setTax(int tax) {
+		this.tax = tax;
+	}
+	public int getBonus() {
+		return bonus;
+	}
+	public void setBonus(int bonus) {
+		this.bonus = bonus;
+	}
+	public int getPay() {
+		return pay;
+	}
+	public void setPay(int pay) {
+		this.pay = pay;
+	}
+	public String getPay_date() {
+		return pay_date;
+	}
+	public void setPay_date(String pay_date) {
+		this.pay_date = pay_date;
+	}
+	public String getAttNo() {
+		return attNo;
+	}
+	public void setAttNo(String attNo) {
+		this.attNo = attNo;
+	}
+	public String getaDiv() {
+		return aDiv;
+	}
+	public void setaDiv(String aDiv) {
+		this.aDiv = aDiv;
+	}
+	public String getsTime() {
+		return sTime;
+	}
+	public void setsTime(String sTime) {
+		this.sTime = sTime;
+	}
+	public String geteTime() {
+		return eTime;
+	}
+	public void seteTime(String eTime) {
+		this.eTime = eTime;
+	}
+	public int getwTime() {
+		return wTime;
+	}
+	public void setwTime(int wTime) {
+		this.wTime = wTime;
+	}
+	public String getaNote() {
+		return aNote;
+	}
+	public void setaNote(String aNote) {
+		this.aNote = aNote;
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 }

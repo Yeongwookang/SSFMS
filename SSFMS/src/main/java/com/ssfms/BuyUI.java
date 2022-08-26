@@ -1,15 +1,15 @@
 package com.ssfms;
 
 import java.io.BufferedReader;
+
 import java.io.InputStreamReader;
-import java.sql.PreparedStatement;
-import java.util.Calendar;
 
 import com.util.DBConn;
 
 public class BuyUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private BuyDAO buydao = new BuyDAOImpl();
+
 	
 	public void menu() {
 		
@@ -185,13 +185,15 @@ public class BuyUI {
 	protected void shopDelete() {
 		System.out.println("\n[매입처 삭제] 기존 매입처 삭제하기");
 		
-		String shop_No;
 		
 		try {
-			System.out.print("삭제할 매입처 코드는?[숫자 4자]: ");
-			shop_No = "SH" + br.readLine();
 			
-			int result=0;
+			BuyDTO buydto = new BuyDTO();
+			
+			System.out.print("삭제할 매입처 코드는?[숫자 4자]: ");
+			 buydto.setShop_No("SH" + br.readLine());
+			
+			int result = buydao.deleteShop(buydto);
 			
 			if(result == 0) {
 				System.out.println("등록된 매입처가 없습니다. ");
@@ -199,7 +201,6 @@ public class BuyUI {
 				System.out.println("삭제가 완료되었습니다!");
 				System.out.println("감사합니다.");
 			}
-			
 			
 			
 		} catch (Exception e) {

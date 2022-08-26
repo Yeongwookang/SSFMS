@@ -143,13 +143,38 @@ public class BuyDAOImpl implements BuyDAO {
 
 	
 	@Override
-	public int deleteShop(BuyDTO buydto) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deleteShop(BuyDTO buydto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
+		
+		try {
+			
+			sql = "DELETE FROM shop WHERE shop_No = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, buydto.getShop_No());
+			result = pstmt.executeUpdate();
+
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+			
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+
+		
+		return result;
 	}
-	
-	
-	
+
 	
 }
 

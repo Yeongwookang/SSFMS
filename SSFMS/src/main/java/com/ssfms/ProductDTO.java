@@ -3,9 +3,9 @@ package com.ssfms;
 public class ProductDTO {
 private String productNo;
 private String product_name;
-private String cost;
-private String price;
-private String stock;
+private int cost;
+private int price;
+private int stock;
 
 public String getProductNo() {
 	return productNo;
@@ -19,22 +19,23 @@ public String getProduct_name() {
 public void setProduct_name(String product_name) {
 	this.product_name = product_name;
 }
-public String getCost() {
+public int getCost() {
 	return cost;
 }
-public void setCost(String cost) {
+public void setCost(int cost) {
 	this.cost = cost;
 }
-public String getPrice() {
+public int getPrice() {
 	return price;
 }
-public void setPrice(String price) {
+public void setPrice(int price) {
 	this.price = price;
 }
-public String getStock() {
+public int getStock() {
 	return stock;
 }
-public void setStock(String stock) {
+public void setStock(int stock) {
 	this.stock = stock;
 }
+
 }

@@ -4,11 +4,11 @@ public class BuyDTO {
 	private String buy_No;
 	private String state_No;
 	private String buy_Date;
-	private String buy_qty;
+	private int buy_qty;
 	
 	private String ban_No;
 	private String ban_Date;
-	private String ban_qty;
+	private int ban_qty;
 	private String ban_Finish;
 	private String ban_Memo;
 	
@@ -23,8 +23,10 @@ public class BuyDTO {
 	
 	private String partNo;
 	private String part_name;
-	private String part_price;
-	private String part_stock;
+	private int part_price;
+	private int part_stock;
+	
+	
 	
 	public String getBuy_No() {
 		return buy_No;
@@ -44,10 +46,10 @@ public class BuyDTO {
 	public void setBuy_Date(String buy_Date) {
 		this.buy_Date = buy_Date;
 	}
-	public String getBuy_qty() {
+	public int getBuy_qty() {
 		return buy_qty;
 	}
-	public void setBuy_qty(String buy_qty) {
+	public void setBuy_qty(int buy_qty) {
 		this.buy_qty = buy_qty;
 	}
 	public String getBan_No() {
@@ -62,10 +64,10 @@ public class BuyDTO {
 	public void setBan_Date(String ban_Date) {
 		this.ban_Date = ban_Date;
 	}
-	public String getBan_qty() {
+	public int getBan_qty() {
 		return ban_qty;
 	}
-	public void setBan_qty(String ban_qty) {
+	public void setBan_qty(int ban_qty) {
 		this.ban_qty = ban_qty;
 	}
 	public String getBan_Finish() {
@@ -140,19 +142,20 @@ public class BuyDTO {
 	public void setPart_name(String part_name) {
 		this.part_name = part_name;
 	}
-	public String getPart_price() {
+	public int getPart_price() {
 		return part_price;
 	}
-	public void setPart_price(String part_price) {
+	public void setPart_price(int part_price) {
 		this.part_price = part_price;
 	}
-	public String getPart_stock() {
+	public int getPart_stock() {
 		return part_stock;
 	}
-	public void setPart_stock(String part_stock) {
+	public void setPart_stock(int part_stock) {
 		this.part_stock = part_stock;
 	}
 	
+
 	
-	
+
 }

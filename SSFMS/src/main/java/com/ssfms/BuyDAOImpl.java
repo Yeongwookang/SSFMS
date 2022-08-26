@@ -2,9 +2,12 @@ package com.ssfms;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.util.DBConn;
 
@@ -174,6 +177,87 @@ public class BuyDAOImpl implements BuyDAO {
 		
 		return result;
 	}
+
+	
+	
+
+	@Override
+	public int insertBuy(BuyDTO buydto) throws SQLException {
+		return 0;
+		
+	}
+
+	
+	
+
+	@Override
+	public int updateBuy(BuyDTO buydto) throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	
+	
+	@Override
+	public List<BuyDTO> listShop() {
+		List<BuyDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			
+			sql = "SELECT shop_No, shop_Num, shop_Name, shop_Boss, "
+					+ " shop_Tel, shop_Post, shop_addr, shop_Reg  FROM shop";
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				BuyDTO buydto = new BuyDTO();
+				
+				buydto.setShop_No(rs.getString("shop_No"));
+				buydto.setShop_Num(rs.getString("shop_Num"));
+				buydto.setShop_Name(rs.getString("shop_Name"));
+				buydto.setShop_Boss(rs.getString("shop_Boss"));
+				buydto.setShop_Tel(rs.getString("shop_Tel"));
+				buydto.setShop_Post(rs.getString("shop_Post"));
+				buydto.setShop_addr(rs.getString("shop_addr"));
+				buydto.setShop_Reg(rs.getString("shop_Reg"));
+
+				
+				list.add(buydto);
+				
+			}
+			
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+		}
+		
+		return list;
+	}
+
+	
+	
+	
 
 	
 }

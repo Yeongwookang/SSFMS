@@ -1,5 +1,6 @@
 package com.ssfms;
 
+
 public class ProductDTO {
 private String productNo;
 private String product_name;

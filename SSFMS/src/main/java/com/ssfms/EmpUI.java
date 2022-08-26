@@ -24,7 +24,7 @@ public class EmpUI {
 		
 		while(true) {
 			try {
-				System.out.print("1.사원등록 2.사원수정 7.연봉입력 8.뒤로가기=> ");
+				System.out.print("1.사원등록 2.사원수정 3.사원삭제 4.경력사항 입력 5.경력사항 수정 6.경력사항 삭제 7.연봉입력 8.뒤로가기=> ");
 				ch = Integer.parseInt(br.readLine());
 				
 				

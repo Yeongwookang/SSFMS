@@ -3,6 +3,8 @@ package com.ssfms;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import com.util.DBConn;
+
 public class App {
 	public static void main(String[] args) {
 		int ch=0;
@@ -24,7 +26,7 @@ public class App {
 				
 			}while(ch<1||ch>6);
 			if(ch==6) {
-				return;
+				System.exit(0);
 			}
 			switch(ch) {
 			case 1: new AccUI().menu();

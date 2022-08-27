@@ -14,7 +14,13 @@ public class SalesDAOImpl implements SalesDAO {
 	private Connection conn = DBConn.getConnection();
 
 	@Override
-	public int insertSales(SalesDTO dto) throws SQLException {
+	public int estimateInsertSales(SalesDTO dto) throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
+	public int orderInsertSales(SalesDTO dto) throws SQLException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -32,7 +38,7 @@ public class SalesDAOImpl implements SalesDAO {
 	}
 
 	@Override
-	public SalesDTO readSales(String id) {
+	public SalesDTO estimateRead(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -48,6 +54,8 @@ public class SalesDAOImpl implements SalesDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 	
 }
 

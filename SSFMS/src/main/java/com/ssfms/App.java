@@ -26,7 +26,7 @@ public class App {
 				
 			}while(ch<1||ch>6);
 			if(ch==6) {
-				System.exit(0);;
+				System.exit(0);
 			}
 			switch(ch) {
 			case 1: new AccUI().menu();

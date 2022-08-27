@@ -121,11 +121,11 @@ public class BuyUI {
 				}
 				
 				switch(ch) {
-				case 1: ; break;
-				case 2: ; break;
-				case 3: ; break;
-				case 4: ; break;
-				case 5: ; break;
+				case 1: buyInsert(); break;
+				case 2: buyUpdate(); break;
+				case 3: buyList(); break;
+				case 4: buyDelete(); break;
+				case 5: partList(); break;
 				
 				}
 					
@@ -135,6 +135,35 @@ public class BuyUI {
 		}
 		
 	}
+	
+	
+	protected void buyInsert() {
+		
+	}
+
+	
+	protected void buyUpdate() {
+
+		
+	}
+	
+	protected void buyList() {
+
+		
+	}
+	
+	protected void buyDelete() {
+
+		
+	}
+	
+	protected void partList() {
+
+		
+	}
+
+	
+
 	
 
 	
@@ -170,6 +199,19 @@ public class BuyUI {
 		}
 		
 	}
+	
+	
+	protected void banpumInsert() {
+		
+	}
+	
+	
+	protected void banpumDelete() {
+		
+	}
+	
+	
+
 	
 	
 	// 매입처관리
@@ -353,39 +395,6 @@ public class BuyUI {
 	}
 	
 
-	
-	
-
-	
-	protected void buyInsert() {
-	
-	}
-
-	
-	protected void buyUpdate() {
-
-		
-	}
-	
-	protected void buyList() {
-
-		
-	}
-	
-	protected void buyDelete() {
-
-		
-	}
-	
-	protected void partList() {
-
-		
-	}
-	
-	protected void banpumInsert() {
-	
-	}
-	
 
 
 	

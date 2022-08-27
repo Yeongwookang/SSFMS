@@ -15,6 +15,8 @@ public class BuyDAOImpl implements BuyDAO {
 	private Connection conn = DBConn.getConnection();
 
 	
+	
+	//구매처 
 	@Override
 	public int insertShop(BuyDTO buydto) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -180,25 +182,6 @@ public class BuyDAOImpl implements BuyDAO {
 
 	
 	
-
-	@Override
-	public int insertBuy(BuyDTO buydto) throws SQLException {
-		return 0;
-		
-	}
-
-	
-	
-
-	@Override
-	public int updateBuy(BuyDTO buydto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	
-	
 	@Override
 	public List<BuyDTO> listShop() {
 		List<BuyDTO> list = new ArrayList<>();
@@ -260,5 +243,43 @@ public class BuyDAOImpl implements BuyDAO {
 	
 
 	
+	@Override
+	public int insertBuy(BuyDTO buydto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
+		
+		
+		
+		
+		
+		
+		return 0;
+		
+	}
+
+	
+	
+
+	@Override
+	public int updateBuy(BuyDTO buydto) throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	
+
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
 

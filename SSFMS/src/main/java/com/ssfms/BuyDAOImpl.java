@@ -243,18 +243,85 @@ public class BuyDAOImpl implements BuyDAO {
 	
 
 	
+	//구매
 	@Override
 	public int insertBuy(BuyDTO buydto) throws SQLException {
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		String sql;
 		int result = 0;
 		
+		try {
+			
+			conn.setAutoCommit(false);
+			sql = "INSERT INTO buy(buy_No, state_No, partNo, buy_Date, buy_qty, buy_price, shop_No)"
+					+ " SELECT buy_No_seq.NEXTVAL, stateNum, partNo, ?, ?, ?, ? FROM accounting WHERE stateNum = ? ";
+
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, buydto.getBuy_Date());
+			pstmt.setInt(2, buydto.getBuy_qty());
+			pstmt.setInt(3, buydto.getBuy_price());
+			pstmt.setString(4, buydto.getShop_No());
+			pstmt.setString(5, buydto.getState_No()); // state_No 가져와야함? 그냥 입력하자...ㅎ
+			
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "UPDATE part SET part_stock = ? "
+					+ " WHERE partNo = ? ";
+			
+			pstmt.setInt(1, buydto.getPart_stock() + buydto.getBuy_qty());
+			pstmt.setString(2, buydto.getPartNo());
+			
+			result = pstmt.executeUpdate();
+			
+			conn.commit();
+			
+
+			
+		} catch (SQLIntegrityConstraintViolationException e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			
+			if(e.getErrorCode()==1400) {
+				System.out.println("필수 사항을 입력하지 않았습니다.");
+			}else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+			
+		}catch (SQLDataException e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			
+			throw e;
+		}catch (SQLException e) {
+			conn.rollback();
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}	
 		
-		
-		
-		
-		
-		return 0;
+		return result;
 		
 	}
 
@@ -265,6 +332,75 @@ public class BuyDAOImpl implements BuyDAO {
 	public int updateBuy(BuyDTO buydto) throws SQLException {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+
+	@Override
+	public int deleteBuy(BuyDTO buydto) throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public List<BuyDTO> listBuy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<BuyDTO> partlistAll(String partNo) {
+		List<BuyDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			
+			sql = "SELECT partNo, part_name, part_price, part_stock "
+					+ " FROM part "
+					+ " WHERE partNo = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, partNo);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				BuyDTO buydto = new BuyDTO();
+				
+				buydto.setPartNo(rs.getString("partNo"));
+				buydto.setPart_name(rs.getString("part_name"));
+				buydto.setPart_price(rs.getInt("part_price"));
+				buydto.setPart_stock(rs.getInt("part_stock"));
+				
+				list.add(buydto);
+				
+			}
+			
+			
+		} catch (Exception e) {
+
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+		}
+		
+		
+		return list;
 	}
 
 

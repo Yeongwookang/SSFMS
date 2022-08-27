@@ -5,6 +5,8 @@ public class BuyDTO {
 	private String state_No;
 	private String buy_Date;
 	private int buy_qty;
+	private int buy_price;
+	
 	
 	private String ban_No;
 	private String ban_Date;
@@ -25,7 +27,6 @@ public class BuyDTO {
 	private String part_name;
 	private int part_price;
 	private int part_stock;
-	
 	
 	
 	public String getBuy_No() {
@@ -51,6 +52,12 @@ public class BuyDTO {
 	}
 	public void setBuy_qty(int buy_qty) {
 		this.buy_qty = buy_qty;
+	}
+	public int getBuy_price() {
+		return buy_price;
+	}
+	public void setBuy_price(int buy_price) {
+		this.buy_price = buy_price;
 	}
 	public String getBan_No() {
 		return ban_No;
@@ -154,6 +161,7 @@ public class BuyDTO {
 	public void setPart_stock(int part_stock) {
 		this.part_stock = part_stock;
 	}
+	
 	
 
 	

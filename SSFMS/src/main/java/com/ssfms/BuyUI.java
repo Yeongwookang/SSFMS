@@ -158,8 +158,33 @@ public class BuyUI {
 	}
 	
 	protected void partList() {
-
+		System.out.println("\n[원자재 재고조회] 원자재 재고 조회하기");
 		
+		String partNo;
+		
+		try {
+			System.out.print("재고 조회할 재료코드는?: ");
+			partNo = br.readLine();
+			
+			List<BuyDTO> list = buydao.partlistAll(partNo);
+			
+			if(list==null) {
+				System.out.println("유효하지 않은 재료코드입니다. ");
+				return;
+			}
+			
+			for(BuyDTO buydto : list) {
+				System.out.print(buydto.getPartNo()+"\t");
+				System.out.print(buydto.getPart_name()+"\t");
+				System.out.print(buydto.getPart_price()+"\t");
+				System.out.print(buydto.getPart_stock()+"\t");
+			}
+
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
 	}
 
 	

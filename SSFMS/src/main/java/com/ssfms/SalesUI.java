@@ -95,6 +95,8 @@ public class SalesUI {
 		// 견적서는 입력과 조회만 가능. 입력후 30일까지만 보관하고 30일이 지나면 삭제
 
 		try {
+			SalesDTO dto = new SalesDTO();
+			
 			System.out.println("견적서일련번호 : ");
 
 			System.out.println("입력날짜(현재날짜) : ");
@@ -128,6 +130,8 @@ public class SalesUI {
 			}
 
 			System.out.println("결제방식 : ");
+			
+			dao.estimateInsertSales(dto);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -140,6 +144,8 @@ public class SalesUI {
 		// 주문서는 입력, 조회, 관리가 가능		=>  주문서는 외부에서 입력하는 것 주문서 테이블을 따로만들어 데이터 입력하는 것 물어보기
 
 		try {
+			SalesDTO dto = new SalesDTO();
+			
 			System.out.println("주문서일련번호 : ");
 
 			System.out.println("입력날짜(현재날짜) : ");
@@ -182,6 +188,8 @@ public class SalesUI {
 			
 			System.out.println("총계 : ");
 
+			dao.orderInsertSales(dto);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

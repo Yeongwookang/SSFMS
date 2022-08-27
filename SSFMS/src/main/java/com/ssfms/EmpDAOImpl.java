@@ -211,22 +211,168 @@ public class EmpDAOImpl implements EmpDAO {
 		return list;
 	}
 
+	// 경력사항 입력
 	@Override
 	public int insertCare(EmpDTO dto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		CallableStatement cstmt = null;
+		String sql;
+		
+		try {
+			sql = "{ CALL insert_care(?, ?, ?, ?, ?, ?) }";
+			cstmt = conn.prepareCall(sql);
+			
+			cstmt.setString(1, dto.getcDiv());
+			cstmt.setString(2, dto.getCar_date());
+			cstmt.setString(3, dto.getcNote());
+			cstmt.setString(4, dto.getDepNo());
+			cstmt.setString(5, dto.getRankNo());
+			cstmt.setString(6, dto.getEmpNo());
+			
+			cstmt.executeUpdate();
+			result =1;
+			
+		}catch (SQLIntegrityConstraintViolationException e) {
+			// 기본키 제약 위반, NOT NULL 등의 제약 위반 - 무결성 제약 위반시 발생
+			if(e.getErrorCode() == 1) { // 기본키 중복
+				System.out.println("사번 중복으로 등록이 불가능합니다.");
+			} else if(e.getErrorCode() == 1400) { // NOT NULL
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+			
+		} catch (SQLDataException e) {
+			// 날짜등의 형식 잘못으로 인한 예외
+			if(e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
+				System.out.println("날짜 입력 형식 오류 입니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+			
+		} finally {
+			if(cstmt != null) {
+				try {
+					cstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
 	}
 
+	// 경력사항 수정
 	@Override
 	public int updateCare(EmpDTO dto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		
+		try {
+			sql = "UPDATE career SET div=?, car_date=?, Note=?, depNo=?, rankNo=?, empNo=?"
+					+ "WHERE carNo = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getcDiv());
+			pstmt.setString(2, dto.getCar_date());
+			pstmt.setString(3, dto.getcNote());
+			pstmt.setString(4, dto.getDepNo());
+			pstmt.setString(5, dto.getRankNo());
+			pstmt.setString(6, dto.getEmpNo());
+			pstmt.setString(7, dto.getCarNo());
+			
+			result = pstmt.executeUpdate();
+			
+		}catch (SQLIntegrityConstraintViolationException e) {
+			if(e.getErrorCode() == 1400) {
+				System.out.println("필수 입력 사항을 입력하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+		} catch (SQLDataException e) {
+			if(e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
+				System.out.println("날짜 입력 형식 오류 입니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
 	}
 
+	// 경력사항 출력
 	@Override
 	public List<EmpDTO> listCare() {
-		// TODO Auto-generated method stub
-		return null;
+		List<EmpDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			
+			sql  = "SELECT carNo, div, car_date, depNo, rankNo, empNo FROM career";
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				EmpDTO dto = new EmpDTO();
+				
+				dto.setCarNo(rs.getString("carNo"));
+				dto.setcDiv(rs.getString("div"));
+				dto.setCar_date(rs.getString("car_date"));
+				dto.setDepNo(rs.getString("depNo"));
+				dto.setRankNo(rs.getString("rankNo"));
+				dto.setEmpNo(rs.getNString("empNo"));
+				
+				list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return list;
 	}
 	
 	// 연봉 입력
@@ -299,10 +445,61 @@ public class EmpDAOImpl implements EmpDAO {
 		return null;
 	}
 
+	// 급여 입력
 	@Override
 	public int insertSett(EmpDTO dto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		CallableStatement cstmt = null;
+		String sql;
+		
+		try {
+			sql = "{ CALL insert_sett(?, ?, ?, ?, ?) }";
+			cstmt = conn.prepareCall(sql);
+			
+			cstmt.setString(1, dto.getEmpNo());
+			cstmt.setInt(2, dto.getSal());
+			cstmt.setInt(3, dto.getTax());
+			cstmt.setInt(4, dto.getBonus());
+			cstmt.setString(5, dto.getPay_date());
+			
+			cstmt.executeUpdate();
+			result =1;
+			
+		}catch (SQLIntegrityConstraintViolationException e) {
+			// 기본키 제약 위반, NOT NULL 등의 제약 위반 - 무결성 제약 위반시 발생
+			if(e.getErrorCode() == 1) { // 기본키 중복
+				System.out.println("사번 중복으로 등록이 불가능합니다.");
+			} else if(e.getErrorCode() == 1400) { // NOT NULL
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+			
+		} catch (SQLDataException e) {
+			// 날짜등의 형식 잘못으로 인한 예외
+			if(e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
+				System.out.println("날짜 입력 형식 오류 입니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+			
+		} finally {
+			if(cstmt != null) {
+				try {
+					cstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
 	}
 
 	@Override

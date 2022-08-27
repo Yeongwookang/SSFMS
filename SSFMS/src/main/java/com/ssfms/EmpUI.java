@@ -215,15 +215,94 @@ public class EmpUI {
     }
 	
 	protected void cinsert() {
+        System.out.println("\n경력사항 등록하기 !!!");
+		
+		try {
+			EmpDTO dto = new EmpDTO();
+			
+			System.out.print("구분(퇴사/입사) ? ");
+			dto.setcDiv(br.readLine());
+
+			System.out.print("일시(퇴사/입사) ? ");
+			dto.setCar_date(br.readLine());
+
+			System.out.print("비고 ? ");
+			dto.setcNote(br.readLine());
+
+			System.out.print("부서코드 ? ");
+			dto.setDepNo(br.readLine());
+			
+			System.out.print("직급코드 ? ");
+			dto.setRankNo(br.readLine());
+			
+			System.out.print("사번 ? ");
+			dto.setEmpNo(br.readLine());
+			
+			dao.insertCare(dto);
+			
+			System.out.println("경력등록에 성공 했습니다.");
+		} catch (Exception e) {
+			System.out.println("경력등록에 실패 했습니다.");
+		}
+		
+		System.out.println();
+
 		
 	}
 	
     protected void cupdate() {
+        System.out.println("\n경력사항 수정 !!!");
+		
+		try {
+			EmpDTO dto = new EmpDTO();
+			
+			System.out.print("수정할 경력번호 ? ");
+			dto.setCarNo(br.readLine());
+			
+			System.out.print("구분(퇴사/입사) ? ");
+			dto.setcDiv(br.readLine());
+
+			System.out.print("일시(퇴사/입사) ? ");
+			dto.setCar_date(br.readLine());
+
+			System.out.print("비고 ? ");
+			dto.setcNote(br.readLine());
+
+			System.out.print("부서코드 ? ");
+			dto.setDepNo(br.readLine());
+			
+			System.out.print("직급코드 ? ");
+			dto.setRankNo(br.readLine());
+			
+			System.out.print("사번 ? ");
+			dto.setEmpNo(br.readLine());
+			
+			dao.updateCare(dto);
+			
+			System.out.println("경력사항 수정에 성공 했습니다.");
+		} catch (Exception e) {
+			System.out.println("경력사항 수정에 실패 했습니다.");
+		}
+		
+		System.out.println();
 		
 	}
     
     protected void clistAll() {
+        System.out.println("\n경력사항 리스트 !!!");
 		
+		List<EmpDTO> list = dao.listCare();
+		for(EmpDTO dto : list) {
+
+			System.out.print(dto.getCarNo() +"\t");
+			System.out.print(dto.getcDiv() +"\t");
+			System.out.print(dto.getCar_date() +"\t");
+			System.out.print(dto.getDepNo() +"\t");
+			System.out.print(dto.getRankNo() +"\t");
+			System.out.println(dto.getEmpNo());
+
+		}
+		System.out.println();
 	}
     
     // 연봉 관리
@@ -313,7 +392,34 @@ public class EmpUI {
     }
     
     protected void sinsert() {
+        System.out.println("\n급여 등록하기 !!!");
 		
+		try {
+			EmpDTO dto = new EmpDTO();
+			
+			System.out.print("사번 ? ");
+			dto.setEmpNo(br.readLine());
+
+			System.out.print("월급 ? ");
+			dto.setSal(Integer.parseInt(br.readLine()));
+
+			System.out.print("세금 ? ");
+			dto.setTax(Integer.parseInt(br.readLine()));
+
+			System.out.print("보너스 ? ");
+			dto.setBonus(Integer.parseInt(br.readLine()));
+			
+			System.out.print("실수령액 ? ");
+			dto.setPay(Integer.parseInt(br.readLine()));
+			
+			dao.insertSett(dto);
+			
+			System.out.println("급여등록에 성공 했습니다.");
+		} catch (Exception e) {
+			System.out.println("급여등록에 실패 했습니다.");
+		}
+		
+		System.out.println();
 	}
 	
     protected void supdate() {

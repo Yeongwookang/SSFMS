@@ -12,6 +12,7 @@ public class BuyUI {
 	private BuyDAO buydao = new BuyDAOImpl();
 
 	
+	// 구매 관리 전체 메뉴
 	public void menu() {
 		
 		int ch;
@@ -19,33 +20,19 @@ public class BuyUI {
 		while(true) {
 			try {
 				System.out.println();
-				System.out.println("----------------------------------");
-				System.out.println("[1] 전표등록 [2] 원자재 발주 [3] 발주수정 [4] 발주현황조회"
-						+ "\n[5] 발주취소 [6] 원자재 재고조회 [7] 반품등록"
-						+ "\n\n[8] 매입처 추가 [9] 매입처 수정 [10] 매입처 삭제 [11] 매입처 조회 [12] 뒤로가기");
-				System.out.println("-------------------------------------");
+				System.out.println("-----------------------------------------------------------------");
+				System.out.println("[1] 매입전표관리 [2] 원자재관리 [3] 반품관리 [4] 매입처관리 [5] 뒤로가기");
+				System.out.println("-----------------------------------------------------------------");
 				System.out.print("=> ");
 				
 				ch = Integer.parseInt(br.readLine());
 				
-				if(ch == 7) {
-					DBConn.close();
-					return;
-				}
-				
 				switch(ch) {
-				case 1: accInsert(); break;
-				case 2: buyInsert(); break;
-				case 3: buyUpdate(); break;
-				case 4: buyList(); break;
-				case 5: buyDelete(); break;
-				case 6: partList(); break;
-				case 7: banpumInsert(); break;
-				case 8: shopInsert(); break;
-				case 9: shopUpdate(); break;
-				case 10: shopDelete(); break;
-				case 11: shopList(); break;
-				case 12: App.main(null); break; //뒤로가기
+				case 1: new BuyUI().menu1(); break;
+				case 2: new BuyUI().menu2(); break;
+				case 3: new BuyUI().menu3(); break;
+				case 4: new BuyUI().menu4(); break;
+				case 5: App.main(null); break; //뒤로가기
 				
 
 				}
@@ -57,14 +44,101 @@ public class BuyUI {
 	}
 	
 	
+	//매입전표관리 메뉴
+	public void menu1() {
+		
+		int ch;
+		
+		while(true) {
+			try {
+				
+				System.out.println();
+				System.out.println("-----------------------------------------------------------------");
+				System.out.println("[1] 전표등록 [2] 전표취소 [3] 등록전표조회 [4] 뒤로가기 ");
+				System.out.println("-----------------------------------------------------------------");
+				System.out.print("=> ");
+				
+				ch = Integer.parseInt(br.readLine());
+				
+				if(ch==4) {
+					new BuyUI().menu();
+				}
+				
+				switch(ch) {
+				case 1: accInsert(); break; 
+				case 2: accDelete(); break;
+				case 3: accList(); break;
+				}
+					
+			} catch (Exception e) {
+			}
+			
+		}
+		
+	}
+	
+	
+	
 	
 	protected void accInsert() {
 
 
 	}
 	
-	protected void buyInsert() {
 	
+	protected void accDelete() {
+		
+	}
+	
+	
+	protected void accList() {
+		
+	}
+	
+	
+	
+	
+	
+	
+	// 원자재관리
+	public void menu2() {
+		
+		int ch;
+		
+		while(true) {
+			try {
+				
+				System.out.println();
+				System.out.println("-----------------------------------------------------------------");
+				System.out.println("[1] 원자재 발주 [2] 발주수정 [3] 발주현황조회 [4] 발주취소 [5] 원자재 재고조회 [6] 뒤로가기 ");
+				System.out.println("-----------------------------------------------------------------");
+				System.out.print("=> ");
+				
+				ch = Integer.parseInt(br.readLine());
+				
+				if(ch==6) {
+					new BuyUI().menu();
+				}
+				
+				switch(ch) {
+				case 1: buyInsert(); break;
+				case 2: buyUpdate(); break;
+				case 3: buyList(); break;
+				case 4: buyDelete(); break;
+				case 5: partList(); break;
+				
+				}
+					
+			} catch (Exception e) {
+			}
+			
+		}
+		
+	}
+	
+	
+	protected void buyInsert() {
+		
 	}
 
 	
@@ -84,13 +158,122 @@ public class BuyUI {
 	}
 	
 	protected void partList() {
+		System.out.println("\n[원자재 재고조회] 원자재 재고 조회하기");
+		
+		String partNo;
+		
+		try {
+			System.out.print("재고 조회할 재료코드는?: ");
+			partNo = br.readLine();
+			
+			List<BuyDTO> list = buydao.partlistAll(partNo);
+			
+			if(list==null) {
+				System.out.println("유효하지 않은 재료코드입니다. ");
+				return;
+			}
+			
+			for(BuyDTO buydto : list) {
+				System.out.print(buydto.getPartNo()+"\t");
+				System.out.print(buydto.getPart_name()+"\t");
+				System.out.print(buydto.getPart_price()+"\t");
+				System.out.print(buydto.getPart_stock()+"\t");
+			}
 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
+	}
+
+	
+
+	
+
+	
+	// 반품관리
+	public void menu3() {
+		
+		int ch;
+		
+		while(true) {
+			try {
+				
+				System.out.println();
+				System.out.println("-----------------------------------------------------------------");
+				System.out.println("[1] 반품등록 [2] 반품취소 [3] 뒤로가기 ");
+				System.out.println("-----------------------------------------------------------------");
+				System.out.print("=> ");
+				
+				ch = Integer.parseInt(br.readLine());
+				
+				if(ch==3) {
+					new BuyUI().menu();
+				}
+				
+				switch(ch) {
+				case 1: ; break;
+				case 2: ; break;
+				
+				}
+					
+			} catch (Exception e) {
+			}
+			
+		}
 		
 	}
 	
-	protected void banpumInsert() {
 	
+	protected void banpumInsert() {
+		
 	}
+	
+	
+	protected void banpumDelete() {
+		
+	}
+	
+	
+
+	
+	
+	// 매입처관리
+	public void menu4() {
+		
+		int ch;
+		
+		while(true) {
+			try {
+				
+				System.out.println();
+				System.out.println("-----------------------------------------------------------------");
+				System.out.println("[1] 매입처등록 [2] 매입처수정 [3] 매입처삭제 [4] 매입처조회 [5] 뒤로가기 ");
+				System.out.println("-----------------------------------------------------------------");
+				System.out.print("=> ");
+				
+				ch = Integer.parseInt(br.readLine());
+				
+				if(ch==5) {
+					new BuyUI().menu();
+				}
+				
+				switch(ch) {
+				case 1: shopInsert(); break;
+				case 2: shopUpdate(); break;
+				case 3: shopDelete(); break;
+				case 4: shopList(); break;
+				
+				}
+					
+			} catch (Exception e) {
+			}
+			
+		}
+		
+	}
+	
 	
 	protected void shopInsert() {
 		System.out.println("\n[매입처 추가] 새로운 매입처 추가하기");
@@ -235,6 +418,9 @@ public class BuyUI {
 		System.out.println();
 		
 	}
+	
+
+
 
 	
 }

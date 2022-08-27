@@ -16,12 +16,8 @@ public class SalesUI {
 
 		while (true) {
 			try {
-				System.out.print("[영업부] 1.견적/주문처리 2.출고 3.반품 4.배송관리 5.영업이익조회 6.세금계산서 7.수금/채권관리 8.종료 =>");
+				System.out.print("[영업부] 1.견적/주문처리 2.출고 3.반품 4.배송관리 5.영업이익조회 6.세금계산서 7.수금/채권관리 8.메인으로 돌아가기 =>");
 				ch = Integer.parseInt(br.readLine());
-
-				if (ch == 3) {
-					return;
-				}
 
 				switch (ch) {
 				case 1:
@@ -61,23 +57,28 @@ public class SalesUI {
 		int ch;
 
 		try {
-			System.out.println("\n[견적/주문관리] 1.견적서 및 주문서 조회 2.견적서 및 주문서 관리 3.영업부로 돌아가기 => ");
+			System.out.println("\n[견적/주문관리] 1.견적서입력 2.주문서입력 3.견적서조회 4.주문서조회 5.주문서관리 6.영업부 메뉴로 돌아가기=> ");
 			ch = Integer.parseInt(br.readLine());
 
-			if (ch == 3) {
-				DBConn.close();
-				return;
+			if (ch == 6) {
+				SalesUI.this.menu();
 			}
 
 			switch (ch) {
 			case 1:
-				check();
+				estimateInsert();
 				break;
 			case 2:
-				manage();
+				orderInsert();
 				break;
 			case 3:
-				SalesUI.this.menu();
+				estimateCheck();
+				break;
+			case 4:
+				orderCheck();
+				break;
+			case 5:
+				manage();
 				break;
 			}
 
@@ -89,13 +90,44 @@ public class SalesUI {
 
 	}
 
-	private void manage() throws NumberFormatException, IOException {
-		System.out.println("\n[견적서 및 주문서 조회]");
-		int stateNo;
+	private void estimateInsert() {
+		System.out.println("[견적서 입력하세요]");
+		// 견적서는 입력과 조회만 가능. 입력후 30일까지만 보관하고 30일이 지나면 삭제
 
 		try {
-			System.out.println("[일련번호를 입력해주세요] => ");
-			stateNo = Integer.parseInt(br.readLine());
+			System.out.println("견적서일련번호 : ");
+
+			System.out.println("입력날짜(현재날짜) : ");
+
+			System.out.println("사업자등록번호 : ");
+
+			System.out.println("상호 : ");
+
+			System.out.println("업태 : ");
+
+			System.out.println("연락처 : ");
+
+			System.out.println("주문처 : ");
+
+			System.out.println("담당자 : ");
+
+			System.out.println("전화번호 : ");
+
+			for (int i = 0; i < 10; i++) {
+				System.out.println("제품명 : ");
+
+				System.out.println("수량 : ");
+
+				System.out.println("단가 : ");
+
+				System.out.println("공급가액");
+
+				System.out.println("세액 : ");
+
+				System.out.println("바고 : ");
+			}
+
+			System.out.println("결제방식 : ");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,13 +135,78 @@ public class SalesUI {
 
 	}
 
-	private void check() throws NumberFormatException, IOException {
-		System.out.println("\n[견적서 및 주문서 관리]");
-		int stateNo;
+	private void orderInsert() {
+		System.out.println("[주문서 입력하세요]");
+		// 주문서는 입력, 조회, 관리가 가능		=>  주문서는 외부에서 입력하는 것 주문서 테이블을 따로만들어 데이터 입력하는 것 물어보기
+
+		try {
+			System.out.println("주문서일련번호 : ");
+
+			System.out.println("입력날짜(현재날짜) : ");
+
+			System.out.println("주문처 : ");
+
+			System.out.println("담당자 : ");
+
+			System.out.println("전화번호 : ");
+
+			System.out.println("남품예정일 : ");
+
+			System.out.println("결재조건 : ");
+
+			System.out.println("회사명 : ");
+
+			System.out.println("회사전화번호 : ");
+			
+			System.out.println("회사사업자번호 : ");
+			
+			System.out.println("업태 : ");
+
+			for (int i = 0; i < 10; i++) {
+				System.out.println("제품명 : ");
+
+				System.out.println("수량 : ");
+
+				System.out.println("단가 : ");
+
+				System.out.println("공급가액");
+
+				System.out.println("세액 : ");
+
+				System.out.println("바고 : ");
+			}
+
+			System.out.println("합계 : ");
+			
+			System.out.println("부가세 : ");
+			
+			System.out.println("총계 : ");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void estimateCheck() {
+		System.out.println("[견적서 조회]");
+		
+		try {
+			System.out.println("조회할 견적서의 일련번호 입력 : ");
+		} catch (Exception e) {
+			
+		}
+		
+	}
+
+	private void orderCheck() {
+
+	}
+
+	private void manage() {
+		System.out.println("\n[주문서 관리]");
 
 		try {
 			System.out.println("[취소할 전표의 일련번호를 입력해주세요] => ");
-			stateNo = Integer.parseInt(br.readLine());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -205,10 +302,10 @@ public class SalesUI {
 		int ch;
 
 		try {
-			System.out.println("\n[수금/채권조회] 1.수금관리 2.채권관리 3.영업부로 돌아가기 => ");
+			System.out.println("\n[수금/채권조회] 1.수금관리 2.채권관리 => ");
 			ch = Integer.parseInt(br.readLine());
 
-			if (ch == 3) {
+			if (ch == 2) {
 				DBConn.close();
 				return;
 			}
@@ -219,9 +316,6 @@ public class SalesUI {
 				break;
 			case 2:
 				bond();
-				break;
-			case 3:
-				SalesUI.this.menu();
 				break;
 			}
 
@@ -235,10 +329,10 @@ public class SalesUI {
 
 	private void money() {
 		System.out.println("[수금관리]");
-		
+
 		try {
 			System.out.println();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -246,7 +340,7 @@ public class SalesUI {
 
 	private void bond() {
 		System.out.println("[채권관리]");
-		
+
 		try {
 			System.out.println("[발행일자]");
 			System.out.println("[채무자명]");
@@ -258,7 +352,7 @@ public class SalesUI {
 			System.out.println("[원금잔액]");
 			System.out.println("[납입일자]");
 			System.out.println("[비고]");
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

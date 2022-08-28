@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 
 import com.util.DBConn;
 
@@ -14,9 +14,31 @@ public class ProdDAOImpl implements ProdDAO {
 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 	@Override
-	public AccDTO prodstateView(AccDTO state) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public AccDTO prodstateView(int StateNo) throws SQLException {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		AccDTO adto = new AccDTO();
+		try {sql="SELECT * FROM STATE WHERE StateNo = ?";
+		pstmt=conn.prepareStatement(sql);
+		pstmt.setInt(1, StateNo);
+		rs=pstmt.executeQuery();
+		if(rs.next()) {
+				adto.setStateNum(rs.getString("stateNum"));
+				adto.setEmpNo(rs.getString("empNo"));
+				adto.setAccountNo(rs.getString("accountNo"));
+				adto.setAccountSubNo(rs.getString("accountSubNo"));
+				adto.setAmount(rs.getString("amount"));
+				adto.setDetail(rs.getString("detail"));
+				adto.setCancellation(rs.getString("cancellation"));
+				adto.setStateCon(rs.getString("stateCon"));
+				adto.setStateDate(rs.getString("stateDate"));
+		}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return adto;
 	}
 
 	@Override
@@ -32,6 +54,7 @@ public class ProdDAOImpl implements ProdDAO {
 			pstmt.setInt(4, pdto.getPrice());
 			pstmt.setInt(5, pdto.getStock());
 			pstmt.executeUpdate();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -71,15 +94,26 @@ public class ProdDAOImpl implements ProdDAO {
 	}
 
 	@Override
-	public void using_part(BuyDTO bdto) throws SQLException {
+	public void using_part(ProdDTO pdto) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 		try {
 			sql = "UPDATE part SET part_stock = part_stock - ? WHERE partNo = ?";
+			sql = "INSERT INTO STOCK(StockNo, prodNo, partNo, pStock, use, nStock, date)"
+					+ "VALUES(STOCK_seq.nextval, ?, ?, ?, ?, ?, SYSDATE )";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, bdto.getPart_stock());
-			pstmt.setString(2, bdto.getPartNo());
-			pstmt.executeUpdate(sql);
+			pstmt.setInt(1, pdto.getProdNo()); // 생산번호
+			pstmt.setString(2, pdto.getPartNo()); // 부품코드
+			pstmt.setInt(3, pdto.partStock(pdto.getPartNo())); // 기존 재고량
+			pstmt.setInt(4, pdto.getPart_stock()); // 사용량
+			pstmt.setInt(5, pdto.partStock(pdto.getPartNo()) - pdto.getPart_stock()); // 현재 재고량
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pdto.getPart_stock());
+			pstmt.setString(2, pdto.getPartNo());
+			pstmt.executeUpdate();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,14 +130,20 @@ public class ProdDAOImpl implements ProdDAO {
 
 	@Override
 	public ProdDTO producing(ProdDTO pdto) throws SQLException {
-		// TODO Auto-generated method stub
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql = "INSERT INTO ";
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		return null;
 	}
 
 	@Override
-	public ProductDTO productStock(String product_name) throws SQLException {
+	public int productStock(String productNo) throws SQLException {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
 
 }

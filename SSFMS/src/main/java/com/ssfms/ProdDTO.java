@@ -1,28 +1,43 @@
 package com.ssfms;
 
 import java.sql.Date;
+import java.sql.SQLException;
 
 public class ProdDTO {
-private String prodNo;
-private String stateNo;
+private int prodNo;
+private int stateNo;
 private String productNo;
 private int qty;
 private int cost;
 private Date prod_Date;
 private String partNo;
+private int part_stock;
+public int partStock(String partNo) throws SQLException {
+	// TODO Auto-generated method stub
+	return 0;
+}
 
-public String getProdNo() {
+
+public int getProdNo() {
 	return prodNo;
 }
-public void setProdNo(String prodNo) {
+
+
+public void setProdNo(int prodNo) {
 	this.prodNo = prodNo;
 }
-public String getStateNo() {
+
+
+public int getStateNo() {
 	return stateNo;
 }
-public void setStateNo(String stateNo) {
+
+
+public void setStateNo(int stateNo) {
 	this.stateNo = stateNo;
 }
+
+
 public String getProductNo() {
 	return productNo;
 }
@@ -52,6 +67,12 @@ public String getPartNo() {
 }
 public void setPartNo(String partNo) {
 	this.partNo = partNo;
+}
+public int getPart_stock() {
+	return part_stock;
+}
+public void setPart_stock(int part_stock) {
+	this.part_stock = part_stock;
 }
 	
 	

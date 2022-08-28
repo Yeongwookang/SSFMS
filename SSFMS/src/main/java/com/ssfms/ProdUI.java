@@ -2,20 +2,22 @@ package com.ssfms;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import com.util.DBConn;
 
 public class ProdUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private ProdDAO dao = new ProdDAOImpl();
-
+	private AccDAO adao = new AccDAOImpl();
 	public void menu() {
 
 		int ch;
 
 		while (true) {
 			try {
-				System.out.println("1. 제품등록 2. 등록제품 삭제 3. ");
+				System.out.println("1. 제품등록 2. 등록제품 삭제 3. 생산출고 4. 생산입고 5. 생산전표등록");
 				ch = Integer.parseInt(br.readLine());
 
 				if (ch == 7) {
@@ -34,10 +36,10 @@ public class ProdUI {
 					using_part();
 					break;
 				case 4:
-					findById();
+					Producing();
 					break;
 				case 5:
-					findByName();
+					insert_Prod_state();
 					break;
 				case 6:
 					listAll();
@@ -51,7 +53,7 @@ public class ProdUI {
 	}
 
 	protected void reg_product() {
-		System.out.println("제품 등록");
+		System.out.println("\n제품 등록");
 		ProductDTO pdto = new ProductDTO();
 		try {
 			System.out.println("제품의 등록번호를 입력해주세요.");
@@ -64,7 +66,6 @@ public class ProdUI {
 			pdto.setPrice(Integer.parseInt(br.readLine()));
 			pdto.setStock(0);
 			dao.reg_product(pdto);
-
 			System.out.println("\n제품 등록이 완료되었습니다.");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,7 +74,7 @@ public class ProdUI {
 	}
 
 	protected void del_product() {
-		System.out.println("등록제품 삭제");
+		System.out.println("\n등록제품 삭제");
 		try {
 			System.out.println("삭제할 제품의 등록번호를 입력해주세요.");
 			String productNo = br.readLine();
@@ -86,21 +87,23 @@ public class ProdUI {
 	}
 
 	protected void using_part() {
-		BuyDTO bdto = new BuyDTO();
-		System.out.println("생산출고");
+		ProdDTO pdto= new ProdDTO();
+		System.out.println("\n생산 출고");
 		try {
 			String partNo;
+			System.out.println("생산코드를 입력해주세요.");
+			pdto.setProdNo(Integer.parseInt(br.readLine()));
 			while (true) {
 				System.out.println("사용한 재료의 코드를 입력해주세요. [입력 종료: 0]");
 				partNo = br.readLine();
 				if (partNo.equals("0")) {
 					break;
 				}
-				bdto.setPartNo(partNo);
+				pdto.setPartNo(partNo);
 				System.out.println("사용한 재료의 갯수를 입력해주세요.");
-				bdto.setPart_stock(Integer.parseInt(br.readLine()));
-				dao.using_part(bdto);
-			}
+				pdto.setPart_stock(Integer.parseInt(br.readLine()));
+				dao.using_part(pdto);
+			} 
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,13 +111,56 @@ public class ProdUI {
 
 	}
 
-	protected void findByName() {
-		System.out.println("\n이름 검색 !!!");
-
+	protected void Producing() {
+		System.out.println("\n생산 입고");
+		try {
+			String ProductNo;
+			ProdDTO pdto = new ProdDTO();
+			System.out.println("승인된 전표번호를 입력해주세요.");
+			int StateNo= Integer.parseInt(br.readLine());
+			dao.prodstateView(StateNo);
+			
+			pdto.setStateNo(StateNo);
+			while (true) {
+				System.out.println("생산한 제품의 코드를 입력하세요. [입력 종료: 0]");
+				ProductNo = br.readLine();
+				if (ProductNo.equals("0")) {
+					break;
+				}
+				pdto.setProductNo(ProductNo);
+				System.out.println("생산한 갯수를 입력하세요.");
+				pdto.setQty(Integer.parseInt(br.readLine()));
+				System.out.println("생산 단가를 입력해주세요.");
+				pdto.setCost(Integer.parseInt(br.readLine()));
+				dao.producing(pdto);
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	protected void findById() {
-		System.out.println("\n아이디 검색 !!!");
+	protected void insert_Prod_state() {
+		System.out.println("\n생산전표등록 !!!");
+		AccDTO adto = new AccDTO();
+		
+		try {
+			adto.setAccountNo(br.readLine());
+			adto.setAccountSubNo(br.readLine());
+			adto.setEmpNo(br.readLine());
+			adto.setDetail(br.readLine());
+			adto.setCancellation("요청");
+			adto.setStateCon("승인대기");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			adto.setStateDate(sdf.format(cal.getTime()));
+			
+			adao.insertAccount(adto);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 
 	}
 

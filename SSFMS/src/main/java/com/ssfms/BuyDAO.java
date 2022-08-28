@@ -20,4 +20,8 @@ public interface BuyDAO {
 	public List<BuyDTO> partlistAll(String partNo);
 	
 	
+	//전표등록
+	public int insertAccBuy (BuyDTO buydto) throws SQLException;
+	
+	
 }

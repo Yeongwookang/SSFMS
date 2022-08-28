@@ -369,7 +369,7 @@ public class BuyDAOImpl implements BuyDAO {
 			while(rs.next()) {
 				BuyDTO buydto = new BuyDTO();
 				
-				buydto.setBuy_No(rs.getInt("buy_No"));
+				buydto.setBuy_No(rs.getString("buy_No"));
 				buydto.setStateNo(rs.getInt("stateNo"));
 				buydto.setPartNo(rs.getString("partNo"));
 				buydto.setPart_name(rs.getString("part_name"));

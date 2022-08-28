@@ -1,25 +1,20 @@
 package com.ssfms;
 
 public class AccDTO {
-	private String stateNum;
+	private int stateNo;
 	private String empNo;
 	private String accountNo;
 	private String accountSubNo;
-	private String name;
-	private String categNo;
-	private String categName;
-	private String amount;
+	private int amount;
 	private String detail;
 	private String cancellation;
 	private String stateCon;
-	private String stateDate;
 	
-	
-	public String getStateNum() {
-		return stateNum;
+	public int getStateNo() {
+		return stateNo;
 	}
-	public void setStateNum(String stateNum) {
-		this.stateNum = stateNum;
+	public void setStateNo(int stateNo) {
+		this.stateNo = stateNo;
 	}
 	public String getEmpNo() {
 		return empNo;
@@ -39,28 +34,10 @@ public class AccDTO {
 	public void setAccountSubNo(String accountSubNo) {
 		this.accountSubNo = accountSubNo;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getCategNo() {
-		return categNo;
-	}
-	public void setCategNo(String categNo) {
-		this.categNo = categNo;
-	}
-	public String getCategName() {
-		return categName;
-	}
-	public void setCategName(String categName) {
-		this.categName = categName;
-	}
-	public String getAmount() {
+	public int getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+	public void setAmount(int amount) {
 		this.amount = amount;
 	}
 	public String getDetail() {
@@ -87,7 +64,9 @@ public class AccDTO {
 	public void setStateDate(String stateDate) {
 		this.stateDate = stateDate;
 	}
-	
-	
-	
+	private String stateDate;
 }
+	
+	
+	
+	

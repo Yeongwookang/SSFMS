@@ -58,11 +58,9 @@ public class AccUI {
 			System.out.print("계정과목코드");
 			dto.setAccountSubNo(br.readLine());
 			
-			System.out.print("분류코드");
-			dto.setCategNo(br.readLine());
-			
+		
 			System.out.print("금액");
-			dto.setAmount(br.readLine());
+			dto.setAmount(Integer.parseInt(br.readLine()));
 			
 			System.out.print("상세내용");
 			dto.setDetail(br.readLine());
@@ -74,7 +72,7 @@ public class AccUI {
 			
 			System.out.println("전표가 등록 되었습니다.");
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 		
 	}
@@ -95,7 +93,7 @@ public class AccUI {
 			dto.setAccountSubNo(br.readLine());
 			
 			System.out.print("수정할 금액");
-			dto.setAmount(br.readLine());
+			dto.setAmount(Integer.parseInt(br.readLine()));
 			
 			System.out.print("수정할 상세내용");
 			dto.setDetail(br.readLine());
@@ -117,11 +115,11 @@ public class AccUI {
 	
 	protected void delete() {
 		System.out.println("\n전표 삭제 ");
-		String stateNo;
+		int stateNo;
 		
 		try {
 			System.out.print("삭제할 전표 번호 ? ");
-			stateNo = br.readLine();
+			stateNo = Integer.parseInt(br.readLine());
 			
 			dao.deleteAccount(stateNo);
 			
@@ -154,7 +152,7 @@ public class AccUI {
 				return;
 			}
 			
-			System.out.print(dto.getStateNum()+"\t");
+			System.out.print(dto.getStateNo()+"\t");
 			System.out.print(dto.getEmpNo()+"\t");
 			System.out.print(dto.getAccountNo()+"\t");
 			System.out.print(dto.getAccountSubNo()+"\t");
@@ -183,7 +181,7 @@ public class AccUI {
 				return;
 			}
 			
-			System.out.print(dto.getStateNum()+"\t");
+			System.out.print(dto.getStateNo()+"\t");
 			System.out.print(dto.getEmpNo()+"\t");
 			System.out.print(dto.getAccountNo()+"\t");
 			System.out.print(dto.getAccountSubNo()+"\t");

@@ -22,17 +22,16 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 		
 		try {
-			sql = "{ CALL accounting(?, ?, ?, ?, ?, ?, ?, ?)} ";
+			sql = "{ CALL insertAccount(?, ?, ?, ?, ?, ?, ?)} ";
 			
 			cstmt = conn.prepareCall(sql);
 			cstmt.setString(1, dto.getEmpNo());
 			cstmt.setString(2, dto.getAccountNo());
 			cstmt.setString(3, dto.getAccountSubNo());
-			cstmt.setString(4, dto.getCategNo());
-			cstmt.setString(5, dto.getAmount());
-			cstmt.setString(6, dto.getDetail());
-			cstmt.setString(7, dto.getCancellation());
-			cstmt.setString(8, dto.getStateCon());
+			cstmt.setInt(4, dto.getAmount());
+			cstmt.setString(5, dto.getDetail());
+			cstmt.setString(6, dto.getCancellation());
+			cstmt.setString(7, dto.getStateCon());
 			
 			cstmt.executeUpdate();
 			result = 1;
@@ -46,11 +45,14 @@ public class AccDAOImpl implements AccDAO {
 				System.out.println(e.toString());
 			}
 			
-			throw e;
+			
 			
 		} catch (SQLException e) {	
 			e.printStackTrace();
-			throw e;
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 			
 		} finally {
 			if(cstmt != null) {
@@ -78,7 +80,7 @@ public class AccDAOImpl implements AccDAO {
 			cstmt.setString(1, dto.getEmpNo());
 			cstmt.setString(2, dto.getAccountNo());
 			cstmt.setString(3, dto.getAccountSubNo());
-			cstmt.setString(4, dto.getAmount());
+			cstmt.setInt(4, dto.getAmount());
 			cstmt.setString(5, dto.getDetail());
 			cstmt.setString(6, dto.getCancellation());
 			cstmt.setString(7, dto.getStateCon());
@@ -103,7 +105,7 @@ public class AccDAOImpl implements AccDAO {
 	}
 
 	@Override
-	public int deleteAccount(AccDTO stateNo) throws SQLException {
+	public int deleteAccount(int stateNo) throws SQLException {
 		int result = 0;
 		CallableStatement cstmt = null;
 		String sql;
@@ -112,7 +114,7 @@ public class AccDAOImpl implements AccDAO {
 			sql = "{ CALL deleteAccount(?) }";
 			cstmt = conn.prepareCall(sql);
 			
-			cstmt.setString(1, stateNo);
+			cstmt.setInt(1, stateNo);
 			
 			cstmt.executeUpdate();
 			
@@ -160,11 +162,11 @@ public class AccDAOImpl implements AccDAO {
 			if(rs.next()) {
 				dto = new AccDTO();
 
-				dto.setStateNum(rs.getString("stateNum"));
+				dto.setStateNo(rs.getInt("stateNo"));
 				dto.setEmpNo(rs.getString("empNo"));
 				dto.setAccountNo(rs.getString("accountNo"));
 				dto.setAccountSubNo(rs.getString("accountSubNo"));
-				dto.setAmount(rs.getString("amount"));
+				dto.setAmount(rs.getInt("amount"));
 				dto.setDetail(rs.getString("detail"));
 				dto.setCancellation(rs.getString("cancellation"));
 				dto.setStateCon(rs.getString("stateCon"));
@@ -212,15 +214,15 @@ cstmt = conn.prepareCall(sql);
 			while(rs.next()) {
 				AccDTO dto = new AccDTO();
 
-				dto.setStateNum(rs.getString("stateNum"));
+				dto.setStateNo(rs.getInt("stateNo"));
 				dto.setEmpNo(rs.getString("empNo"));
 				dto.setAccountNo(rs.getString("accountNo"));
 				dto.setAccountSubNo(rs.getString("accountSubNo"));
-				dto.setAmount(rs.getString("amount"));
+				dto.setAmount(rs.getInt("amount"));
 				dto.setDetail(rs.getString("detail"));
 				dto.setCancellation(rs.getString("cancellation"));
 				dto.setStateCon(rs.getString("stateCon"));
-				dto.setStateDate(rs.getString("stateDate"));
+				dto.setStateDate(rs.getString("stateDate"));	
 				
 				list.add(dto);
 			}
@@ -267,15 +269,15 @@ cstmt = conn.prepareCall(sql);
 			while(rs.next()) {
 				AccDTO dto = new AccDTO();
 
-				dto.setStateNum(rs.getString("stateNum"));
+				dto.setStateNo(rs.getInt("stateNo"));
 				dto.setEmpNo(rs.getString("empNo"));
 				dto.setAccountNo(rs.getString("accountNo"));
 				dto.setAccountSubNo(rs.getString("accountSubNo"));
-				dto.setAmount(rs.getString("amount"));
+				dto.setAmount(rs.getInt("amount"));
 				dto.setDetail(rs.getString("detail"));
 				dto.setCancellation(rs.getString("cancellation"));
 				dto.setStateCon(rs.getString("stateCon"));
-				dto.setStateDate(rs.getString("stateDate"));
+				dto.setStateDate(rs.getString("stateDate"));	
 				
 				list.add(dto);
 			}
@@ -302,62 +304,7 @@ cstmt = conn.prepareCall(sql);
 		return list;
 	}
 
-	@Override
-	public List<AccDTO> listAccount_categ(String categName) {
-		List<AccDTO> list = new ArrayList<>();
-		CallableStatement cstmt = null;
-		ResultSet rs = null;
-		String sql;
-		
-		try {
-			sql = "{ CALL searchcategNameAcc(?,?) }";
-			cstmt = conn.prepareCall(sql);
-			
-			cstmt.registerOutParameter(1, OracleTypes.CURSOR);
-			cstmt.setString(2, categName);
-			
-			cstmt.executeUpdate();
-			
-			rs = (ResultSet)cstmt.getObject(1);
-			
-			while(rs.next()) {
-				AccDTO dto = new AccDTO();
-
-				dto.setStateNum(rs.getString("stateNum"));
-				dto.setEmpNo(rs.getString("empNo"));
-				dto.setAccountNo(rs.getString("accountNo"));
-				dto.setAccountSubNo(rs.getString("accountSubNo"));
-				dto.setAmount(rs.getString("amount"));
-				dto.setDetail(rs.getString("detail"));
-				dto.setCancellation(rs.getString("cancellation"));
-				dto.setStateCon(rs.getString("stateCon"));
-				dto.setStateDate(rs.getString("stateDate"));
-				
-				list.add(dto);
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if(rs != null) {
-				try {
-					rs.close();
-				} catch (Exception e2) {
-				}
-			}
-
-			if(cstmt != null) {
-				try {
-					cstmt.close();
-				} catch (Exception e2) {
-				}
-			}
-			
-		}
-		
-		return list;
-	}
-
+	
 	@Override
 	public List<AccDTO> listAccount_subNo(String accountSubNo) {
 		List<AccDTO> list = new ArrayList<>();
@@ -379,15 +326,15 @@ cstmt = conn.prepareCall(sql);
 			while(rs.next()) {
 				AccDTO dto = new AccDTO();
 
-				dto.setStateNum(rs.getString("stateNum"));
+				dto.setStateNo(rs.getInt("stateNo"));
 				dto.setEmpNo(rs.getString("empNo"));
 				dto.setAccountNo(rs.getString("accountNo"));
 				dto.setAccountSubNo(rs.getString("accountSubNo"));
-				dto.setAmount(rs.getString("amount"));
+				dto.setAmount(rs.getInt("amount"));
 				dto.setDetail(rs.getString("detail"));
 				dto.setCancellation(rs.getString("cancellation"));
 				dto.setStateCon(rs.getString("stateCon"));
-				dto.setStateDate(rs.getString("stateDate"));
+				dto.setStateDate(rs.getString("stateDate"));	
 				
 				list.add(dto);
 			}

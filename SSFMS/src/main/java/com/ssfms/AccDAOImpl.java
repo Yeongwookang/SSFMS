@@ -22,7 +22,7 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 		
 		try {
-			sql = "{ CALL accounting(?, ?, ?, ?, ?, ?, ?)} ";
+			sql = "{ CALL insertAccount(?, ?, ?, ?, ?, ?, ?)} ";
 			
 			cstmt = conn.prepareCall(sql);
 			cstmt.setString(1, dto.getEmpNo());
@@ -45,11 +45,14 @@ public class AccDAOImpl implements AccDAO {
 				System.out.println(e.toString());
 			}
 			
-			throw e;
+			
 			
 		} catch (SQLException e) {	
 			e.printStackTrace();
-			throw e;
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 			
 		} finally {
 			if(cstmt != null) {

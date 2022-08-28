@@ -72,7 +72,7 @@ public class AccUI {
 			
 			System.out.println("전표가 등록 되었습니다.");
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 		
 	}

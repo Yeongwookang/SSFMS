@@ -2,6 +2,7 @@ package com.ssfms;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -18,24 +19,25 @@ public class AccDAOImpl implements AccDAO {
 	@Override
 	public int insertAccount(AccDTO dto) throws SQLException {
 		int result = 0;
-		CallableStatement cstmt = null;
+		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
-			sql = "{ CALL insertAccount(?, ?, ?, ?, ?, ?, ?)} ";
+			sql = "INSERT INTO accounting (StateNo, empNo, accountNo, accountsubNo, amount, "
+					+ " detail, cancellation, statecon, statedate)"
+					+ " VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)";
 			
-			cstmt = conn.prepareCall(sql);
-			cstmt.setString(1, dto.getEmpNo());
-			cstmt.setString(2, dto.getAccountNo());
-			cstmt.setString(3, dto.getAccountSubNo());
-			cstmt.setInt(4, dto.getAmount());
-			cstmt.setString(5, dto.getDetail());
-			cstmt.setString(6, dto.getCancellation());
-			cstmt.setString(7, dto.getStateCon());
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getEmpNo());
+			pstmt.setString(2, dto.getAccountNo());
+			pstmt.setString(3, dto.getAccountSubNo());
+			pstmt.setInt(4, dto.getAmount());
+			pstmt.setString(5, dto.getDetail());
+			pstmt.setString(6, dto.getCancellation());
+			pstmt.setString(7, dto.getStateCon());
 			
-			cstmt.executeUpdate();
+			pstmt.executeUpdate();
 			result = 1;
-			
 		} catch (SQLIntegrityConstraintViolationException e) {
 			if(e.getErrorCode() == 1 ) {
 				System.out.println("동일한 전표번호가 존재합니다.");
@@ -44,9 +46,6 @@ public class AccDAOImpl implements AccDAO {
 			} else {
 				System.out.println(e.toString());
 			}
-			
-			
-			
 		} catch (SQLException e) {	
 			e.printStackTrace();
 			
@@ -55,9 +54,9 @@ public class AccDAOImpl implements AccDAO {
 			e.printStackTrace();
 			
 		} finally {
-			if(cstmt != null) {
+			if(pstmt != null) {
 				try {
-					cstmt.close();
+					pstmt.close();
 				} catch (Exception e2) {
 					
 				}

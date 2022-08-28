@@ -38,6 +38,7 @@ public class AccDAOImpl implements AccDAO {
 			
 			pstmt.executeUpdate();
 			result = 1;
+			
 		} catch (SQLIntegrityConstraintViolationException e) {
 			if(e.getErrorCode() == 1 ) {
 				System.out.println("동일한 전표번호가 존재합니다.");

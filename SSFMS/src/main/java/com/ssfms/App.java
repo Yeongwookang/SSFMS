@@ -33,7 +33,6 @@ public class App {
 				ch=Integer.parseInt(br.readLine());
 				
 			}while(ch<1||ch>6);
-			
 			if(ch==6) {
 				System.exit(0);
 			}

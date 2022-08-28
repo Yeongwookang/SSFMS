@@ -1,14 +1,14 @@
 package com.ssfms;
 
 public class BuyDTO {
-	private String buy_No;
-	private String state_No;
+	private int buy_No;
+	private int stateNo;
 	private String buy_Date;
 	private int buy_qty;
 	private int buy_price;
 	
 	
-	private String ban_No;
+	private int ban_No;
 	private String ban_Date;
 	private int ban_qty;
 	private String ban_Finish;
@@ -29,17 +29,17 @@ public class BuyDTO {
 	private int part_stock;
 	
 	
-	public String getBuy_No() {
+	public int getBuy_No() {
 		return buy_No;
 	}
-	public void setBuy_No(String buy_No) {
+	public void setBuy_No(int buy_No) {
 		this.buy_No = buy_No;
 	}
-	public String getState_No() {
-		return state_No;
+	public int getStateNo() {
+		return stateNo;
 	}
-	public void setState_No(String state_No) {
-		this.state_No = state_No;
+	public void setStateNo(int stateNo) {
+		this.stateNo = stateNo;
 	}
 	public String getBuy_Date() {
 		return buy_Date;
@@ -59,10 +59,10 @@ public class BuyDTO {
 	public void setBuy_price(int buy_price) {
 		this.buy_price = buy_price;
 	}
-	public String getBan_No() {
+	public int getBan_No() {
 		return ban_No;
 	}
-	public void setBan_No(String ban_No) {
+	public void setBan_No(int ban_No) {
 		this.ban_No = ban_No;
 	}
 	public String getBan_Date() {
@@ -163,7 +163,6 @@ public class BuyDTO {
 	}
 	
 	
-
 	
 
 }

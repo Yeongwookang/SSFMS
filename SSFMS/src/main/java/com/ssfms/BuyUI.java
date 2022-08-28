@@ -148,9 +148,28 @@ public class BuyUI {
 	}
 	
 	protected void buyList() {
+		System.out.println("\n[발주현황조회] 발주현황 조회하기");
 
+		System.out.println("매입번호\t전표일련번호\t재료코드\t재료명\t매입일자\t매입수량\t매입금액\t매입처코드");
+		System.out.println("------------------------------------------------------------------------------------------------------------------");
+		
+		List<BuyDTO> list = buydao.listBuy();
+		for(BuyDTO buydto : list) {
+			System.out.print(buydto.getBuy_No()+"\t");
+			System.out.print(buydto.getStateNo()+"\t");
+			System.out.print(buydto.getPartNo()+"\t");
+			System.out.print(buydto.getPart_name()+"\t");
+			System.out.print(buydto.getBuy_Date()+"\t");
+			System.out.print(buydto.getBuy_qty()+"\t");
+			System.out.print(buydto.getBuy_price()+"\t");
+			System.out.print(buydto.getShop_No()+"\t");
+			
+		}
+		System.out.println();
 		
 	}
+	
+	
 	
 	protected void buyDelete() {
 

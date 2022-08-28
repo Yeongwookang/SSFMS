@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 
 public class ProdDTO {
-private int prodNo;
+private String prodNo;
 private int stateNo;
 private String productNo;
 private int qty;
@@ -18,14 +18,7 @@ public int partStock(String partNo) throws SQLException {
 }
 
 
-public int getProdNo() {
-	return prodNo;
-}
 
-
-public void setProdNo(int prodNo) {
-	this.prodNo = prodNo;
-}
 
 
 public int getStateNo() {
@@ -73,6 +66,22 @@ public int getPart_stock() {
 }
 public void setPart_stock(int part_stock) {
 	this.part_stock = part_stock;
+}
+
+
+
+
+
+public String getProdNo() {
+	return prodNo;
+}
+
+
+
+
+
+public void setProdNo(String prodNo) {
+	this.prodNo = prodNo;
 }
 	
 	

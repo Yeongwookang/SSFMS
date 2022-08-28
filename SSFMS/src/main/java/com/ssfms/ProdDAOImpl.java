@@ -75,7 +75,7 @@ public class ProdDAOImpl implements ProdDAO {
 			sql = "INSERT INTO STOCK(StockNo, prodNo, partNo, pStock, use, nStock, date)"
 					+ "VALUES(STOCK_seq.nextval, ?, ?, ?, ?, ?, SYSDATE )";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, pdto.getProdNo()); // 생산번호
+			pstmt.setString(1, pdto.getProdNo()); // 생산번호
 			pstmt.setString(2, pdto.getPartNo()); // 부품코드
 			pstmt.setInt(3, pdto.partStock(pdto.getPartNo())); // 기존 재고량
 			pstmt.setInt(4, pdto.getPart_stock()); // 사용량

@@ -90,7 +90,7 @@ public class ProdUI {
 		try {
 			String partNo;
 			System.out.println("생산코드를 입력해주세요.");
-			pdto.setProdNo(Integer.parseInt(br.readLine()));
+			pdto.setProdNo(br.readLine());
 			while (true) {
 				System.out.println("사용한 재료의 코드를 입력해주세요. [입력 종료: 0]");
 				partNo = br.readLine();

@@ -3,7 +3,6 @@ package com.ssfms;
 import java.sql.SQLException;
 
 public interface ProdDAO {
-	public AccDTO prodstateView (int StateNo) throws SQLException; // 생산 전표 확인
 	public void reg_product (ProductDTO pdto) throws SQLException; // 제품등록
 	public void del_product (String prodNo) throws SQLException; // 제품삭제
 	public void using_part(ProdDTO pdto ) throws SQLException;// 부품 사용

@@ -2,8 +2,6 @@ package com.ssfms;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import com.util.DBConn;
 
@@ -118,7 +116,7 @@ public class ProdUI {
 			ProdDTO pdto = new ProdDTO();
 			System.out.println("승인된 전표번호를 입력해주세요.");
 			int StateNo= Integer.parseInt(br.readLine());
-			dao.prodstateView(StateNo);
+			
 			
 			pdto.setStateNo(StateNo);
 			while (true) {
@@ -140,13 +138,19 @@ public class ProdUI {
 	}
 
 	protected void insert_Prod_state() {
-		System.out.println("\n생산전표등록 !!!");
-		AccDTO adto = new AccDTO();
-		
+		System.out.println("\n생산전표등록");
+		AccUI aui=new AccUI();
 		try {
-			adto.setAccountNo(br.readLine());
-			adto.setAccountSubNo(br.readLine());
+			aui.insert();
+			/*System.out.println("작성자의 사번을 입력해주세요.");
 			adto.setEmpNo(br.readLine());
+			System.out.println("계좌코드를 입력해주세요.");
+			adto.setAccountNo(br.readLine());
+			System.out.println("계정과목 코드를 입력해주세요.");
+			adto.setAccountSubNo(br.readLine());
+			System.out.println("금액을 입력해주세요.");
+			adto.setAmount(br.readLine());
+			System.out.println("비고사항을 입력해주세요.");
 			adto.setDetail(br.readLine());
 			adto.setCancellation("요청");
 			adto.setStateCon("승인대기");
@@ -154,7 +158,7 @@ public class ProdUI {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			adto.setStateDate(sdf.format(cal.getTime()));
 			
-			adao.insertAccount(adto);
+			adao.insertAccount(adto);*/
 			
 			
 		} catch (Exception e) {

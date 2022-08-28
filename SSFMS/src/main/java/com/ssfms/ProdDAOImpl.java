@@ -13,33 +13,6 @@ public class ProdDAOImpl implements ProdDAO {
 	private Connection conn = DBConn.getConnection();
 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-	@Override
-	public AccDTO prodstateView(int StateNo) throws SQLException {
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String sql;
-		AccDTO adto = new AccDTO();
-		try {sql="SELECT * FROM STATE WHERE StateNo = ?";
-		pstmt=conn.prepareStatement(sql);
-		pstmt.setInt(1, StateNo);
-		rs=pstmt.executeQuery();
-		if(rs.next()) {
-				adto.setStateNum(rs.getString("stateNum"));
-				adto.setEmpNo(rs.getString("empNo"));
-				adto.setAccountNo(rs.getString("accountNo"));
-				adto.setAccountSubNo(rs.getString("accountSubNo"));
-				adto.setAmount(rs.getString("amount"));
-				adto.setDetail(rs.getString("detail"));
-				adto.setCancellation(rs.getString("cancellation"));
-				adto.setStateCon(rs.getString("stateCon"));
-				adto.setStateDate(rs.getString("stateDate"));
-		}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		return adto;
-	}
 
 	@Override
 	public void reg_product(ProductDTO pdto) throws SQLException {

@@ -11,17 +11,25 @@ public class App {
 		BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
 		try {
 			do {
-
-				String n = " _____  _____  ______ ___  ___ _____ \r\n"
-				                + "/  ___|/  ___| |  ___||  \\/  |/  ___|\r\n"
-				                + "\\ `--. \\ `--.  | |_   | .  . |\\ `--. \r\n"
-				                + " `--. \\ `--. \\ |  _|  | |\\/| | `--. \\\r\n"
-				                + "/\\__/ //\\__/ / | |    | |  | |/\\__/ /\r\n"
-				                + "\\____/ \\____/  \\_|    \\_|  |_/\\____/ ";
+				
+				System.out.println();
+				System.out.println("\t     ･ﾟ✧ 관리자님, 환영합니다! ･ﾟ✧\t     ");
+				
+				System.out.println("=================================================");
+				String n = "      _____  _____  ______ ___  ___ _____ \r\n"
+				                + "     /  ___|/  ___| |  ___||  \\/  |/  ___|\r\n"
+				                + "     \\ `--. \\ `--.  | |_   | .  . |\\ `--. \r\n"
+				                + "      `--. \\ `--. \\ |  _|  | |\\/| | `--. \\\r\n"
+				                + "     /\\__/ //\\__/ / | |    | |  | |/\\__/ /\r\n"
+				                + "     \\____/ \\____/  \\_|    \\_|  |_/\\____/ ";
 
 				System.out.println(n);
-				        
-				System.out.print("1.회계 2.구매 3.인사 4.생산 5.영업 6.종료 => ");
+				        System.out.println("\t\t\t  대한민국 재무관리 No.1 System");
+				        System.out.println();
+				System.out.println("=================================================");
+				System.out.print("[1] 회계 [2] 구매 [3] 인사 [4] 생산 [5] 영업 [6] 로그아웃 \n");
+				System.out.println("=================================================");
+				System.out.print("[번호 입력] : ");
 				ch=Integer.parseInt(br.readLine());
 				
 			}while(ch<1||ch>6);

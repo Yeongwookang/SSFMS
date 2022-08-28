@@ -3,6 +3,7 @@ package com.ssfms;
 import java.io.BufferedReader;
 
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import com.util.DBConn;
 
@@ -21,7 +22,7 @@ public class BuyUI {
 			try {
 				System.out.println();
 				System.out.println("-----------------------------------------------------------------");
-				System.out.println("[1] 매입전표관리 [2] 구매관리 [3] 반품관리 [4] 매입처관리 [5] 뒤로가기");
+				System.out.println("[1] 매입전표관리 [2] 매입관리 [3] 반품관리 [4] 매입처관리 [5] 뒤로가기");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.print("=> ");
 				
@@ -81,6 +82,43 @@ public class BuyUI {
 	
 	
 	protected void accInsert() {
+		System.out.println("\n[매입전표등록] 매입전표 등록하기 ");
+		
+		try {
+			EmpDTO empdto = new EmpDTO();
+			AccDTO accdto = new AccDTO();
+
+			
+			System.out.print("매입 신청자 사번: ");
+			empdto.setEmpNo(br.readLine());
+			
+			System.out.print("매입 신청 계좌코드: ");
+			accdto.setAccountNo(br.readLine());
+			
+			System.out.print("매입 신청 금액: ");
+			accdto.setAmount(Integer.parseInt(br.readLine()));
+			
+			System.out.print("상세 내용: ");
+			accdto.setDetail(br.readLine());
+			
+			System.out.print("취소여부[X or O]: ");
+			accdto.setCancellation(br.readLine());
+			
+			System.out.print("매입 신청 일자: ");
+			accdto.setStateDate(br.readLine());
+			
+			buydao.insertAccBuy(accdto, empdto);
+			
+			System.out.println("매입전표 등록이 완료되었습니다.");
+			System.out.println("관리자 승인까지 1~2일의 기간이 소요됩니다. ");
+			
+			
+		} catch (NumberFormatException e) {
+			System.out.println("금액은 숫자만 입력 가능합니다.");
+		} catch (Exception e) {
+			System.out.println("데이터 등록이 실패했습니다. ");
+		}
+		System.out.println();
 
 
 	}
@@ -88,19 +126,50 @@ public class BuyUI {
 	
 	protected void accDelete() {
 		
+		
+		
+		
 	}
 	
 	
 	protected void accList() {
+		System.out.println("\n[등록전표조회] 등록된 매입전표 리스트");
 		
+		String accountSubNo;
 		
-		
-		
-		
+		try {
+			System.out.print("매입전표 조회[원자재 매입코드 153]: ");
+			accountSubNo = br.readLine();
+			
+			List<AccDTO> list = buydao.listAccBuy(accountSubNo);
+			
+			if(list.size()==0) {
+				System.out.println("등록된 전표 내역이 없습니다. ");
+				return;
+			}
+			
+			System.out.println("전표일련번호\t사번\t계좌코드\t계정과목코드\t금액\t상세내용\t\t\t전표상태\t전표날짜");
+			System.out.println("------------------------------------------------------------------------------------------------------------------");
+			
+			for(AccDTO accdto : list) {
+				System.out.print(accdto.getStateNo()+"\t");
+				System.out.print(accdto.getEmpNo()+"\t");
+				System.out.print(accdto.getAccountNo()+"\t");
+				System.out.print(accdto.getAccountSubNo()+"\t");
+				System.out.print(accdto.getAmount()+"\t");
+				System.out.print(accdto.getDetail()+"\t");
+				System.out.print(accdto.getStateCon()+"\t");
+				System.out.print(accdto.getStateDate()+"\t");
+
+			}
+
+			
+		} catch (Exception e) {
+			System.out.println("등록전표 조회에 실패했습니다. ");
+		}
+		System.out.println();
 	}
-	
-	
-	
+
 	
 	
 	

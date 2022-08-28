@@ -471,24 +471,158 @@ public class BuyDAOImpl implements BuyDAO {
 	
 	// 구매 전표 등록
 	@Override
-	public int insertAccBuy(BuyDTO buydto) throws SQLException {
+	public int insertAccBuy(AccDTO accdto, EmpDTO empdto) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
+		int result = 0;
+		
+		try {
+			
+			
+			
+			
+			conn.setAutoCommit(false);
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '153', ?, ?, ?, '미승인', ?) ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, accdto.getAmount());
+			pstmt.setString(4, accdto.getDetail());
+			pstmt.setString(5, accdto.getCancellation());
+			pstmt.setString(6, accdto.getStateDate());
+			
+			
+			result = pstmt.executeUpdate();
+			
+			
+			conn.commit();
+			
+	
+		} catch (SQLIntegrityConstraintViolationException e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			
+			if(e.getErrorCode() == 1) {
+				System.out.println("중복 데이터로 등록이 불가능합니다.");	
+			}else if (e.getErrorCode() == 1400) {
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			}else {
+				System.out.println(e.toString());
+			}
+			throw e;
+			
+		} catch (SQLDataException e) {
+			
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			
+			if(e.getErrorCode() == 1840 || e.getErrorCode()==1861) {
+				System.out.println("날짜 입력 형식 오류입니다.");
+			}else {
+				System.out.println(e.toString());
+			}
+			throw e;
+			
+		} catch (SQLException e) {
+			conn.rollback();
+			throw e;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
 		
 		
-		
-		
-		
-		
-		return 0;
+		return result;
 	}
 
 
-	
+	//등록전표조회 
+	@Override
+	public List<AccDTO> listAccBuy(String accountSubNo) {
+		List<AccDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			
+			sql = "SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, stateCon, stateDate  "
+					+ " FROM accounting "
+					+ " WHERE accountSubNo = ? ";
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, accountSubNo);
+			
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				AccDTO accdto = new AccDTO();
+				
+				
+				
+				accdto.setStateNo(rs.getInt("StateNo"));
+				accdto.setEmpNo(rs.getString("empNo"));
+				accdto.setAccountNo(rs.getString("accountNo"));
+				accdto.setAccountSubNo(rs.getString("accountSubNo"));
+				accdto.setAmount(rs.getInt("amount"));
+				accdto.setDetail(rs.getString("detail"));
+				accdto.setStateCon(rs.getString("stateCon"));
+				accdto.setStateDate(rs.getDate("stateDate").toString());
+				
+				list.add(accdto);
+				
+			}
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			
+		}
+		
+		
+		
+		return list;
+	}
 
-	
-	
-	
+
+
 	
 	
 }

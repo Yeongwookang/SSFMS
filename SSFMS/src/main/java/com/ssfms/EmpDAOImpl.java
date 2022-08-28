@@ -433,16 +433,105 @@ public class EmpDAOImpl implements EmpDAO {
 		return result;
 	}
 
+	// 연봉 수정
 	@Override
 	public int updateAsal(EmpDTO adto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		
+		try {
+			sql = "UPDATE annual_salary SET sal_date=?, asal=?, empNo=?"
+					+ "WHERE asalNo = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, adto.getSal_date());
+			pstmt.setInt(2, adto.getAsal());
+			pstmt.setString(3, adto.getEmpNo());
+			pstmt.setString(4, adto.getAsalNo());
+			
+			result = pstmt.executeUpdate();
+			
+		}catch (SQLIntegrityConstraintViolationException e) {
+			if(e.getErrorCode() == 1400) {
+				System.out.println("필수 입력 사항을 입력하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+		} catch (SQLDataException e) {
+			if(e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
+				System.out.println("날짜 입력 형식 오류 입니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
 	}
 
+	// 연봉 리스트출력
 	@Override
 	public List<EmpDTO> listAsal() {
-		// TODO Auto-generated method stub
-		return null;
+		List<EmpDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			
+			sql  = "SELECT asalNo, sal_date, asal, empNo FROM annual_salary";
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				EmpDTO dto = new EmpDTO();
+				
+				dto.setAsalNo(rs.getString("asalNo"));
+				dto.setSal_date(rs.getString("sal_date"));
+				dto.setAsal(rs.getInt("asal"));
+				dto.setEmpNo(rs.getString("empNo"));
+				
+				list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return list;
 	}
 
 	// 급여 입력
@@ -460,7 +549,7 @@ public class EmpDAOImpl implements EmpDAO {
 			cstmt.setInt(2, dto.getSal());
 			cstmt.setInt(3, dto.getTax());
 			cstmt.setInt(4, dto.getBonus());
-			cstmt.setString(5, dto.getPay_date());
+			cstmt.setInt(5, dto.getPay());
 			
 			cstmt.executeUpdate();
 			result =1;
@@ -502,34 +591,274 @@ public class EmpDAOImpl implements EmpDAO {
 		return result;
 	}
 
+	// 급여 수정
 	@Override
 	public int updateSett(EmpDTO dto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		
+		try {
+			sql = "UPDATE SETTLEMENT SET empNo=?, sal=?, tax=?, bonus=?, pay=?"
+					+ "WHERE settleNo = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getEmpNo());
+			pstmt.setInt(2, dto.getSal());
+			pstmt.setInt(3, dto.getTax());
+			pstmt.setInt(4, dto.getBonus());
+			pstmt.setInt(5, dto.getPay());
+			pstmt.setString(6, dto.getSettleNo());
+
+			result = pstmt.executeUpdate();
+			
+		}catch (SQLIntegrityConstraintViolationException e) {
+			if(e.getErrorCode() == 1400) {
+				System.out.println("필수 입력 사항을 입력하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+		} catch (SQLDataException e) {
+			if(e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
+				System.out.println("날짜 입력 형식 오류 입니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
 	}
 
+	// 급여 리스트
 	@Override
 	public List<EmpDTO> listSett() {
-		// TODO Auto-generated method stub
-		return null;
+		List<EmpDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			
+			sql  = "SELECT settleNo, empNo, sal, tax, bonus, pay FROM settlement";
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				EmpDTO dto = new EmpDTO();
+				
+				dto.setSettleNo(rs.getString("settleNo"));
+				dto.setEmpNo(rs.getString("empNo"));
+				dto.setSal(rs.getInt("sal"));
+				dto.setTax(rs.getInt("tax"));
+				dto.setBonus(rs.getInt("bonus"));
+				dto.setPay(rs.getInt("pay"));
+				
+				list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return list;
 	}
 
+	// 근태 입력
 	@Override
 	public int insertAtt(EmpDTO dto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		CallableStatement cstmt = null;
+		String sql;
+		
+		try {
+			sql = "{ CALL insert_att(?, ?, ?, ?, ?, ?) }";
+			cstmt = conn.prepareCall(sql);
+			
+			cstmt.setString(1, dto.getSettleNo());
+			cstmt.setString(2, dto.getaDiv());
+			cstmt.setString(3, dto.getsTime());
+			cstmt.setString(4, dto.geteTime());
+			cstmt.setInt(5, dto.getwTime());
+			cstmt.setString(6, dto.getaNote());
+			
+			cstmt.executeUpdate();
+			result =1;
+			
+		}catch (SQLIntegrityConstraintViolationException e) {
+			// 기본키 제약 위반, NOT NULL 등의 제약 위반 - 무결성 제약 위반시 발생
+			if(e.getErrorCode() == 1) { // 기본키 중복
+				System.out.println("사번 중복으로 등록이 불가능합니다.");
+			} else if(e.getErrorCode() == 1400) { // NOT NULL
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+			
+		} catch (SQLDataException e) {
+			// 날짜등의 형식 잘못으로 인한 예외
+			if(e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
+				System.out.println("날짜 입력 형식 오류 입니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+			
+		} finally {
+			if(cstmt != null) {
+				try {
+					cstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
 	}
 
+	// 근태 수정
 	@Override
 	public int updateAtt(EmpDTO dto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		
+		try {
+			sql = "UPDATE attendance SET settleNo = ?, div=?, sTime=?, eTime=?, wTime=?, note=?"
+					+ "WHERE attNo = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getSettleNo());
+			pstmt.setString(2, dto.getaDiv());
+			pstmt.setString(3, dto.getsTime());
+			pstmt.setString(4, dto.geteTime());
+			pstmt.setInt(5, dto.getwTime());
+			pstmt.setString(6, dto.getaNote());
+			pstmt.setString(7, dto.getAttNo());
+			
+			result = pstmt.executeUpdate();
+			
+		}catch (SQLIntegrityConstraintViolationException e) {
+			if(e.getErrorCode() == 1400) {
+				System.out.println("필수 입력 사항을 입력하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+		} catch (SQLDataException e) {
+			if(e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
+				System.out.println("날짜 입력 형식 오류 입니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			
+			throw e;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
 	}
 
+	// 근태 리스트
 	@Override
 	public List<EmpDTO> listAtt() {
-		// TODO Auto-generated method stub
-		return null;
+		List<EmpDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			
+			sql  = "SELECT attNo, div, sTime, eTime, wTime, settleNo, note FROM attendance";
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				EmpDTO dto = new EmpDTO();
+				
+				dto.setAttNo(rs.getString("attNo"));
+				dto.setaDiv(rs.getString("div"));
+				dto.setsTime(rs.getString("sTime"));
+				dto.seteTime(rs.getString("eTime"));
+				dto.setwTime(rs.getInt("wTime"));
+				dto.setSettleNo(rs.getString("settleNo"));
+				dto.setaNote(rs.getString("note"));
+				
+				list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return list;
 	}
 	
 }

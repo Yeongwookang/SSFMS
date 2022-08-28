@@ -359,11 +359,45 @@ public class EmpUI {
 	}
 
     protected void aupdate() {
+System.out.println("\n연봉 수정 !!!");
 		
+		try {
+			EmpDTO adto = new EmpDTO();
+			
+			System.out.print("수정할 연봉코드 ? ");
+			adto.setAsalNo(br.readLine());
+			
+			System.out.print("계약일자 ? ");
+			adto.setSal_date(br.readLine());
+
+			System.out.print("계약연봉 ? ");
+			adto.setAsal(Integer.parseInt(br.readLine()));
+
+			System.out.print("사번 ? ");
+			adto.setEmpNo(br.readLine());
+			
+			dao.updateAsal(adto);
+			
+			System.out.println("연봉 수정에 성공 했습니다.");
+		} catch (Exception e) {
+			System.out.println("연봉 수정에 실패 했습니다.");
+		}
+		
+		System.out.println();
 	}
     
     protected void alistAll() {
+        System.out.println("\n연봉 리스트 !!!");
 		
+		List<EmpDTO> list = dao.listAsal();
+		for(EmpDTO dto : list) {
+			System.out.print(dto.getAsalNo() +"\t");
+			System.out.print(dto.getSal_date() +"\t");
+			System.out.print(dto.getAsal() +"\t");
+			System.out.println(dto.getEmpNo());
+
+		}
+		System.out.println();
 	}
     
     // 급여 관리
@@ -423,11 +457,54 @@ public class EmpUI {
 	}
 	
     protected void supdate() {
+        System.out.println("\n급여 수정 !!!");
 		
+		try {
+			EmpDTO dto = new EmpDTO();
+			
+			System.out.print("수정할 정산코드 ? ");
+			dto.setSettleNo(br.readLine());
+			
+			System.out.print("사번 ? ");
+			dto.setEmpNo(br.readLine());
+
+			System.out.print("월급 ? ");
+			dto.setSal(Integer.parseInt(br.readLine()));
+
+			System.out.print("세금 ? ");
+			dto.setTax(Integer.parseInt(br.readLine()));
+
+			System.out.print("보너스 ? ");
+			dto.setBonus(Integer.parseInt(br.readLine()));
+			
+			System.out.print("실수령액 ? ");
+			dto.setPay(Integer.parseInt(br.readLine()));
+			
+			dao.updateSett(dto);
+			
+			System.out.println("급여 수정에 성공 했습니다.");
+		} catch (Exception e) {
+			System.out.println("급여 수정에 실패 했습니다.");
+		}
+		
+		System.out.println();
 	}
     
     protected void slistAll() {
+        System.out.println("\n경력사항 리스트 !!!");
 		
+		List<EmpDTO> list = dao.listSett();
+		for(EmpDTO dto : list) {
+
+			System.out.print(dto.getSettleNo() +"\t");
+			System.out.print(dto.getEmpNo() +"\t");
+			System.out.print(dto.getSal() +"\t");
+			System.out.print(dto.getTax() +"\t");
+			System.out.print(dto.getBonus() +"\t");
+			System.out.println(dto.getPay());
+
+		}
+		System.out.println();
 	}
     
     // 근태 관리
@@ -456,15 +533,93 @@ public class EmpUI {
     }
     
     protected void atinsert() {
+        System.out.println("\n근태 등록하기 !!!");
 		
+		try {
+			EmpDTO dto = new EmpDTO();
+			
+			System.out.print("정산코드 ? ");
+			dto.setSettleNo(br.readLine());
+			
+			System.out.print("구분(시작/종료) ? ");
+			dto.setaDiv(br.readLine());
+			
+			System.out.print("시작일시 ? ");
+			dto.setsTime(br.readLine());
+			
+			System.out.print("종료일시 ? ");
+			dto.seteTime(br.readLine());
+
+			System.out.print("근로시간 ? ");
+			dto.setwTime(Integer.parseInt(br.readLine()));
+			
+			System.out.print("비고 ? ");
+			dto.setaNote(br.readLine());
+
+			dao.insertAtt(dto);
+			
+			System.out.println("근태등록에 성공 했습니다.");
+		} catch (Exception e) {
+			System.out.println("근태등록에 실패 했습니다.");
+		}
+		
+		System.out.println();
 	}
 	
+	
     protected void atupdate() {
+        System.out.println("\n근태 정보 수정 !!!");
 		
+		try {
+			EmpDTO dto = new EmpDTO();
+			
+			System.out.print("수정할 근태코드 ? ");
+			dto.setAttNo(br.readLine());
+			
+			System.out.print("정산코드 ? ");
+			dto.setSettleNo(br.readLine());
+			
+			System.out.print("구분(시작/종료) ? ");
+			dto.setaDiv(br.readLine());
+			
+			System.out.print("시작일시 ? ");
+			dto.setsTime(br.readLine());
+			
+			System.out.print("종료일시 ? ");
+			dto.seteTime(br.readLine());
+
+			System.out.print("근로시간 ? ");
+			dto.setwTime(Integer.parseInt(br.readLine()));
+			
+			System.out.print("비고 ? ");
+			dto.setaNote(br.readLine());
+			
+			dao.updateAtt(dto);
+			
+			System.out.println("근태 수정에 성공 했습니다.");
+		} catch (Exception e) {
+			System.out.println("근태 수정에 실패 했습니다.");
+		}
+		
+		System.out.println();
 	}
     
     protected void atlistAll() {
-		
+    	 System.out.println("\n근태 리스트 !!!");
+ 		
+ 		List<EmpDTO> list = dao.listAtt();
+ 		for(EmpDTO dto : list) {
+
+ 			System.out.print(dto.getAttNo() +"\t");
+ 			System.out.print(dto.getaDiv() +"\t");
+ 			System.out.print(dto.getsTime() +"\t");
+ 			System.out.print(dto.geteTime() +"\t");
+ 			System.out.print(dto.getwTime() +"\t");
+ 			System.out.print(dto.getSettleNo()+"\t");
+ 			System.out.println(dto.getaNote());
+
+ 		}
+ 		System.out.println();
 	}
     
     

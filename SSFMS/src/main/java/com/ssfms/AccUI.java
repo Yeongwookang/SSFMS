@@ -49,23 +49,23 @@ public class AccUI {
 		try {
 			AccDTO dto = new AccDTO(); 
 			
-			System.out.print("사번");
+			System.out.print("사번 : ");
 			dto.setEmpNo(br.readLine());
 			
-			System.out.print("계좌코드");
+			System.out.print("계좌코드 : ");
 			dto.setAccountNo(br.readLine());
 			
-			System.out.print("계정과목코드");
+			System.out.print("계정과목코드 : ");
 			dto.setAccountSubNo(br.readLine());
 			
 		
-			System.out.print("금액");
+			System.out.print("금액 : ");
 			dto.setAmount(Integer.parseInt(br.readLine()));
 			
-			System.out.print("상세내용");
+			System.out.print("상세내용 : ");
 			dto.setDetail(br.readLine());
 			
-			System.out.print("전표상태");
+			System.out.print("전표상태 : ");
 			dto.setStateCon(br.readLine());
 			
 			dao.insertAccount(dto);
@@ -83,25 +83,25 @@ public class AccUI {
 		try {
 			AccDTO dto = new AccDTO();
 			
-			System.out.print("수정할 사원코드");
+			System.out.print("수정할 사원코드 : ");
 			dto.setEmpNo(br.readLine());
 			
-			System.out.print("수정할 계좌코드");
+			System.out.print("수정할 계좌코드 : ");
 			dto.setAccountNo(br.readLine());
 			
-			System.out.print("수정할 계정과목코드");
+			System.out.print("수정할 계정과목코드 : ");
 			dto.setAccountSubNo(br.readLine());
 			
-			System.out.print("수정할 금액");
+			System.out.print("수정할 금액 : ");
 			dto.setAmount(Integer.parseInt(br.readLine()));
 			
-			System.out.print("수정할 상세내용");
+			System.out.print("수정할 상세내용 : ");
 			dto.setDetail(br.readLine());
 			
-			System.out.print("수정할 취소여부");
+			System.out.print("수정할 취소여부 : ");
 			dto.setCancellation(br.readLine());
 			
-			System.out.print("수정할 전표상태");
+			System.out.print("수정할 전표상태 : ");
 			dto.setStateCon(br.readLine());
 			
 			dao.updateAccount(dto);

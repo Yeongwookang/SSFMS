@@ -182,6 +182,7 @@ public class BuyDAOImpl implements BuyDAO {
 
 	
 	
+	// 매입처 리스트 조회
 	@Override
 	public List<BuyDTO> listShop() {
 		List<BuyDTO> list = new ArrayList<>();
@@ -254,8 +255,9 @@ public class BuyDAOImpl implements BuyDAO {
 		try {
 			
 			conn.setAutoCommit(false);
-			sql = "INSERT INTO buy(buy_No, state_No, partNo, buy_Date, buy_qty, buy_price, shop_No)"
-					+ " SELECT buy_No_seq.NEXTVAL, stateNum, partNo, ?, ?, ?, ? FROM accounting WHERE stateNum = ? ";
+			sql = "INSERT INTO buy(buy_No, stateNo, partNo, buy_Date, buy_qty, buy_price, shop_No)"
+					+ " SELECT buy_No_seq.NEXTVAL, stateNo, ?, ?, ?, ?, ? FROM accounting "
+					+ " WHERE stateNum = ? ";
 
 			pstmt = conn.prepareStatement(sql);
 			
@@ -263,7 +265,7 @@ public class BuyDAOImpl implements BuyDAO {
 			pstmt.setInt(2, buydto.getBuy_qty());
 			pstmt.setInt(3, buydto.getBuy_price());
 			pstmt.setString(4, buydto.getShop_No());
-			pstmt.setString(5, buydto.getState_No()); // state_No 가져와야함? 그냥 입력하자...ㅎ
+			pstmt.setInt(5, buydto.getStateNo()); // state_No 가져와야함? 그냥 입력하자...ㅎ
 			
 			result = pstmt.executeUpdate();
 			pstmt.close();
@@ -334,6 +336,7 @@ public class BuyDAOImpl implements BuyDAO {
 		return 0;
 	}
 
+	
 
 	@Override
 	public int deleteBuy(BuyDTO buydto) throws SQLException {
@@ -342,13 +345,72 @@ public class BuyDAOImpl implements BuyDAO {
 	}
 
 
+	
+	
+	// 발주리스트 전체조회
 	@Override
 	public List<BuyDTO> listBuy() {
-		// TODO Auto-generated method stub
-		return null;
+		List<BuyDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			
+			sql = "SELECT buy_No, stateNo, buy.partNo, , part.part_name, buy_Date, buy_qty, buy_price, shop_No "
+					+ " FROM buy "
+					+ " JOIN part ON buy.partNo = part.partNo ";
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			
+			while(rs.next()) {
+				BuyDTO buydto = new BuyDTO();
+				
+				buydto.setBuy_No(rs.getInt("buy_No"));
+				buydto.setStateNo(rs.getInt("stateNo"));
+				buydto.setPartNo(rs.getString("partNo"));
+				buydto.setPart_name(rs.getString("part_name"));
+				buydto.setBuy_Date(rs.getString("buy_Date"));
+				buydto.setBuy_qty(rs.getInt("buy_qty"));
+				buydto.setBuy_price(rs.getInt("buy_price"));
+				buydto.setShop_No(rs.getString("shop_No"));
+				
+				list.add(buydto);
+				
+			}
+			
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+		}
+		
+		return list;
 	}
 
+	
 
+
+
+	// 재고 조회 (원자재) 
 	@Override
 	public List<BuyDTO> partlistAll(String partNo) {
 		List<BuyDTO> list = new ArrayList<>();

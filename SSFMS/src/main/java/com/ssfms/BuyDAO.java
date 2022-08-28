@@ -22,6 +22,7 @@ public interface BuyDAO {
 	
 	//전표등록
 	public int insertAccBuy (AccDTO accdto, EmpDTO empdto) throws SQLException;
+	public int updateAccBuy (AccDTO accdto) throws SQLException; ///전표취소-상태변경
 	public List<AccDTO> listAccBuy(String accountSubNo);
 	
 	

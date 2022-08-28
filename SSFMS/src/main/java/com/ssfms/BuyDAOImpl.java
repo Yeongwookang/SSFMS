@@ -9,6 +9,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import com.util.DBConn;
 
 public class BuyDAOImpl implements BuyDAO {
@@ -26,17 +27,17 @@ public class BuyDAOImpl implements BuyDAO {
 		try {
 			
 			sql = "INSERT INTO shop(shop_No, shop_Num, shop_Name, shop_Boss, shop_Tel, shop_Post, shop_addr, shop_Reg)"
-					+ " VALUES(?,?,?,?,?,?,?,?)";
+					+ " VALUES('SH'||TO_CHAR(shop_no_seq.NEXTVAL),?,?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, buydto.getShop_No());
-			pstmt.setString(2, buydto.getShop_Num());
-			pstmt.setString(3, buydto.getShop_Name());
-			pstmt.setString(4, buydto.getShop_Boss());
-			pstmt.setString(5, buydto.getShop_Tel());
-			pstmt.setString(6, buydto.getShop_Post());
-			pstmt.setString(7, buydto.getShop_addr());
-			pstmt.setString(8, buydto.getShop_Reg());
+			//pstmt.setString(1, buydto.getShop_No());
+			pstmt.setString(1, buydto.getShop_Num());
+			pstmt.setString(2, buydto.getShop_Name());
+			pstmt.setString(3, buydto.getShop_Boss());
+			pstmt.setString(4, buydto.getShop_Tel());
+			pstmt.setString(5, buydto.getShop_Post());
+			pstmt.setString(6, buydto.getShop_addr());
+			pstmt.setString(7, buydto.getShop_Reg());
 			
 			result = pstmt.executeUpdate();
 
@@ -469,6 +470,8 @@ public class BuyDAOImpl implements BuyDAO {
 	
 	
 	
+	
+	//---------------------------------
 	// 구매 전표 등록
 	@Override
 	public int insertAccBuy(AccDTO accdto, EmpDTO empdto) throws SQLException {
@@ -483,15 +486,14 @@ public class BuyDAOImpl implements BuyDAO {
 			
 			conn.setAutoCommit(false);
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '153', ?, ?, ?, '미승인', ?) ";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '153', ?, ?, 'X', '미승인', ?) ";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(2, accdto.getAccountNo());
 			pstmt.setInt(3, accdto.getAmount());
 			pstmt.setString(4, accdto.getDetail());
-			pstmt.setString(5, accdto.getCancellation());
-			pstmt.setString(6, accdto.getStateDate());
+			pstmt.setString(5, accdto.getStateDate());
 			
 			
 			result = pstmt.executeUpdate();
@@ -555,6 +557,8 @@ public class BuyDAOImpl implements BuyDAO {
 	}
 
 
+	
+
 	//등록전표조회 
 	@Override
 	public List<AccDTO> listAccBuy(String accountSubNo) {
@@ -565,7 +569,7 @@ public class BuyDAOImpl implements BuyDAO {
 		
 		try {
 			
-			sql = "SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, stateCon, stateDate  "
+			sql = "SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate  "
 					+ " FROM accounting "
 					+ " WHERE accountSubNo = ? ";
 			
@@ -587,6 +591,7 @@ public class BuyDAOImpl implements BuyDAO {
 				accdto.setAccountSubNo(rs.getString("accountSubNo"));
 				accdto.setAmount(rs.getInt("amount"));
 				accdto.setDetail(rs.getString("detail"));
+				accdto.setCancellation(rs.getString("cancellation"));
 				accdto.setStateCon(rs.getString("stateCon"));
 				accdto.setStateDate(rs.getDate("stateDate").toString());
 				
@@ -622,6 +627,45 @@ public class BuyDAOImpl implements BuyDAO {
 	}
 
 
+	@Override
+	public int updateAccBuy(AccDTO accdto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
+		
+		
+		try {
+			
+			sql = "UPDATE accounting SET "
+					+ " cancellation = 'O' "
+					+ " WHERE StateNo = ? AND stateCon = '미승인' AND accountSubNo = '153' ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, accdto.getStateNo());
+			
+			result = pstmt.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+			
+		}finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+
+		return result;
+	}
 
 	
 	

@@ -29,7 +29,7 @@ public class App {
 				System.out.println("=================================================");
 				System.out.print("[1] 회계 [2] 구매 [3] 인사 [4] 생산 [5] 영업 [6] 로그아웃 \n");
 				System.out.println("=================================================");
-				System.out.print("[번호 입력] : ");
+				System.out.print("[메뉴 버튼] : ");
 				ch=Integer.parseInt(br.readLine());
 				
 			}while(ch<1||ch>6);

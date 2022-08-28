@@ -5,6 +5,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+
 import com.util.DBConn;
 
 
@@ -101,15 +104,16 @@ public class BuyUI {
 			System.out.print("상세 내용: ");
 			accdto.setDetail(br.readLine());
 			
-			System.out.print("취소여부[X or O]: ");
-			accdto.setCancellation(br.readLine());
+			//System.out.print("취소여부[X or O]: ");
+			//accdto.setCancellation(br.readLine());
 			
 			System.out.print("매입 신청 일자: ");
 			accdto.setStateDate(br.readLine());
 			
 			buydao.insertAccBuy(accdto, empdto);
 			
-			System.out.println("매입전표 등록이 완료되었습니다.");
+			System.out.println();
+			System.out.println("[등록완료] 매입전표 등록이 완료되었습니다.");
 			System.out.println("관리자 승인까지 1~2일의 기간이 소요됩니다. ");
 			
 			
@@ -124,12 +128,41 @@ public class BuyUI {
 	}
 	
 	
+	
 	protected void accDelete() {
+		System.out.println("\n[전표취소] 등록된 전표 취소하기 ");
 		
+		try {
+			
+			AccDTO accdto = new AccDTO();
+			
+			System.out.print("취소할 전표일련번호: ");
+			accdto.setStateNo(Integer.parseInt(br.readLine()));
+			
+			int result = buydao.updateAccBuy(accdto);
+			
+			if(result ==0) {
+				System.out.println("등록된 전표가 아니거나 승인된 전표입니다.");
+				System.out.println("(취소조건 : 미승인된 구매 전표만 취소 가능 ");
+			}else {
+				System.out.println();
+				System.out.println("[취소완료] 매입전표가 취소되었습니다.");
+				System.out.println("관리자 승인까지 1~2일의 기간이 소요됩니다. ");
+			}
+
+			
+		} catch (Exception e) {
+			System.out.println("[취소실패] 전표 취소가 실패했습니다. ");
+		}
+		
+		System.out.println();
 		
 		
 		
 	}
+	
+	
+
 	
 	
 	protected void accList() {
@@ -138,7 +171,7 @@ public class BuyUI {
 		String accountSubNo;
 		
 		try {
-			System.out.print("매입전표 조회[원자재 매입코드 153]: ");
+			System.out.print("매입전표 조회 [원자재 매입코드는 153]: ");
 			accountSubNo = br.readLine();
 			
 			List<AccDTO> list = buydao.listAccBuy(accountSubNo);
@@ -148,7 +181,7 @@ public class BuyUI {
 				return;
 			}
 			
-			System.out.println("전표일련번호\t사번\t계좌코드\t계정과목코드\t금액\t상세내용\t\t\t전표상태\t전표날짜");
+			System.out.println("전표일련번호\t사번\t계좌코드\t계정과목코드\t금액\t상세내용\t\t\t취소상태\t전표상태\t전표날짜");
 			System.out.println("------------------------------------------------------------------------------------------------------------------");
 			
 			for(AccDTO accdto : list) {
@@ -158,8 +191,9 @@ public class BuyUI {
 				System.out.print(accdto.getAccountSubNo()+"\t");
 				System.out.print(accdto.getAmount()+"\t");
 				System.out.print(accdto.getDetail()+"\t");
+				System.out.print(accdto.getCancellation()+"\t");
 				System.out.print(accdto.getStateCon()+"\t");
-				System.out.print(accdto.getStateDate()+"\t");
+				System.out.println(accdto.getStateDate()+"\t");
 
 			}
 
@@ -215,10 +249,14 @@ public class BuyUI {
 	}
 
 	
+	
 	protected void buyUpdate() {
 
 		
 	}
+	
+	
+	
 	
 	protected void buyList() {
 		System.out.println("\n[발주현황조회] 발주현황 조회하기");
@@ -377,8 +415,8 @@ public class BuyUI {
 			
 			BuyDTO buydto = new BuyDTO();
 			
-			System.out.print("매입처 코드[숫자 4자]: ");
-			buydto.setShop_No("SH" + br.readLine());
+			//System.out.print("매입처 코드[숫자 4자]: ");
+			//buydto.setShop_No("SH" + br.readLine());
 			
 			System.out.print("사업자등록번호[10자]: ");
 			buydto.setShop_Num(br.readLine());
@@ -408,7 +446,7 @@ public class BuyUI {
 			
 			
 		} catch (Exception e) {
-			System.out.println("데이터 등록이 실패했습니다.");
+			System.out.println("[등록실패] 데이터 등록이 실패했습니다.");
 		}
 		System.out.println();
 
@@ -451,11 +489,12 @@ public class BuyUI {
 			if(result==0) {
 				System.out.println("등록된 자료가 아닙니다.");
 			}else {
-				System.out.println("데이터가 수정되었습니다.");
+				System.out.println("[수정완료] 새로운 정보로 수정되었습니다.");
+				System.out.println("감사합니다.");
 			}
 			
 		} catch (Exception e) {
-			System.out.println("자료 수정에 실패했습니다.");
+			System.out.println("[수정실패] 자료 수정에 실패했습니다.");
 		}
 		System.out.println();
 	}
@@ -478,7 +517,7 @@ public class BuyUI {
 			if(result == 0) {
 				System.out.println("등록된 매입처가 없습니다. ");
 			}else {
-				System.out.println("삭제가 완료되었습니다!");
+				System.out.println("[삭제완료] 삭제가 완료되었습니다!");
 				System.out.println("감사합니다.");
 			}
 			

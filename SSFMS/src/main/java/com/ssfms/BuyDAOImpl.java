@@ -244,7 +244,7 @@ public class BuyDAOImpl implements BuyDAO {
 	
 
 	
-	//구매
+	//구매 이루어지는 것
 	@Override
 	public int insertBuy(BuyDTO buydto) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -463,6 +463,24 @@ public class BuyDAOImpl implements BuyDAO {
 		
 		
 		return list;
+	}
+
+
+	
+	
+	
+	// 구매 전표 등록
+	@Override
+	public int insertAccBuy(BuyDTO buydto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		
+		
+		
+		
+		
+		return 0;
 	}
 
 

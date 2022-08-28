@@ -21,7 +21,7 @@ public class BuyUI {
 			try {
 				System.out.println();
 				System.out.println("-----------------------------------------------------------------");
-				System.out.println("[1] 매입전표관리 [2] 원자재관리 [3] 반품관리 [4] 매입처관리 [5] 뒤로가기");
+				System.out.println("[1] 매입전표관리 [2] 구매관리 [3] 반품관리 [4] 매입처관리 [5] 뒤로가기");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.print("=> ");
 				
@@ -92,6 +92,10 @@ public class BuyUI {
 	
 	
 	protected void accList() {
+		
+		
+		
+		
 		
 	}
 	
@@ -192,6 +196,9 @@ public class BuyUI {
 				return;
 			}
 			
+			System.out.println();
+			System.out.println("재료코드\t재료명\t\t\t\t\t\t재료가격\t수량");
+			System.out.println("-------------------------------------------------------------------");
 			for(BuyDTO buydto : list) {
 				System.out.print(buydto.getPartNo()+"\t");
 				System.out.print(buydto.getPart_name()+"\t");

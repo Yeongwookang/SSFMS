@@ -256,8 +256,10 @@ public class AccDAOImpl implements AccDAO {
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.executeUpdate();
 			pstmt.setString(1, empNo);
+			
+			pstmt.executeUpdate();
+			
 			
 			rs = pstmt.executeQuery();
 			
@@ -315,8 +317,10 @@ public class AccDAOImpl implements AccDAO {
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.executeUpdate();
 			pstmt.setString(1, accountSubNo);
+			
+			pstmt.executeUpdate();
+			
 			
 			rs = pstmt.executeQuery();
 			

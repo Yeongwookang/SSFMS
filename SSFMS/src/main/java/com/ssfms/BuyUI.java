@@ -242,9 +242,46 @@ public class BuyUI {
 	
 	
 	protected void buyInsert() {
+		System.out.println("\n[원자재 발주] 원자재 발주하기");
+		System.out.println("[조건 : 전표 상태 '승인' / 계정코드 '153'만 발주가능");
 		
-		
-		
+		try {
+			BuyDTO buydto = new BuyDTO();
+			
+			System.out.println("계정과목 코드: ");
+			buydto.setAccountSubNo(br.readLine());
+			
+			System.out.print("발주할 전표일련번호: ");
+			buydto.setStateNo(Integer.parseInt(br.readLine()));
+			
+			System.out.print("발주할 원자재 코드: ");
+			buydto.setPartNo(br.readLine());
+			
+			System.out.print("발주 일시: ");
+			buydto.setBuy_Date(br.readLine());
+			
+			System.out.print("발주 수량: ");
+			buydto.setBuy_qty(Integer.parseInt(br.readLine()));
+			
+			System.out.print("발주 신청할 매입처코드: ");
+			buydto.setShop_No(br.readLine());
+			
+			
+			buydao.insertBuy(buydto);
+			
+			System.out.println();
+			System.out.println("[발주완료] 원자재 발주가 완료되었습니다.");
+			System.out.println("초고속 배송으로 발주 완료되었습니다. ");
+			
+			
+		} catch (NumberFormatException e) {
+			System.out.println("금액 및 수량은 숫자만 입력 가능합니다.");
+		} catch (Exception e) {
+			System.out.println("데이터 등록이 실패했습니다. ");
+		}
+		System.out.println();
+
+
 	}
 
 	

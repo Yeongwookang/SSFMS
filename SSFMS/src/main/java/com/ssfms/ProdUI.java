@@ -2,27 +2,56 @@ package com.ssfms;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
-import com.util.DBConn;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProdUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private ProdDAO dao = new ProdDAOImpl();
 	private AccDAO adao = new AccDAOImpl();
+
 	public void menu() {
 
 		int ch;
 
 		while (true) {
 			try {
-				System.out.println("1. 제품등록 2. 등록제품 삭제 3. 생산출고 4. 생산입고 5. 생산전표등록");
+				System.out.println("1. 제품관리 2. 부품재고관리 3. 제품재고관리 4. 전표관리 5. 돌아가기");
 				ch = Integer.parseInt(br.readLine());
+				switch (ch) {
+				case 1:
+					productMenu();
+					break;
+				case 2:
+					partStockMenu();
+					break;
+				case 3:
+					productStockMenu();
+					break;
+				case 4:
+					State();
+					break;
+				case 5:
+					App.main(null);
+					break;
 
-				if (ch == 7) {
-					DBConn.close();
-					return;
 				}
+			} catch (Exception e) {
+			}
+		}
 
+	}
+
+	public void productMenu() {
+		int ch;
+
+		while (true) {
+			try {
+				System.out.println("1. 제품등록 2. 등록제품삭제 3. 돌아가기 ");
+				ch = Integer.parseInt(br.readLine());
+				if (ch == 3) {
+					new ProdUI().menu();
+				}
 				switch (ch) {
 				case 1:
 					reg_product();
@@ -30,24 +59,10 @@ public class ProdUI {
 				case 2:
 					del_product();
 					break;
-				case 3:
-					using_part();
-					break;
-				case 4:
-					Producing();
-					break;
-				case 5:
-					insert_Prod_state();
-					break;
-				case 6:
-					listAll();
-					break;
 				}
-
 			} catch (Exception e) {
 			}
 		}
-
 	}
 
 	protected void reg_product() {
@@ -60,7 +75,7 @@ public class ProdUI {
 			pdto.setProduct_name(br.readLine());
 			System.out.println("제품의 생산 가격을 입력해주세요.");
 			pdto.setCost(Integer.parseInt(br.readLine()));
-			System.out.println("제품의 판매 가격을 입혁해주세요.");
+			System.out.println("제품의 판매 가격을 입력해주세요.");
 			pdto.setPrice(Integer.parseInt(br.readLine()));
 			pdto.setStock(0);
 			dao.reg_product(pdto);
@@ -83,9 +98,165 @@ public class ProdUI {
 			e.printStackTrace();
 		}
 	}
+	
+	public void partStockMenu() {
+		int ch;
+
+		while (true) {
+			try {
+				System.out.println("1.부품재고확인 2. 부품구매요청 3. 돌아가기 ");
+				ch = Integer.parseInt(br.readLine());
+				if (ch == 3) {
+					new ProdUI().menu();
+				}
+				switch (ch) {
+				case 1:
+					stock();
+					break;
+				case 2:
+					buy_offer();
+					break;
+				}
+			} catch (Exception e) {
+			}
+		}
+	}
+	protected void stock() {
+		System.out.println("\n 부품재고 확인");
+		
+		
+	}
+	protected void buy_offer() {
+		System.out.println("\n 부품구매 요청");
+		
+	} 
+
+
+	public void State() {
+		int ch;
+
+		while (true) {
+			try {
+				System.out.println("1. 생산전표등록 2. 전표취소신청 3. 생산부서 전표목록 4. 돌아가기 ");
+				ch = Integer.parseInt(br.readLine());
+				if (ch == 4) {
+					new ProdUI().menu();
+				}
+				switch (ch) {
+				case 1:
+					insert_Prod_state();
+					break;
+				case 2:
+					cancel_prod_state();
+					break;
+				case 3:
+					prod_state_list();
+					break;
+				
+				}
+			} catch (Exception e) {
+			}
+		}
+	}
+	protected void insert_Prod_state() {
+		System.out.println("\n생산전표등록");
+		try {
+			AccDTO adto = new AccDTO(); 
+			
+			System.out.print("사번 : ");
+			adto.setEmpNo(br.readLine());
+			
+			System.out.print("계좌코드 : [기본 계좌 60001]");
+			adto.setAccountNo(br.readLine());
+			
+			System.out.print("계정과목코드 : [ 기본 101 ]");
+			adto.setAccountSubNo(br.readLine());
+			
+			System.out.print("금액 : ");
+			adto.setAmount(Integer.parseInt(br.readLine()));
+			
+			System.out.print("상세내용 : ");
+			adto.setDetail(br.readLine());
+			
+			adao.insertAccount(adto);
+			
+			System.out.println("전표가 등록 되었습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	protected void cancel_prod_state() {
+		System.out.println("\n생산전표취소");
+		try {
+			AccDTO adto = new AccDTO(); 
+			
+			System.out.print("취소할 전표 번호 : ");
+			int stateNo=Integer.parseInt(br.readLine());
+			adto=adao.readAccount(stateNo);
+			if(adto.getStateCon().equals("승인")||adto.getStateCon().equals("처리")) {
+				System.out.println("[ 승인, 처리 ] 상태인 전표는 취소할수 없습니다.");
+				return;
+			}
+			adao.deleteAccount(stateNo);
+			System.out.println("전표취소가 완료되었습니다.");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	protected void prod_state_list() {
+		System.out.println("\n생산부서 전표리스트");
+		try {
+			List<AccDTO> list = new ArrayList<>();
+			list.add(adao.readAccount(null))
+			
+			System.out.print("취소할 전표 번호 : ");
+			int stateNo=Integer.parseInt(br.readLine());
+			adto=adao.readAccount(stateNo);
+			if(adto.getStateCon().equals("승인")||adto.getStateCon().equals("처리")) {
+				System.out.println("[ 승인, 처리 ] 상태인 전표는 취소할수 없습니다.");
+				return;
+			}
+			adao.deleteAccount(stateNo);
+			System.out.println("전표취소가 완료되었습니다.");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void productStockMenu() {
+		int ch;
+
+		while (true) {
+			try {
+				System.out.println("1. 제품재고리스트 2. 재고사용표 3. 돌아가기 ");
+				ch = Integer.parseInt(br.readLine());
+				if (ch == 3) {
+					new ProdUI().menu();
+				}
+				switch (ch) {
+				case 1:
+					reg_product();
+					break;
+				case 2:
+					del_product();
+					break;
+				}
+			} catch (Exception e) {
+			}
+		}
+	}
+
+
+
 
 	protected void using_part() {
-		ProdDTO pdto= new ProdDTO();
+		ProdDTO pdto = new ProdDTO();
 		System.out.println("\n생산 출고");
 		try {
 			String partNo;
@@ -99,9 +270,9 @@ public class ProdUI {
 				}
 				pdto.setPartNo(partNo);
 				System.out.println("사용한 재료의 갯수를 입력해주세요.");
-				pdto.setPart_stock(Integer.parseInt(br.readLine()));
+				pdto.setQty(Integer.parseInt(br.readLine()));
 				dao.using_part(pdto);
-			} 
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,15 +281,14 @@ public class ProdUI {
 	}
 
 	protected void Producing() {
-		System.out.println("\n생산 입고");
+		System.out.println("\n부품관리");
 		try {
 			String ProductNo;
 			ProdDTO pdto = new ProdDTO();
 			System.out.println("승인된 전표번호를 입력해주세요.");
-			int StateNo= Integer.parseInt(br.readLine());
-			
-			
-			pdto.setStateNo(StateNo);
+			AccDTO adto = adao.readAccount(br.readLine());
+			pdto.setStateNo(adto.getStateNo());
+
 			while (true) {
 				System.out.println("생산한 제품의 코드를 입력하세요. [입력 종료: 0]");
 				ProductNo = br.readLine();
@@ -131,45 +301,16 @@ public class ProdUI {
 				System.out.println("생산 단가를 입력해주세요.");
 				pdto.setCost(Integer.parseInt(br.readLine()));
 				dao.producing(pdto);
-			} 
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected void insert_Prod_state() {
-		System.out.println("\n생산전표등록");
-		AccUI aui=new AccUI();
-		try {
-			aui.insert();
-			/*System.out.println("작성자의 사번을 입력해주세요.");
-			adto.setEmpNo(br.readLine());
-			System.out.println("계좌코드를 입력해주세요.");
-			adto.setAccountNo(br.readLine());
-			System.out.println("계정과목 코드를 입력해주세요.");
-			adto.setAccountSubNo(br.readLine());
-			System.out.println("금액을 입력해주세요.");
-			adto.setAmount(br.readLine());
-			System.out.println("비고사항을 입력해주세요.");
-			adto.setDetail(br.readLine());
-			adto.setCancellation("요청");
-			adto.setStateCon("승인대기");
-			Calendar cal = Calendar.getInstance();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			adto.setStateDate(sdf.format(cal.getTime()));
-			
-			adao.insertAccount(adto);*/
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 
-	}
 
 	protected void listAll() {
-		System.out.println("\n전체 리스트 !!!");
+		System.out.println("\n");
 
 	}
 }

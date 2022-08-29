@@ -19,7 +19,10 @@ public class AccUI {
 		while(true) {
 			try {
 				
-				System.out.print("회계 => 1. 전표등록 2. 전표수정 3. 전표삭제 4. 전체 전표 조회 5. 사원별 전표 조회 6. 계정과목 별 전표 조회 7. 월별 총 매입매출 조회 8. 거래처 관리 ");
+				System.out.print("회계 => \n"
+						+ "1. 전표등록 \t 2. 전표수정 \t 3. 전표삭제 \n"
+						+ "4. 전체 전표 조회 \t 5. 사원별 전표 조회 6. 계정과목 별 전표 조회 \n"
+						+ "7. 월별 총 매입매출 조회 8. 거래처 관리  9. 뒤로가기 ");
 				ch = Integer.parseInt(br.readLine());
 				
 				if(ch == 10) {
@@ -160,21 +163,25 @@ public class AccUI {
 			System.out.print("검색할 사원 ? ");
 			empNo = br.readLine();
 			
-			AccDTO dto = dao.readAccount(empNo);
-			if(dto == null) {
+			List<AccDTO>findByempNo = dao.listAccount_emp(empNo);
+			
+			if(findByempNo.size() == 0) {
 				System.out.println("등록된 사원이 아닙니다.\n");
 				return;
+			}for(AccDTO dto : findByempNo) {
+				System.out.print(dto.getStateNo() + "\t");
+				System.out.print(dto.getEmpNo() + "\t");
+				System.out.print(dto.getAccountNo() + "\t");
+				System.out.print(dto.getAccountSubNo() + "\t");
+				System.out.print(dto.getAmount() + "\t");
+				System.out.print(dto.getDetail() + "\t");
+				System.out.print(dto.getCancellation() + "\t");
+				System.out.print(dto.getStateCon() + "\t");
+				System.out.println(dto.getStateDate() );
+				
 			}
-			
-			System.out.print(dto.getStateNo()+"\t");
-			System.out.print(dto.getEmpNo()+"\t");
-			System.out.print(dto.getAccountNo()+"\t");
-			System.out.print(dto.getAccountSubNo()+"\t");
-			System.out.print(dto.getAmount()+"\t");
-			System.out.print(dto.getDetail()+"\t");
-			System.out.print(dto.getCancellation()+"\t");
-			System.out.print(dto.getStateCon()+"\t");
-			System.out.println(dto.getStateDate());
+			System.out.println();
+		
 				
 		} catch (Exception e) {
 		}
@@ -182,28 +189,32 @@ public class AccUI {
 	}
 	
 	protected void findByname() {
-		System.out.println("\n계정과목명 별 전표 조회 ");
+		System.out.println("\n계정과목코드 별 전표 조회 ");
 		String categName;
 		
 		try {
-			System.out.print("계정과목명을 입력하세요. ");
+			System.out.print("계정과목코드를 입력하세요. ");
 			categName = br.readLine();
 			
-			AccDTO dto = dao.readAccount(categName);
-			if(dto == null) {
+			List<AccDTO>findByname = dao.listAccount_subNo(categName);
+			if(findByname.size() == 0) {
 				System.out.println("해당 계정과목으로 등론된 전표가 존재하지 않습니다.\n");
 				return;
 			}
 			
-			System.out.print(dto.getStateNo()+"\t");
-			System.out.print(dto.getEmpNo()+"\t");
-			System.out.print(dto.getAccountNo()+"\t");
-			System.out.print(dto.getAccountSubNo()+"\t");
-			System.out.print(dto.getAmount()+"\t");
-			System.out.print(dto.getDetail()+"\t");
-			System.out.print(dto.getCancellation()+"\t");
-			System.out.print(dto.getStateCon()+"\t");
-			System.out.println(dto.getStateDate());
+			for(AccDTO dto : findByname) {
+				System.out.print(dto.getStateNo() + "\t");
+				System.out.print(dto.getEmpNo() + "\t");
+				System.out.print(dto.getAccountNo() + "\t");
+				System.out.print(dto.getAccountSubNo() + "\t");
+				System.out.print(dto.getAmount() + "\t");
+				System.out.print(dto.getDetail() + "\t");
+				System.out.print(dto.getCancellation() + "\t");
+				System.out.print(dto.getStateCon() + "\t");
+				System.out.println(dto.getStateDate() );
+				
+			}
+			System.out.println();
 				
 		} catch (Exception e) {
 		}
@@ -211,13 +222,13 @@ public class AccUI {
 	}
 	protected void findBycateg_Name() {
 		System.out.println("\n월별 총 매입/매출액 ");
-
+		
 		
 	}
 	
 	protected void findBycustomer() {
 		System.out.println("\n거래처 관리 ");
-
+		
 	}
 	
 }

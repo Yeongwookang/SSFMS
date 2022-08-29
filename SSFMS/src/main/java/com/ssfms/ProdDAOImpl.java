@@ -27,6 +27,7 @@ public class ProdDAOImpl implements ProdDAO {
 			pstmt.setInt(4, pdto.getPrice());
 			pstmt.setInt(5, pdto.getStock());
 			pstmt.executeUpdate();
+			
 
 		} catch (SQLException e) {
 			e.printStackTrace();

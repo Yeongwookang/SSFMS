@@ -1,7 +1,6 @@
 package com.ssfms;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 import com.util.DBConn;
@@ -9,7 +8,6 @@ import com.util.DBConn;
 public class SalesUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private SalesDAO dao = new SalesDAOImpl();
-	private ProductDTO pdto = new ProductDTO();
 
 	public void menu() {
 		int ch;
@@ -33,7 +31,7 @@ public class SalesUI {
 					shippingManagement();
 					break;
 				case 5:
-					operatingProfitCheck();
+					operatingProfit();
 					break;
 				case 6:
 					taxBill();
@@ -57,10 +55,10 @@ public class SalesUI {
 		int ch;
 
 		try {
-			System.out.println("\n[견적/주문관리] 1.견적서입력 2.주문서입력 3.견적서조회 4.주문서조회 5.주문서관리 6.영업부 메뉴로 돌아가기=> ");
+			System.out.println("\n[견적/주문관리] 1.견적서입력 2.견적서조회 3.주문서조회 4.주문서관리 5.영업부 메뉴로 돌아가기=> ");
 			ch = Integer.parseInt(br.readLine());
 
-			if (ch == 6) {
+			if (ch == 5) {
 				SalesUI.this.menu();
 			}
 
@@ -69,15 +67,12 @@ public class SalesUI {
 				estimateInsert();
 				break;
 			case 2:
-				orderInsert();
-				break;
-			case 3:
 				estimateCheck();
 				break;
-			case 4:
+			case 3:
 				orderCheck();
 				break;
-			case 5:
+			case 4:
 				manage();
 				break;
 			}
@@ -96,16 +91,14 @@ public class SalesUI {
 
 		try {
 			SalesDTO dto = new SalesDTO();
-			
+
 			System.out.println("견적서일련번호 : ");
 
-			System.out.println("입력날짜(현재날짜) : ");
+			// System.out.println("입력날짜(현재날짜) : ");
 
 			System.out.println("사업자등록번호 : ");
 
-			System.out.println("상호 : ");
-
-			System.out.println("업태 : ");
+			System.out.println("회사명 : ");
 
 			System.out.println("연락처 : ");
 
@@ -120,17 +113,20 @@ public class SalesUI {
 
 				System.out.println("수량 : ");
 
-				System.out.println("단가 : ");
-
-				System.out.println("공급가액");
-
-				System.out.println("세액 : ");
-
-				System.out.println("바고 : ");
+				/*
+				 * 
+				 * registNo(사업자등록번호) System.out.println("단가 : ");
+				 * 
+				 * System.out.println("공급가액");
+				 * 
+				 * System.out.println("세액 : ");
+				 * 
+				 * System.out.println("비고 : ");
+				 */
 			}
 
 			System.out.println("결제방식 : ");
-			
+
 			dao.estimateInsertSales(dto);
 
 		} catch (Exception e) {
@@ -139,71 +135,63 @@ public class SalesUI {
 
 	}
 
-	private void orderInsert() {
-		System.out.println("[주문서 입력하세요]");
-		// 주문서는 입력, 조회, 관리가 가능		=>  주문서는 외부에서 입력하는 것 주문서 테이블을 따로만들어 데이터 입력하는 것 물어보기
-
-		try {
-			SalesDTO dto = new SalesDTO();
-			
-			System.out.println("주문서일련번호 : ");
-
-			System.out.println("입력날짜(현재날짜) : ");
-
-			System.out.println("주문처 : ");
-
-			System.out.println("담당자 : ");
-
-			System.out.println("전화번호 : ");
-
-			System.out.println("남품예정일 : ");
-
-			System.out.println("결재조건 : ");
-
-			System.out.println("회사명 : ");
-
-			System.out.println("회사전화번호 : ");
-			
-			System.out.println("회사사업자번호 : ");
-			
-			System.out.println("업태 : ");
-
-			for (int i = 0; i < 10; i++) {
-				System.out.println("제품명 : ");
-
-				System.out.println("수량 : ");
-
-				System.out.println("단가 : ");
-
-				System.out.println("공급가액");
-
-				System.out.println("세액 : ");
-
-				System.out.println("바고 : ");
-			}
-
-			System.out.println("합계 : ");
-			
-			System.out.println("부가세 : ");
-			
-			System.out.println("총계 : ");
-
-			dao.orderInsertSales(dto);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	/*
+	 * private void orderInsert() { System.out.println("[주문서 입력하세요]"); // 주문서는 입력,
+	 * 조회, 관리가 가능 => 주문서는 외부에서 입력하는 것 테이블생성해서 넣어놓기
+	 * 
+	 * try { SalesDTO dto = new SalesDTO();
+	 * 
+	 * System.out.println("주문서일련번호 (orderNo): ");
+	 * 
+	 * System.out.println("입력날짜(현재날짜) currDate: ");
+	 * 
+	 * System.out.println("주문처 orderPlace: ");
+	 * 
+	 * System.out.println("담당자 manager: ");
+	 * 
+	 * System.out.println("전화번호 tel : ");
+	 * 
+	 * System.out.println("남품예정일 deliveryDate : ");
+	 * 
+	 * System.out.println("회사명 companyName: ");
+	 * 
+	 * System.out.println("회사전화번호 companyTel: ");
+	 * 
+	 * System.out.println("회사사업자번호 companyNo: ");
+	 * 
+	 * "회사주소 companyAddress: ");
+	 * 
+	 * for (int i = 0; i < 10; i++) { System.out.println("제품명 productName : ");
+	 * 
+	 * System.out.println("수량 num : ");
+	 * 
+	 * System.out.println("단가 price : ");
+	 * 
+	 * System.out.println("공급가액  supplyValue ");
+	 * 
+	 * System.out.println("세액 tax : ");
+	 * 
+	 * System.out.println("비고 note : ");
+	 * 
+	 * //이거 수량 제외 다 적어놓고 수량만 적게끔하 }
+	 * 
+	 * System.out.println("합계 sum : ");
+	 * 
+	 * System.out.println("부가세 surtax : ");
+	 * 
+	 * System.out.println("총계 tot : ");
+	 * 
+	 */
 
 	private void estimateCheck() {
 		System.out.println("[견적서 조회]");
-		
+
 		try {
 			System.out.println("조회할 견적서의 일련번호 입력 : ");
 		} catch (Exception e) {
-			
+
 		}
-		
+
 	}
 
 	private void orderCheck() {
@@ -222,14 +210,25 @@ public class SalesUI {
 
 	}
 
-	protected void release() throws NumberFormatException, IOException {
-		System.out.println("\n[출고]");
-
-		int stateNo;
+	protected void release() {
+		int ch;
 
 		try {
-			System.out.println("[출고시킬 제품의 주문번호를 입력하세요] => ");
-			stateNo = Integer.parseInt(br.readLine());
+			System.out.println("\n[출고] 1.출고등록 2.출고조회 3.영업부메뉴로 돌아가기 => ");
+			ch = Integer.parseInt(br.readLine());
+
+			if (ch == 3) {
+				SalesUI.this.menu();
+			}
+
+			switch (ch) {
+			case 1:
+				releaseInsert();
+				break;
+			case 2:
+				releaseCheck();
+				break;
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -237,13 +236,13 @@ public class SalesUI {
 
 	}
 
-	protected void banpum() throws NumberFormatException, IOException {
-		System.out.println("\n[반품]");
-		int stateNo;
+	private void releaseCheck() {
+		System.out.println("[출고등록]");
 
 		try {
-			System.out.println("[반품처리할 제품의 주문번호를 입력하세요] => ");
-			stateNo = Integer.parseInt(br.readLine());
+			
+
+			System.out.println("주문서 일련번호 입력 > ");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -251,14 +250,67 @@ public class SalesUI {
 
 	}
 
-	protected void shippingManagement() throws NumberFormatException, IOException {
-		System.out.println("\n[배송관리]");
+	private void releaseInsert() {
+		System.out.println("[출고조회]");
 
-		int stateNo;
+		System.out.println("주문서 일련번호 입력 > ");
+
+	}
+
+	protected void banpum() {
+		int ch;
 
 		try {
-			System.out.println("[배송정보를 출력할 배송번호를 입력하세요] => ");
-			stateNo = Integer.parseInt(br.readLine());
+			System.out.println("\n[반품] 1.반품등록 2.반품조회 3.영업부 메뉴로 돌아가기 => ");
+			ch = Integer.parseInt(br.readLine());
+
+			if (ch == 3) {
+				SalesUI.this.menu();
+			}
+
+			switch (ch) {
+			case 1:
+				banpumInsert();
+				break;
+			case 2:
+				banpumChenk();
+				break;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void banpumChenk() {
+		System.out.println("[반품등록]");
+
+	}
+
+	private void banpumInsert() {
+		System.out.println("[반품조회]");
+
+	}
+
+	protected void shippingManagement() {
+		int ch;
+
+		try {
+			System.out.println("\n[배송관리] 1.배송입력 2.배송조회 3.영업부 메뉴로 돌아가기 =>");
+			ch = Integer.parseInt(br.readLine());
+
+			if (ch == 3) {
+				SalesUI.this.menu();
+			}
+
+			switch (ch) {
+			case 1:
+				banpumInsert();
+				break;
+			case 2:
+				banpumChenk();
+				break;
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -266,43 +318,171 @@ public class SalesUI {
 
 	}
 
-	protected void operatingProfitCheck() {
-		System.out.println("\n[영업이익조회]");
+	protected void operatingProfit() {
+		int ch;
 
+		// 매출데이터 입력후 전표에 차변, 대변 같이 넣기
+		// 영업이익조회 = 매출-매출원가-판매비와 관리비
 		try {
-			System.out.println("[영업이익]");
+			System.out.println("[영업이익조회] 1.매출입력 2.매출전표입력(차변/대변) 3.영업이익조회 4.영업부 메뉴로 돌아가기 => ");
 
+			ch = Integer.parseInt(br.readLine());
+
+			if (ch == 4) {
+				SalesUI.this.menu();
+			}
+
+			switch (ch) {
+			case 1:
+				salesInsert();
+				break;
+			case 2:
+				salesAccountInsert();
+				break;
+			case 3:
+				operatingProfitCheck();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	private void salesInsert() {
+		System.out.println("[매출입력]");
+
+		try {
+			SalesDTO dto = new SalesDTO();
+			
+			System.out.println("[매출번호]");
+			dto.setSalesNo(br.readLine());
+			
+			System.out.println("[전표일련번호]");
+			dto.setStateNo(Integer.parseInt(br.readLine()));
+			
+			System.out.println("[제품코드]");
+			dto.setProductCode(br.readLine());
+			
+			System.out.println("[거래처]");
+			dto.setCustomer(br.readLine());
+			
+			System.out.println("[매출액]");
+			dto.setSales(Integer.parseInt(br.readLine()));
+			
+			System.out.println("[수량]");
+			dto.setSalesQty(Integer.parseInt(br.readLine()));
+			
+			System.out.println("[거래일시]");
+			dto.setDealDate(br.readLine());
+			
+			dao.salesInsert(dto);
+			
+			System.out.println("[매출이 입력되었습니다.]");
+
+		} catch (NumberFormatException e) {
+			System.out.println("금액은 숫자만 입력 가능합니다.");
+		} catch (Exception e) {
+			System.out.println("등록에 실패했습니다. 다시 입력해주세요.");
+		}
+		System.out.println();
+
+	}
+
+	private void salesAccountInsert() {
+		System.out.println("[매출전표입력(차변/대변)]");
+
+	}
+
+	private void operatingProfitCheck() {
+		System.out.println("[영업이익조회]");
 
 	}
 
 	protected void taxBill() {
-		System.out.println("\n[세금계산서]");
+		int ch;
 
 		try {
-			System.out.println("\n[세금계산서 조회]");
+			System.out.println("\n[세금계산서] 1.세금계산서 입력 2.세금계산서 조회 3.영업부 메뉴로 돌아가기 =>");
+			ch = Integer.parseInt(br.readLine());
 
-			System.out.println("[등록번호]");
-			System.out.println("[상호]");
-			System.out.println("[사업자번호]");
-			System.out.println("[대표자성명]");
-			System.out.println("[주소]");
-			System.out.println("[종목]");
-			System.out.println("[작성일자]");
-			System.out.println("[품목]");
-			System.out.println("[수량]");
-			System.out.println("[단가]");
-			System.out.println("[공급가액]");
-			System.out.println("[부가세]");
-			System.out.println("[발행금액]");
-			System.out.println("[미수금]");
-			System.out.println("[구분]");
+			if (ch == 3) {
+				SalesUI.this.menu();
+			}
 
+			switch (ch) {
+			case 1:
+				taxBillInsert();
+				break;
+			case 2:
+				taxBillCheck();
+				break;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	private void taxBillInsert() {
+		System.out.println("[세금계산서 입력]");
+
+		try {
+			SalesDTO dto = new SalesDTO();
+
+			System.out.println("[등록번호]");
+			dto.setTaxBillNum(Integer.parseInt(br.readLine()));
+
+			System.out.println("[상호]");
+			dto.setCompanyName(br.readLine());
+
+			System.out.println("[대표자성명]");
+			dto.setName(br.readLine());
+
+			System.out.println("[주소]");
+			dto.setAddress(br.readLine());
+
+			System.out.println("[업태]");
+			dto.setBusStatue(br.readLine());
+
+			System.out.println("[공급가액]");
+			dto.setValueSupply(Integer.parseInt(br.readLine()));
+
+			System.out.println("[세액]");
+			dto.setTaxAmount(Integer.parseInt(br.readLine()));
+
+			System.out.println("[품목]");
+			dto.setItem(br.readLine());
+
+			System.out.println("[수량]");
+			dto.setNum(Integer.parseInt(br.readLine()));
+
+			System.out.println("[단가]");
+			dto.setUnitPrice(Integer.parseInt(br.readLine()));
+
+			System.out.println("[합계금액]");
+			dto.setTotal(Integer.parseInt(br.readLine()));
+
+			System.out.println("[미수금]");
+			dto.setOutAmount(Integer.parseInt(br.readLine()));
+
+			System.out.println("[구분]");
+			dto.setNote(br.readLine());
+
+			dao.taxBillInsert(dto);
+
+			System.out.println("[세금계산서 입력이 완료되었습니다.]");
+
+		} catch (NumberFormatException e) {
+			System.out.println("금액은 숫자만 입력 가능합니다.");
+		} catch (Exception e) {
+			System.out.println("등록에 실패하였습니다. 다시 시도해주세요.");
+		}
+		System.out.println();
+
+	}
+
+	private void taxBillCheck() {
+		System.out.println("[세금계산서 조회]");
 
 	}
 
@@ -310,7 +490,7 @@ public class SalesUI {
 		int ch;
 
 		try {
-			System.out.println("\n[수금/채권조회] 1.수금관리 2.채권관리 => ");
+			System.out.println("\n[수금/채권조회] 1.수금/채권 관리 2.나가기 => ");
 			ch = Integer.parseInt(br.readLine());
 
 			if (ch == 2) {
@@ -321,9 +501,6 @@ public class SalesUI {
 			switch (ch) {
 			case 1:
 				money();
-				break;
-			case 2:
-				bond();
 				break;
 			}
 
@@ -336,35 +513,14 @@ public class SalesUI {
 	}
 
 	private void money() {
-		System.out.println("[수금관리]");
+		System.out.println("[수금/채권 관리]");
 
 		try {
-			System.out.println();
+			System.out.println("수금/채권 조회");
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void bond() {
-		System.out.println("[채권관리]");
-
-		try {
-			System.out.println("[발행일자]");
-			System.out.println("[채무자명]");
-			System.out.println("[연락처]");
-			System.out.println("[상황조건]");
-			System.out.println("[채권금액]");
-			System.out.println("[원금/이자]");
-			System.out.println("[금액]");
-			System.out.println("[원금잔액]");
-			System.out.println("[납입일자]");
-			System.out.println("[비고]");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 
 }

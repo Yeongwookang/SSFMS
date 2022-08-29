@@ -8,9 +8,11 @@ import java.util.List;
 
 public interface SalesDAO {
 	public int estimateInsertSales(SalesDTO dto) throws SQLException;	
-	public int orderInsertSales(SalesDTO dto) throws SQLException;
 	public int updateSales(SalesDTO dto) throws SQLException;
-	public int deleteSales(String id) throws SQLException;
+	public int taxBillInsert(SalesDTO dto) throws SQLException;
+	public int salesInsert(SalesDTO dto) throws SQLException;
+	public int salesAccountInsert(SalesDTO dto) throws SQLException;
+	
 	
 	public SalesDTO estimateRead(String id);
 	public List<SalesDTO> listSales();

@@ -10,7 +10,29 @@ public class AccDTO {
 	private String cancellation;
 	private String stateCon;
 	private String name;
+	private String dep;
+	private String rank; 
+	private String asub_name;
 	
+	
+	public String getAsub_name() {
+		return asub_name;
+	}
+	public void setAsub_name(String asub_name) {
+		this.asub_name = asub_name;
+	}
+	public String getDep() {
+		return dep;
+	}
+	public void setDep(String dep) {
+		this.dep = dep;
+	}
+	public String getRank() {
+		return rank;
+	}
+	public void setRank(String rank) {
+		this.rank = rank;
+	}
 	public String getName() {
 		return name;
 	}

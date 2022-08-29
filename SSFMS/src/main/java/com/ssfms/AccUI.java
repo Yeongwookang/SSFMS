@@ -19,7 +19,10 @@ public class AccUI {
 		while(true) {
 			try {
 				
-				System.out.print("회계 => 1. 전표등록 2. 전표수정 3. 전표삭제 4. 전체 전표 조회 5. 사원별 전표 조회 6. 계정과목 별 전표 조회 7. 월별 총 매입매출 조회 8. 거래처 관리 ");
+				System.out.print("회계 => \n"
+						+ "1. 전표등록 \t 2. 전표수정 \t 3. 전표삭제 \n"
+						+ "4. 전체 전표 조회 \t 5. 사원별 전표 조회 6. 계정과목 별 전표 조회 \n"
+						+ "7. 월별 총 매입매출 조회 8. 거래처 관리  9. 뒤로가기 ");
 				ch = Integer.parseInt(br.readLine());
 				
 				if(ch == 10) {

@@ -136,7 +136,7 @@ public class AccDAOImpl implements AccDAO {
 		
 		return result;
 	}
-/*
+
 	@Override
 	public AccDTO readAccount (int stateNo) {
 		AccDTO dto = null;
@@ -187,7 +187,7 @@ public class AccDAOImpl implements AccDAO {
 		
 		return dto;
 	}
-*/
+
 	@Override
 	public List<AccDTO> listAccount() {
 		List<AccDTO> list = new ArrayList<>();
@@ -358,10 +358,5 @@ public class AccDAOImpl implements AccDAO {
 		return list;
 	}
 
-	@Override
-	public AccDTO readAccount(String stateNo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

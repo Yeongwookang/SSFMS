@@ -109,16 +109,18 @@ public class AccDAOImpl implements AccDAO {
 	@Override
 	public int deleteAccount(int stateNo) throws SQLException {
 		int result = 0;
-		CallableStatement cstmt = null;
+		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
-			sql = "{ CALL deleteAccount(?) }";
-			cstmt = conn.prepareCall(sql);
+			conn.setAutoCommit(false);
 			
-			cstmt.setInt(1, stateNo);
 			
-			cstmt.executeUpdate();
+			pstmt = conn.prepareCall(sql);
+			
+			pstmt.setInt(1, stateNo);
+			
+			pstmt.executeUpdate();
 			
 			result = 1;
 			
@@ -132,9 +134,9 @@ public class AccDAOImpl implements AccDAO {
 			throw e;
 			
 		} finally {
-			if(cstmt != null) {
+			if(pstmt != null) {
 				try {
-					cstmt.close();
+					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}

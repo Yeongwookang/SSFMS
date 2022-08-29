@@ -9,7 +9,14 @@ public class AccDTO {
 	private String detail;
 	private String cancellation;
 	private String stateCon;
+	private String name;
 	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public int getStateNo() {
 		return stateNo;
 	}

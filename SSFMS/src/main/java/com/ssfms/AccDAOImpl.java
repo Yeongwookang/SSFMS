@@ -308,15 +308,15 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 		
 		try {
-			sql = "{ \"SELECT accounting (StateNo, empNo, accountNo, accountsubNo, amount, \"\r\n"
-					+ "					+ \" detail, cancellation, statecon, statedate)\"\r\n"
-					+ "					+ \" VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)\";\r\n"
-					+ "			 }";
+			sql = "SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate "
+					+ "FROM accounting "
+					+ "WHERE accountSubNo = ? ";
 			
 			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.executeUpdate();
+			pstmt.setString(1, accountSubNo);
 			
 			rs = pstmt.executeQuery();
 			

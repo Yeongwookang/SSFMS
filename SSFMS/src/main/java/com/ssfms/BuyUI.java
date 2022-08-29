@@ -27,7 +27,7 @@ public class BuyUI {
 				System.out.println("-----------------------------------------------------------------");
 				System.out.println("[1] 매입전표관리 [2] 매입관리 [3] 반품관리 [4] 매입처관리 [5] 뒤로가기");
 				System.out.println("-----------------------------------------------------------------");
-				System.out.print("=> ");
+				System.out.print(" => ");
 				
 				ch = Integer.parseInt(br.readLine());
 				

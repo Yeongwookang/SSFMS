@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.util.DBConn;
 
@@ -151,6 +153,64 @@ public class ProdDAOImpl implements ProdDAO {
 			e.printStackTrace();
 		}
 		return bdto;
+	}
+
+	@Override
+	public List<AccDTO> listAccount_prod() throws SQLException {
+		List<AccDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT * FROM State_prod_view";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.executeUpdate();
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				AccDTO dto = new AccDTO();
+
+				dto.setStateNo(rs.getInt("stateNo"));
+				dto.setT_account(rs.getString("t_account"));
+				dto.setEmpNo(rs.getString("empNo"));
+				dto.setAccountNo(rs.getString("accountNo"));
+				dto.setAsub_name(rs.getString("asub_name"));
+				dto.setAmount(rs.getInt("amount"));
+				dto.setDetail(rs.getString("detail"));
+				dto.setCancellation(rs.getString("cancellation"));
+				dto.setStateCon(rs.getString("stateCon"));
+				dto.setStateDate(rs.getString("stateDate"));
+				dto.setDep(rs.getString("dep"));
+				dto.setRank(rs.getString("rank"));
+				dto.setName(rs.getString("name"));
+				
+				list.add(dto);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+		}
+		
+		return list;
 	}
 
 }

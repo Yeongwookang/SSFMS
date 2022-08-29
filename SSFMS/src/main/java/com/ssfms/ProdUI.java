@@ -10,6 +10,7 @@ public class ProdUI {
 	private ProdDAO dao = new ProdDAOImpl();
 	private AccDAO adao = new AccDAOImpl();
 
+
 	public void menu() {
 
 		int ch;
@@ -211,18 +212,22 @@ public class ProdUI {
 		System.out.println("\n생산부서 전표리스트");
 		try {
 			List<AccDTO> list = new ArrayList<>();
-			list.add(adao.readAccount(null))
-			
-			System.out.print("취소할 전표 번호 : ");
-			int stateNo=Integer.parseInt(br.readLine());
-			adto=adao.readAccount(stateNo);
-			if(adto.getStateCon().equals("승인")||adto.getStateCon().equals("처리")) {
-				System.out.println("[ 승인, 처리 ] 상태인 전표는 취소할수 없습니다.");
-				return;
+			list=dao.listAccount_prod();
+			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t\t사번\t부서\t직급\t이름");
+			for(AccDTO adto : list) {
+				System.out.print(adto.getStateNo() + "\t");
+				System.out.print(adto.getT_account()+"\t");
+				System.out.print(adto.getAccountNo() + "\t");
+				System.out.print(adto.getAsub_name() + "\t");
+				System.out.print(adto.getAmount() + "\t\t");
+				System.out.print(adto.getCancellation() + "\t");
+				System.out.print(adto.getStateCon() + "\t");
+				System.out.print(adto.getStateDate()+ "\t" );
+				System.out.print(adto.getEmpNo() + "\t");
+				System.out.print(adto.getDep()+ "\t");
+				System.out.print(adto.getRank()+ "\t");
+				System.out.println(adto.getName());
 			}
-			adao.deleteAccount(stateNo);
-			System.out.println("전표취소가 완료되었습니다.");
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -286,7 +291,7 @@ public class ProdUI {
 			String ProductNo;
 			ProdDTO pdto = new ProdDTO();
 			System.out.println("승인된 전표번호를 입력해주세요.");
-			AccDTO adto = adao.readAccount(br.readLine());
+			AccDTO adto = adao.readAccount(Integer.parseInt(br.readLine()));
 			pdto.setStateNo(adto.getStateNo());
 
 			while (true) {

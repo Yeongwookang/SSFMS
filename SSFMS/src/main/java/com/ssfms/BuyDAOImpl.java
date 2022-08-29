@@ -82,6 +82,7 @@ public class BuyDAOImpl implements BuyDAO {
 	}
 
 	
+	//매입처 정보 수정
 	@Override
 	public int updateShop(BuyDTO buydto) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -148,6 +149,7 @@ public class BuyDAOImpl implements BuyDAO {
 
 
 	
+	//매입처 삭제
 	@Override
 	public int deleteShop(BuyDTO buydto) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -254,7 +256,7 @@ public class BuyDAOImpl implements BuyDAO {
 		String sql;
 		int result = 0;
 		
-		int sno=0, price=0;
+		int price=0;
 		
 
 		try {
@@ -381,16 +383,10 @@ public class BuyDAOImpl implements BuyDAO {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 	
-
-	@Override
-	public int deleteBuy(BuyDTO buydto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
+	
+	
+	
 	
 	
 	
@@ -404,7 +400,7 @@ public class BuyDAOImpl implements BuyDAO {
 		
 		try {
 			
-			sql = "SELECT buy_No, stateNo, buy.partNo, , part.part_name, buy_Date, buy_qty, buy_price, shop_No "
+			sql = "SELECT buy_No, stateNo, buy.partNo, part.part_name, buy_Date, buy_qty, buy_price, shop_No "
 					+ " FROM buy "
 					+ " JOIN part ON buy.partNo = part.partNo ";
 			
@@ -420,7 +416,7 @@ public class BuyDAOImpl implements BuyDAO {
 				buydto.setStateNo(rs.getInt("stateNo"));
 				buydto.setPartNo(rs.getString("partNo"));
 				buydto.setPart_name(rs.getString("part_name"));
-				buydto.setBuy_Date(rs.getString("buy_Date"));
+				buydto.setBuy_Date(rs.getDate("buy_Date").toString());
 				buydto.setBuy_qty(rs.getInt("buy_qty"));
 				buydto.setBuy_price(rs.getInt("buy_price"));
 				buydto.setShop_No(rs.getString("shop_No"));
@@ -603,7 +599,7 @@ public class BuyDAOImpl implements BuyDAO {
 
 	
 
-	//등록전표조회 
+	//등록전표조회 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	@Override
 	public List<AccDTO> listAccBuy(String accountSubNo) {
 		List<AccDTO> list = new ArrayList<>();
@@ -613,10 +609,12 @@ public class BuyDAOImpl implements BuyDAO {
 		
 		try {
 			
-			sql = "SELECT stateNo, empNo, accountNo, accounting.accountSubNo, ACCOUNTSUB.name, amount, detail, cancellation, stateCon, stateDate  "
-					+ " FROM accounting "
-					+ " JOIN ACCOUNTSUB ON ACCOUNTSUB.accountSubNo = accounting.accountSubNo "
-					+ " WHERE accountSubNo = ? ";
+			
+			/////////////////////차변 대변 그거 만들어달라고 해야함
+			sql = "SELECT stateNo, empNo, accountNo, B.name, amount, detail, cancellation, stateCon, stateDate "
+					+ " FROM accounting A "
+					+ " JOIN accountsub B ON A.accountSubNo = B.accountSubNo "
+					+ " WHERE A.accountSubNo = ? ";
 			
 			
 			pstmt = conn.prepareStatement(sql);
@@ -633,8 +631,7 @@ public class BuyDAOImpl implements BuyDAO {
 				accdto.setStateNo(rs.getInt("StateNo"));
 				accdto.setEmpNo(rs.getString("empNo"));
 				accdto.setAccountNo(rs.getString("accountNo"));
-				accdto.setAccountSubNo(rs.getString("accounting.accountSubNo"));
-				accdto.setName(rs.getString("ACCOUNTSUB.name"));
+				accdto.setName(rs.getString("name"));
 				accdto.setAmount(rs.getInt("amount"));
 				accdto.setDetail(rs.getString("detail"));
 				accdto.setCancellation(rs.getString("cancellation"));

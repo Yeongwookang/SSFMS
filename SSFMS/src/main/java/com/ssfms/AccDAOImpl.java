@@ -11,7 +11,6 @@ import java.util.List;
 
 import com.util.DBConn;
 
-import oracle.jdbc.OracleTypes;
 
 public class AccDAOImpl implements AccDAO {
 	private Connection conn = DBConn.getConnection();
@@ -70,22 +69,25 @@ public class AccDAOImpl implements AccDAO {
 	@Override
 	public int updateAccount(AccDTO dto) throws SQLException {
 		int result = 0;
-		CallableStatement cstmt = null;
+		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
-			sql = "{ CALL updateAccount(?,?,?,?,?,?,?) }";
-			cstmt = conn.prepareCall(sql);
+			sql = "INSERT INTO accounting (StateNo, empNo, accountNo, accountsubNo, amount, "
+					+ " detail, cancellation, statecon, statedate)"
+					+ " VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)";
 			
-			cstmt.setString(1, dto.getEmpNo());
-			cstmt.setString(2, dto.getAccountNo());
-			cstmt.setString(3, dto.getAccountSubNo());
-			cstmt.setInt(4, dto.getAmount());
-			cstmt.setString(5, dto.getDetail());
-			cstmt.setString(6, dto.getCancellation());
-			cstmt.setString(7, dto.getStateCon());
+			pstmt = conn.prepareCall(sql);
 			
-			cstmt.executeUpdate();
+			pstmt.setString(1, dto.getEmpNo());
+			pstmt.setString(2, dto.getAccountNo());
+			pstmt.setString(3, dto.getAccountSubNo());
+			pstmt.setInt(4, dto.getAmount());
+			pstmt.setString(5, dto.getDetail());
+			pstmt.setString(6, dto.getCancellation());
+			pstmt.setString(7, dto.getStateCon());
+			
+			pstmt.executeUpdate();
 			
 			result = 1;
 			
@@ -93,9 +95,9 @@ public class AccDAOImpl implements AccDAO {
 			e.printStackTrace();
 		}
 		finally {
-			if(cstmt != null) {
+			if(pstmt != null) {
 				try {
-					cstmt.close();
+					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
@@ -144,20 +146,20 @@ public class AccDAOImpl implements AccDAO {
 	@Override
 	public AccDTO readAccount(String stateNum) {
 		AccDTO dto = null;
-		CallableStatement cstmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = "{ CALL readAccount(?,?) }";
-			cstmt = conn.prepareCall(sql);
+			sql = "{ \"SELECT accounting (StateNo, empNo, accountNo, accountsubNo, amount, \"\r\n"
+					+ "					+ \" detail, cancellation, statecon, statedate)\"\r\n"
+					+ "					+ \" VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)\";\r\n"
+					+ "			 }";
 			
-			cstmt.registerOutParameter(1, OracleTypes.CURSOR);
-			cstmt.setString(2, stateNum);
+			pstmt = conn.prepareCall(sql);
+			pstmt.setString(1, stateNum);
 			
-			cstmt.executeUpdate();
-			
-			rs = (ResultSet)cstmt.getObject(1);
+			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				dto = new AccDTO();
@@ -182,9 +184,9 @@ public class AccDAOImpl implements AccDAO {
 				} catch (Exception e2) {
 				}
 			}
-			if(cstmt != null) {
+			if(pstmt != null) {
 				try {
-					cstmt.close();
+					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
@@ -196,20 +198,21 @@ public class AccDAOImpl implements AccDAO {
 	@Override
 	public List<AccDTO> listAccount() {
 		List<AccDTO> list = new ArrayList<>();
-		CallableStatement cstmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = "{ CALL listAccount(?)}";
+			sql = "{ \"SELECT accounting (StateNo, empNo, accountNo, accountsubNo, amount, \"\r\n"
+					+ "					+ \" detail, cancellation, statecon, statedate)\"\r\n"
+					+ "					+ \" VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)\";\r\n"
+					+ "			 }";
 			
-cstmt = conn.prepareCall(sql);
+			pstmt = conn.prepareCall(sql);
 			
-			cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+			pstmt.executeUpdate();
 			
-			cstmt.executeUpdate();
-			
-			rs = (ResultSet)cstmt.getObject(1);
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				AccDTO dto = new AccDTO();
@@ -237,9 +240,9 @@ cstmt = conn.prepareCall(sql);
 				}
 			}
 
-			if(cstmt != null) {
+			if(pstmt != null) {
 				try {
-					cstmt.close();
+					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
@@ -251,20 +254,21 @@ cstmt = conn.prepareCall(sql);
 	@Override
 	public List<AccDTO> listAccount_emp(String empNo) {
 		List<AccDTO> list = new ArrayList<>();
-		CallableStatement cstmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = "{ CALL searchempNoAcc(?,?) }";
-			cstmt = conn.prepareCall(sql);
+			sql = "{ \"SELECT accounting (StateNo, empNo, accountNo, accountsubNo, amount, \"\r\n"
+					+ "					+ \" detail, cancellation, statecon, statedate)\"\r\n"
+					+ "					+ \" VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)\";\r\n"
+					+ "			 }";
 			
-			cstmt.registerOutParameter(1, OracleTypes.CURSOR);
-			cstmt.setString(2, empNo);
+			pstmt = conn.prepareCall(sql);
 			
-			cstmt.executeUpdate();
+			pstmt.executeUpdate();
 			
-			rs = (ResultSet)cstmt.getObject(1);
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				AccDTO dto = new AccDTO();
@@ -292,9 +296,9 @@ cstmt = conn.prepareCall(sql);
 				}
 			}
 
-			if(cstmt != null) {
+			if(pstmt != null) {
 				try {
-					cstmt.close();
+					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
@@ -308,20 +312,22 @@ cstmt = conn.prepareCall(sql);
 	@Override
 	public List<AccDTO> listAccount_subNo(String accountSubNo) {
 		List<AccDTO> list = new ArrayList<>();
-		CallableStatement cstmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = "{ CALL searchcategNameAcc(?,?) }";
-			cstmt = conn.prepareCall(sql);
+			sql = "{ \"SELECT accounting (StateNo, empNo, accountNo, accountsubNo, amount, \"\r\n"
+					+ "					+ \" detail, cancellation, statecon, statedate)\"\r\n"
+					+ "					+ \" VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)\";\r\n"
+					+ "			 }";
 			
-			cstmt.registerOutParameter(1, OracleTypes.CURSOR);
-			cstmt.setString(2, accountSubNo);
 			
-			cstmt.executeUpdate();
+			pstmt = conn.prepareCall(sql);
 			
-			rs = (ResultSet)cstmt.getObject(1);
+			pstmt.executeUpdate();
+			
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				AccDTO dto = new AccDTO();
@@ -349,9 +355,9 @@ cstmt = conn.prepareCall(sql);
 				}
 			}
 
-			if(cstmt != null) {
+			if(pstmt != null) {
 				try {
-					cstmt.close();
+					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}

@@ -2,6 +2,7 @@ package com.ssfms;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import com.util.DBConn;
 
@@ -72,7 +73,7 @@ public class AccUI {
 			
 			System.out.println("전표가 등록 되었습니다.");
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("등록 실패하였습니다.");
 		}
 		
 	}
@@ -135,7 +136,20 @@ public class AccUI {
 	
 	protected void listAll() {
 		System.out.println("\n전체 전표 조회 ");
-	
+		List<AccDTO>listAll = dao.listAccount();
+		for(AccDTO dto : listAll) {
+			System.out.print(dto.getStateNo() + "\t");
+			System.out.print(dto.getEmpNo() + "\t");
+			System.out.print(dto.getAccountNo() + "\t");
+			System.out.print(dto.getAccountSubNo() + "\t");
+			System.out.print(dto.getAmount() + "\t");
+			System.out.print(dto.getDetail() + "\t");
+			System.out.print(dto.getCancellation() + "\t");
+			System.out.print(dto.getStateCon() + "\t");
+			System.out.println(dto.getStateDate() );
+			
+		}
+		System.out.println();
 	}
 	
 	protected void findByempNo() {

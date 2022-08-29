@@ -1,6 +1,5 @@
 package com.ssfms;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,12 +45,14 @@ public class AccDAOImpl implements AccDAO {
 			} else {
 				System.out.println(e.toString());
 			}
+			throw e;
 		} catch (SQLException e) {	
 			e.printStackTrace();
-			
+			throw e;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 			
 		} finally {
 			if(pstmt != null) {
@@ -115,51 +116,41 @@ public class AccDAOImpl implements AccDAO {
 		try {
 			conn.setAutoCommit(false);
 			
-			
-			pstmt = conn.prepareCall(sql);
+			sql = "DELETE FROM accounting WHERE stateNo = ?";
+			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setInt(1, stateNo);
 			
-			pstmt.executeUpdate();
-			
-			result = 1;
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
 			
 		} catch (SQLException e) {
-			if(e.getErrorCode() == 20100) {
-				System.out.println("등록된 자료가 아닙니다.");
-			} else {
-				e.printStackTrace();
-			}
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			} 
 			
-			throw e;
-			
-		} finally {
-			if(pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (Exception e2) {
-				}
-			}
 		}
+			
 		
 		return result;
 	}
-
+/*
 	@Override
-	public AccDTO readAccount(String stateNum) {
+	public AccDTO readAccount (int stateNo) {
 		AccDTO dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = "{ \"SELECT accounting (StateNo, empNo, accountNo, accountsubNo, amount, \"\r\n"
-					+ "					+ \" detail, cancellation, statecon, statedate)\"\r\n"
-					+ "					+ \" VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)\";\r\n"
-					+ "			 }";
+			sql = " SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate"
+					+ "FROM accounting"
+					+ "WHERE stateNo = ? ";
 			
-			pstmt = conn.prepareCall(sql);
-			pstmt.setString(1, stateNum);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, stateNo);
 			
 			rs = pstmt.executeQuery();
 			
@@ -196,7 +187,7 @@ public class AccDAOImpl implements AccDAO {
 		
 		return dto;
 	}
-
+*/
 	@Override
 	public List<AccDTO> listAccount() {
 		List<AccDTO> list = new ArrayList<>();
@@ -205,12 +196,10 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 		
 		try {
-			sql = "{ \"SELECT accounting (StateNo, empNo, accountNo, accountsubNo, amount, \"\r\n"
-					+ "					+ \" detail, cancellation, statecon, statedate)\"\r\n"
-					+ "					+ \" VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)\";\r\n"
-					+ "			 }";
+			sql = "SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate "
+					+ "FROM accounting";
 			
-			pstmt = conn.prepareCall(sql);
+			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.executeUpdate();
 			
@@ -266,7 +255,7 @@ public class AccDAOImpl implements AccDAO {
 					+ "					+ \" VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)\";\r\n"
 					+ "			 }";
 			
-			pstmt = conn.prepareCall(sql);
+			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.executeUpdate();
 			
@@ -367,6 +356,12 @@ public class AccDAOImpl implements AccDAO {
 		}
 		
 		return list;
+	}
+
+	@Override
+	public AccDTO readAccount(String stateNo) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

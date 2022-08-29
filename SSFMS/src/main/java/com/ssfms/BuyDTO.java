@@ -6,8 +6,14 @@ public class BuyDTO {
 	private String buy_Date;
 	private int buy_qty;
 	private int buy_price;
+	private String accountSubNo;
 	
-	
+	public String getAccountSubNo() {
+		return accountSubNo;
+	}
+	public void setAccountSubNo(String accountSubNo) {
+		this.accountSubNo = accountSubNo;
+	}
 	private String ban_No;
 	private String ban_Date;
 	private int ban_qty;

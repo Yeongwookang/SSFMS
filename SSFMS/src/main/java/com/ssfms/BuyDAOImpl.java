@@ -245,44 +245,99 @@ public class BuyDAOImpl implements BuyDAO {
 	
 
 	// -----------------------------------------------------------------------------------
-	//구매 이루어지는 것
+	//구매 이루어지는 것!!!!!!!!!!!!!!!!
 	@Override
 	public int insertBuy(BuyDTO buydto) throws SQLException {
 		PreparedStatement pstmt = null;
+		PreparedStatement pstmt2 = null;
 		ResultSet rs = null;
 		String sql;
 		int result = 0;
 		
+		int sno=0, price=0;
+		
+
 		try {
 			
 			conn.setAutoCommit(false);
-			sql = "INSERT INTO buy(buy_No, stateNo, partNo, buy_Date, buy_qty, buy_price, shop_No)"
-					+ " SELECT 'B_'||TO_CHAR(buy_No_seq.NEXTVAL), stateNo, ?, ?, ?, ?, ? FROM accounting "
-					+ " WHERE stateNo = ? ";
-
+			
+			// --------------------------------------------
+			sql = "SELECT stateNo FROM accounting "
+					+ " WHERE accountSubNo = ? AND stateCon = '승인' ";
+			
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, buydto.getAccountSubNo());
+			rs = pstmt.executeQuery();
 			
-			pstmt.setString(1, buydto.getBuy_Date());
-			pstmt.setInt(2, buydto.getBuy_qty());
-			pstmt.setInt(3, buydto.getBuy_price());
-			pstmt.setString(4, buydto.getShop_No());
-			pstmt.setInt(5, buydto.getStateNo());
 			
-			result = pstmt.executeUpdate();
+			if(rs.next()) {
+				
+				sno = rs.getInt("stateNo");
+			}else {
+				return 0;
+			}
+
+			
+			rs.close();
+			rs = null;
 			pstmt.close();
 			pstmt = null;
 			
-			sql = "UPDATE part SET part_stock += ? "
+			// --------------------------------------------			
+			sql = "SELECT part_price FROM part "
 					+ " WHERE partNo = ? ";
 			
-			pstmt.setInt(1, buydto.getPart_stock() + buydto.getBuy_qty());
-			pstmt.setString(2, buydto.getPartNo());
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, buydto.getPartNo());
 			
-			result = pstmt.executeUpdate();
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				price = rs.getInt("part_price");
+			}else {
+				return 0;
+			}
+			
+			rs.close();
+			rs = null;
+			pstmt.close();
+			pstmt = null;
+			
+			// --------------------------------------------		
+			sql = "INSERT INTO buy (buy_No, stateNo, partNo, buy_Date, buy_qty, buy_price, shop_No) "
+					+ " VALUES ('B_'||TO_CHAR(buy_No_seq.NEXTVAL), ?, ?, ?, ?, ?, ?) ";
+			 
+			
+			pstmt2 = conn.prepareStatement(sql);
+
+			pstmt2.setInt(1, sno);
+			pstmt2.setString(2, buydto.getPartNo());
+			pstmt2.setString(3, buydto.getBuy_Date());
+			pstmt2.setInt(4, buydto.getBuy_qty());
+			pstmt2.setInt(5, price * buydto.getBuy_qty());
+			pstmt2.setString(6, buydto.getShop_No());
+			
+			pstmt2.executeUpdate();
+
+			pstmt2.close();
+			pstmt2 = null;
+			
+			// --------------------------------------------			
+			sql = "UPDATE part SET part_stock = part_stock + ? "
+					+ " WHERE partNo = ? ";
+			
+			pstmt2 = conn.prepareStatement(sql);		
+			
+			pstmt2.setInt(1, buydto.getBuy_qty());
+			pstmt2.setString(2, buydto.getPartNo());
+			
+			pstmt2.executeUpdate();
+			
+			result = 1;
 			
 			conn.commit();
 			
-
+			
 			
 		} catch (SQLIntegrityConstraintViolationException e) {
 			try {
@@ -295,7 +350,6 @@ public class BuyDAOImpl implements BuyDAO {
 			}else {
 				System.out.println(e.toString());
 			}
-			
 			throw e;
 			
 		}catch (SQLDataException e) {
@@ -303,25 +357,39 @@ public class BuyDAOImpl implements BuyDAO {
 				conn.rollback();
 			} catch (Exception e2) {
 			}
-			
+			System.out.println(e.toString());
 			throw e;
+			
 		}catch (SQLException e) {
 			conn.rollback();
+			e.printStackTrace();
+			throw e;
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+			
 		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}			
 			if(pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
-			
-			try {
-				conn.setAutoCommit(true);
-			} catch (Exception e2) {
+			if(pstmt2 != null) {
+				try {
+					pstmt2.close();
+				} catch (Exception e2) {
+				}
 			}
+			conn.setAutoCommit(true);
+
 		}	
 		
 		return result;
@@ -483,11 +551,9 @@ public class BuyDAOImpl implements BuyDAO {
 		try {
 			
 			
-			
-			
 			conn.setAutoCommit(false);
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '153', ?, ?, 'X', '미승인', ?) ";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '153', ?, ?, '', '미승인', ?) ";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, empdto.getEmpNo());
@@ -498,11 +564,11 @@ public class BuyDAOImpl implements BuyDAO {
 			
 			
 			result = pstmt.executeUpdate();
-			
-			
+
 			conn.commit();
 			
 	
+			
 		} catch (SQLIntegrityConstraintViolationException e) {
 			try {
 				conn.rollback();
@@ -628,6 +694,7 @@ public class BuyDAOImpl implements BuyDAO {
 	}
 
 
+	//전표상태 취소 
 	@Override
 	public int updateAccBuy(AccDTO accdto) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -641,11 +708,13 @@ public class BuyDAOImpl implements BuyDAO {
 					+ " cancellation = 'O' "
 					+ " WHERE StateNo = ? AND stateCon = '미승인' AND accountSubNo = '153' ";
 			
+			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setInt(1, accdto.getStateNo());
 			
 			result = pstmt.executeUpdate();
+			
 			
 			
 		} catch (SQLException e) {

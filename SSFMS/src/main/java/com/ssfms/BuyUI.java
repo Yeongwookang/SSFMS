@@ -25,7 +25,7 @@ public class BuyUI {
 			try {
 				System.out.println();
 				System.out.println("-----------------------------------------------------------------");
-				System.out.println("[1] 매입전표관리 [2] 매입관리 [3] 반품관리 [4] 매입처관리 [5] 뒤로가기");
+				System.out.println("[1] 매입전표관리 [2] 매입관리 [3] 반품관리 [4] 매입요청관리 [5] 매입처관리 [6] 뒤로가기");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.print(" => ");
 				
@@ -36,7 +36,8 @@ public class BuyUI {
 				case 2: new BuyUI().menu2(); break;
 				case 3: new BuyUI().menu3(); break;
 				case 4: new BuyUI().menu4(); break;
-				case 5: App.main(null); break; //뒤로가기
+				case 5: new BuyUI().menu5(); break;
+				case 6: App.main(null); break; //뒤로가기
 				
 
 				}
@@ -48,6 +49,9 @@ public class BuyUI {
 	}
 	
 	
+
+
+
 	//매입전표관리 메뉴
 	public void menu1() {
 		
@@ -214,13 +218,13 @@ public class BuyUI {
 				
 				System.out.println();
 				System.out.println("-----------------------------------------------------------------");
-				System.out.println("[1] 원자재 발주 [2] 발주내역조회 [3] 원자재 재고조회 [4] 뒤로가기 ");
+				System.out.println("[1] 원자재 발주 [2] 발주내역조회 [3] 원자재 재고조회 [4] 신규 원자재 등록 [5] 뒤로가기 ");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.print("=> ");
 				
 				ch = Integer.parseInt(br.readLine());
 				
-				if(ch==4) {
+				if(ch==5) {
 					new BuyUI().menu();
 				}
 				
@@ -228,6 +232,8 @@ public class BuyUI {
 				case 1: buyInsert(); break;
 				case 2: buyList(); break;
 				case 3: partList(); break;
+				case 4: insertPart(); break;
+				
 				
 				}
 					
@@ -239,6 +245,12 @@ public class BuyUI {
 	}
 	
 	
+	private void insertPart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	protected void buyInsert() {
 		System.out.println("\n[원자재 발주] 원자재 발주하기");
 		System.out.println("[조건 : 전표 상태 '승인' / 계정과목 코드 '153'만 발주가능");
@@ -405,11 +417,63 @@ public class BuyUI {
 	}
 	
 	
+	
+	//매입요청 관리
+	public void menu4() {
+		
+		int ch;
+		
+		while(true) {
+			try {
+				
+				System.out.println();
+				System.out.println("-----------------------------------------------------------------");
+				System.out.println("[1] 매입요청 조회 [2] 매입요청 승인 [3] 뒤로가기 ");
+				System.out.println("-----------------------------------------------------------------");
+				System.out.print("=> ");
+				
+				ch = Integer.parseInt(br.readLine());
+				
+				if(ch==3) {
+					new BuyUI().menu();
+				}
+				
+				switch(ch) {
+				case 1: applyBuy(); break;
+				case 2: applyBuyUpdate(); break;
+				
+				}
+					
+			} catch (Exception e) {
+			}
+			
+		}
+		
+	}
+
+	
+	protected void applyBuyUpdate() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	protected void applyBuy() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	
 	
+
+
+
+
 	// 매입처관리
-	public void menu4() {
+	public void menu5() {
 		
 		int ch;
 		

@@ -13,7 +13,14 @@ public class AccDTO {
 	private String dep;
 	private String rank; 
 	private String asub_name;
+	private String t_account;
 	
+	public String getT_account() {
+		return t_account;
+	}
+	public void setT_account(String t_account) {
+		this.t_account = t_account;
+	}
 	public String getAsub_name() {
 		return asub_name;
 	}

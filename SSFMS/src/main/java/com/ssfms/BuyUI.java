@@ -104,9 +104,6 @@ public class BuyUI {
 			System.out.print("상세 내용: ");
 			accdto.setDetail(br.readLine());
 			
-			//System.out.print("취소여부[X or O]: ");
-			//accdto.setCancellation(br.readLine());
-			
 			System.out.print("매입 신청 일자: ");
 			accdto.setStateDate(br.readLine());
 			
@@ -246,11 +243,14 @@ public class BuyUI {
 	
 	protected void buyInsert() {
 		
+		
+		
 	}
 
 	
 	
 	protected void buyUpdate() {
+		
 
 		
 	}
@@ -283,9 +283,13 @@ public class BuyUI {
 	
 	
 	protected void buyDelete() {
+		
+		
 
 		
 	}
+	
+	
 	
 	protected void partList() {
 		System.out.println("\n[원자재 재고조회] 원자재 재고 조회하기");

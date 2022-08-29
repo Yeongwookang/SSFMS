@@ -260,30 +260,7 @@ public class BuyDAOImpl implements BuyDAO {
 		try {
 			
 			conn.setAutoCommit(false);
-			
-			// --------------------------------------------
-			sql = "SELECT stateNo FROM accounting "
-					+ " WHERE accountSubNo = ? AND stateCon = '승인' ";
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, buydto.getAccountSubNo());
-			rs = pstmt.executeQuery();
-			
-			
-			if(rs.next()) {
 				
-				sno = rs.getInt("stateNo");
-			}else {
-				return 0;
-			}
-
-			
-			rs.close();
-			rs = null;
-			pstmt.close();
-			pstmt = null;
-			
-			// --------------------------------------------			
 			sql = "SELECT part_price FROM part "
 					+ " WHERE partNo = ? ";
 			
@@ -310,7 +287,7 @@ public class BuyDAOImpl implements BuyDAO {
 			
 			pstmt2 = conn.prepareStatement(sql);
 
-			pstmt2.setInt(1, sno);
+			pstmt2.setInt(1, buydto.getStateNo());
 			pstmt2.setString(2, buydto.getPartNo());
 			pstmt2.setString(3, buydto.getBuy_Date());
 			pstmt2.setInt(4, buydto.getBuy_qty());
@@ -636,8 +613,9 @@ public class BuyDAOImpl implements BuyDAO {
 		
 		try {
 			
-			sql = "SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate  "
+			sql = "SELECT stateNo, empNo, accountNo, accounting.accountSubNo, ACCOUNTSUB.name, amount, detail, cancellation, stateCon, stateDate  "
 					+ " FROM accounting "
+					+ " JOIN ACCOUNTSUB ON ACCOUNTSUB.accountSubNo = accounting.accountSubNo "
 					+ " WHERE accountSubNo = ? ";
 			
 			
@@ -655,7 +633,8 @@ public class BuyDAOImpl implements BuyDAO {
 				accdto.setStateNo(rs.getInt("StateNo"));
 				accdto.setEmpNo(rs.getString("empNo"));
 				accdto.setAccountNo(rs.getString("accountNo"));
-				accdto.setAccountSubNo(rs.getString("accountSubNo"));
+				accdto.setAccountSubNo(rs.getString("accounting.accountSubNo"));
+				accdto.setName(rs.getString("ACCOUNTSUB.name"));
 				accdto.setAmount(rs.getInt("amount"));
 				accdto.setDetail(rs.getString("detail"));
 				accdto.setCancellation(rs.getString("cancellation"));

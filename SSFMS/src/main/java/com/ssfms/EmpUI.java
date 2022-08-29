@@ -2,25 +2,15 @@ package com.ssfms;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+
+import db.member2.MemberDTO;
 
 
 
 public class EmpUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private EmpDAO dao = new EmpDAOImpl();
-	
-	/*
-	Date date = new Date();
-	
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm:ss");
-	// 안에 문자에도 대소문자 구별 필수
-	String s = sdf.format(date);
-	System.out.println(s);
-	*/
-	
 
 	public void menu() { 
 		
@@ -29,7 +19,7 @@ public class EmpUI {
 		while(true) {
 			try {
 				do {
-				System.out.print("1.사원관리 2.경력관리 3.연봉관리 4.급여관리 5.근태관리 6.돌아가기 => ");
+				System.out.print("1.사원관리 2.경력관리 3.연봉관리 4.급여관리 5.근태관리 6.급여전표관리 7.돌아가기 => ");
 				ch = Integer.parseInt(br.readLine());
 				System.out.println();
 				}while(ch<1||ch>6);
@@ -39,9 +29,10 @@ public class EmpUI {
 				case 2: new EmpUI().menu2();
 				case 3: new EmpUI().menu3();
 				case 4: new EmpUI().menu4();
-				case 5: new EmpUI().menu5();				
+				case 5: new EmpUI().menu5();
+				case 6: new EmpUI().menu6();
 				// 메인 메뉴로 돌아가기 
-				case 6: App.main(null); break;
+				case 7: App.main(null); break;
 				}
 				
 			} catch (Exception e) {
@@ -259,7 +250,7 @@ public class EmpUI {
 			System.out.print("수정할 경력번호 ? ");
 			dto.setCarNo(br.readLine());
 			
-			System.out.print("구분(퇴사/입사) ? ");
+			System.out.print("구분 ? ");
 			dto.setcDiv(br.readLine());
 
 			System.out.print("일시(퇴사/입사) ? ");
@@ -305,6 +296,33 @@ public class EmpUI {
 		System.out.println();
 	}
     
+    protected void findByEmpNo() {
+		System.out.println("\n사번 검색 !!!");
+		String empNon;
+		
+		try {
+			System.out.print("검색할 아이디 ? ");
+			empNon = br.readLine();
+			
+			EmpDTO dto = dao.listMember(empNon);
+			if(dto == null) {
+				System.out.println("등록된 아이디가 아닙니다.\n");
+				return;
+			}
+			
+			System.out.println(dto.getCarNo()+"\t");
+			System.out.print(dto.getEmpNo()+"\t");
+			System.out.print(dto.getcDiv()+"\t");
+			System.out.print(dto.getCar_date()+"\t");
+			System.out.print(dto.getcNote()+"\t");
+			System.out.print(dto.getDep()+"\t");
+			System.out.println(dto.getRank());
+		} catch (Exception e) {
+		}
+		
+		System.out.println();
+	}
+    
     // 연봉 관리
     public void menu3() { 
     	int ch;
@@ -336,11 +354,13 @@ public class EmpUI {
 		try {
 			EmpDTO adto = new EmpDTO();
 			
+			/*
 			System.out.print("연봉코드 ? ");
 			adto.setAsalNo(br.readLine());
 			
 			System.out.print("계약일자 ? ");
 			adto.setSal_date(br.readLine());
+			*/
 
 			System.out.print("계약연봉 ? ");
 			adto.setAsal(Integer.parseInt(br.readLine()));
@@ -359,7 +379,7 @@ public class EmpUI {
 	}
 
     protected void aupdate() {
-System.out.println("\n연봉 수정 !!!");
+        System.out.println("\n연봉 수정 !!!");
 		
 		try {
 			EmpDTO adto = new EmpDTO();
@@ -436,15 +456,23 @@ System.out.println("\n연봉 수정 !!!");
 
 			System.out.print("월급 ? ");
 			dto.setSal(Integer.parseInt(br.readLine()));
+			
+			int tax = 0;
+			if(dto.getSal()>=3000000) {
+				tax = (int) (dto.getSal()*0.03);
+			}else if (dto.getSal()>=2000000) {
+				tax = (int) (dto.getSal()*0.02);
+			}else {
+				tax=0;
+			}
 
-			System.out.print("세금 ? ");
-			dto.setTax(Integer.parseInt(br.readLine()));
+			dto.setTax(tax);
 
 			System.out.print("보너스 ? ");
 			dto.setBonus(Integer.parseInt(br.readLine()));
 			
-			System.out.print("실수령액 ? ");
-			dto.setPay(Integer.parseInt(br.readLine()));
+			int rSal = dto.getSal()-dto.getTax();
+			dto.setPay(rSal);
 			
 			dao.insertSett(dto);
 			
@@ -621,6 +649,140 @@ System.out.println("\n연봉 수정 !!!");
  		}
  		System.out.println();
 	}
+    
+    // 전표 관리
+    public void menu6() { 
+    	int ch;
+    	while(true) {
+    		try {
+    			do {
+    			System.out.print("1.전표등록 2.전표수정 3.전표리스트 4.돌아가기 => ");
+    			ch = Integer.parseInt(br.readLine());
+    			}while(ch<1||ch>4);
+    			System.out.println();
+    			
+    			if(ch==4) {
+    				new EmpUI().menu();
+    			}
+    			
+    			switch (ch) {
+    			case 1: acInsert(); break;
+				case 2: acUpdate(); break;
+				case 3: acListAll(); break;
+				}
+			} catch (Exception e) {
+			}
+    	}
+    }
+    
+    protected void acInsert() {
+    	System.out.println("\n구입전표등록!!!");
+    	
+    	try {
+    		AccDTO accdto = new AccDTO();
+    		EmpDTO empdto = new EmpDTO();
+    		
+			System.out.print("급여 신청자 사번");
+			empdto.setEmpNo(br.readLine());
+			
+			System.out.print("매입 신청 계좌코드: ");
+			accdto.setAccountNo(br.readLine());
+			
+			System.out.print("매입 신청 금액: ");
+			accdto.setAmount(Integer.parseInt(br.readLine()));
+			
+			System.out.print("상세 내용: ");
+			accdto.setDetail(br.readLine());
+			
+			//System.out.print("취소여부[X or O]: ");
+			//accdto.setCancellation(br.readLine());
+			
+			System.out.print("매입 신청 일자: ");
+			accdto.setStateDate(br.readLine());
+			
+			dao.insertAccSett(accdto, empdto);
+			
+			System.out.println();
+			System.out.println("[등록완료] 매입전표 등록이 완료되었습니다.");
+			System.out.println("관리자 승인까지 1~2일의 기간이 소요됩니다. ");
+			
+			
+		} catch (NumberFormatException e) {
+			System.out.println("금액은 숫자만 입력 가능합니다.");
+		} catch (Exception e) {
+			System.out.println("데이터 등록이 실패했습니다. ");
+		}
+		System.out.println();
+			
+    }
+    
+    protected void acUpdate() {
+        System.out.println("\n[전표취소] 등록된 전표 취소하기 ");
+		
+		try {
+			
+			AccDTO accdto = new AccDTO();
+			
+			System.out.print("취소할 전표일련번호: ");
+			accdto.setStateNo(Integer.parseInt(br.readLine()));
+			
+			int result = dao.updateAccSett(accdto);
+			
+			if(result ==0) {
+				System.out.println("등록된 전표가 아니거나 승인된 전표입니다.");
+				System.out.println("(취소조건 : 미승인된 구매 전표만 취소 가능 ");
+			}else {
+				System.out.println();
+				System.out.println("[취소완료] 매입전표가 취소되었습니다.");
+				System.out.println("관리자 승인까지 1~2일의 기간이 소요됩니다. ");
+			}
+
+			
+		} catch (Exception e) {
+			System.out.println("[취소실패] 전표 취소가 실패했습니다. ");
+		}
+		
+		System.out.println();
+    }
+    
+    protected void acListAll() {
+System.out.println("\n[등록전표조회] 등록된 매입전표 리스트");
+		
+		String accountSubNo;
+		
+		try {
+			System.out.print("매입전표 조회 [원자재 매입코드는 153]: ");
+			accountSubNo = br.readLine();
+			
+			List<AccDTO> list = dao.listAccSett(accountSubNo);
+			
+			if(list.size()==0) {
+				System.out.println("등록된 전표 내역이 없습니다. ");
+				return;
+			}
+			
+			System.out.println("전표일련번호\t사번\t계좌코드\t계정과목코드\t금액\t상세내용\t\t\t취소상태\t전표상태\t전표날짜");
+			System.out.println("------------------------------------------------------------------------------------------------------------------");
+			
+			for(AccDTO accdto : list) {
+				System.out.print(accdto.getStateNo()+"\t");
+				System.out.print(accdto.getEmpNo()+"\t");
+				System.out.print(accdto.getAccountNo()+"\t");
+				System.out.print(accdto.getAccountSubNo()+"\t");
+				System.out.print(accdto.getAmount()+"\t");
+				System.out.print(accdto.getDetail()+"\t");
+				System.out.print(accdto.getCancellation()+"\t");
+				System.out.print(accdto.getStateCon()+"\t");
+				System.out.println(accdto.getStateDate()+"\t");
+
+			}
+
+			
+		} catch (Exception e) {
+			System.out.println("등록전표 조회에 실패했습니다. ");
+		}
+		System.out.println();
+    }
     
     
 }

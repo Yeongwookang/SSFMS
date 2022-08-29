@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.util.DBConn;
+import oracle.jdbc.OracleTypes;
 
 public class EmpDAOImpl implements EmpDAO {
 	private Connection conn = DBConn.getConnection();
@@ -21,6 +22,7 @@ public class EmpDAOImpl implements EmpDAO {
 		int result = 0;
 		// PreparedStatement pstmt = null;
 		CallableStatement cstmt = null;
+		ResultSet rs = null;
 		String sql;
 		
 		
@@ -59,6 +61,7 @@ public class EmpDAOImpl implements EmpDAO {
 			cstmt.setString(9, dto.getHire_class());
 			
 			cstmt.executeUpdate();
+
 			result =1;
 			
 		}catch (SQLIntegrityConstraintViolationException e) {
@@ -385,14 +388,16 @@ public class EmpDAOImpl implements EmpDAO {
 		
 		try {
 			sql = "INSERT INTO annual_salary(asalNo, sal_date, asal, empNo) "
-					+ "VALUES (?, ?, ?, ?)";
+					+ "VALUES (ann_seq.NEXTVAL, sysdate, ?, ?)";
 			
 			pstmt = conn.prepareStatement(sql);
 			
+			/*
 			pstmt.setString(1, adto.getAsalNo());
 			pstmt.setString(2, adto.getSal_date());
-			pstmt.setInt(3, adto.getAsal());
-			pstmt.setString(4, adto.getEmpNo());
+			*/
+			pstmt.setInt(1, adto.getAsal());
+			pstmt.setString(2, adto.getEmpNo());
 			
 			result = pstmt.executeUpdate();
 			
@@ -860,6 +865,241 @@ public class EmpDAOImpl implements EmpDAO {
 		
 		return list;
 	}
+
+	// 월급 전표 등록
+	@Override
+	public int insertAccSett(AccDTO accdto, EmpDTO empdto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
+		
+		try {
+			conn.setAutoCommit(false);
+			
+			sql = "INSERT INTO settlement (empNo, sal, tax, bonus, pay)VALUES";
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setInt(2, empdto.getSal());
+			pstmt.setInt(3, empdto.getTax());
+			pstmt.setInt(4, empdto.getBonus());
+			pstmt.setInt(5, empdto.getPay());
+			
+			
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate) "
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '504', ?, ?, 'null', '미승인', ?) ";
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, accdto.getAmount());
+			pstmt.setString(4, accdto.getDetail());
+			pstmt.setString(5, accdto.getStateDate());
+			
+			result = pstmt.executeUpdate();
+			
+			conn.commit();
+			
+		} catch (SQLIntegrityConstraintViolationException e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			
+			if(e.getErrorCode() == 1) {
+				System.out.println("중복 데이터로 등록이 불가능합니다.");	
+			}else if (e.getErrorCode() == 1400) {
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			}else {
+				System.out.println(e.toString());
+			}
+			throw e;
+			
+		} catch (SQLDataException e) {
+			
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			
+			if(e.getErrorCode() == 1840 || e.getErrorCode()==1861) {
+				System.out.println("날짜 입력 형식 오류입니다.");
+			}else {
+				System.out.println(e.toString());
+			}
+			throw e;
+			
+		} catch (SQLException e) {
+			conn.rollback();
+			throw e;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
+		
+		return result;
+	}
+
+	// 월급 전표 수정
+	@Override
+	public int updateAccSett(AccDTO accdto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
+		
+		
+		try {
+			
+			sql = "UPDATE accounting SET "
+					+ " cancellation = 'O' "
+					+ " WHERE StateNo = ? AND stateCon = '미승인' AND accountSubNo = '153' ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, accdto.getStateNo());
+			
+			result = pstmt.executeUpdate();
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+			
+		}finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+
+		return result;
+	}
+
+	// 월급 전표 리스트
+	@Override
+	public List<AccDTO> listAccSett(String accountSubNo) {
+		List<AccDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			
+			sql = "SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate  "
+					+ " FROM accounting "
+					+ " WHERE accountSubNo = ? ";
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, accountSubNo);
+			
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				AccDTO accdto = new AccDTO();
+				
+			
+				accdto.setStateNo(rs.getInt("StateNo"));
+				accdto.setEmpNo(rs.getString("empNo"));
+				accdto.setAccountNo(rs.getString("accountNo"));
+				accdto.setAccountSubNo(rs.getString("accountSubNo"));
+				accdto.setAmount(rs.getInt("amount"));
+				accdto.setDetail(rs.getString("detail"));
+				accdto.setCancellation(rs.getString("cancellation"));
+				accdto.setStateCon(rs.getString("stateCon"));
+				accdto.setStateDate(rs.getDate("stateDate").toString());
+				
+				list.add(accdto);
+				
+			}
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			
+		}
+		
+		return list;
+	}
 	
-}
+	@Override
+	public List<EmpDTO> listMember(String empNo) {
+		EmpDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		
+		try {
+			sql = "SELECT * FROM ( \r\n"
+	         		+ " SELECT  carNo, empNo, div, car_date, note, dep, rank\r\n"
+	         		+ " FROM career c join department d ON c.depNo = d.depNo join rank r ON c.rankNo = r.rankNo\r\n"
+	         		+ " WHERE empNo = '1002'\r\n"
+	         		+ "         ORDER BY carNo DESC\r\n"
+	         		+ "     )WHERE rownum =1";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, empNo);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto = new EmpDTO();
+
+				dto.setCarNo(rs.getString("carNo"));
+				dto.setEmpNo(rs.getString("empNo"));
+				dto.setcDiv(rs.getString("div"));
+				dto.setCar_date(rs.getString("car_date"));
+				dto.setcNote(rs.getString("note"));
+				dto.setDep(rs.getString("dep"));
+				dto.setRank(rs.getString("rank"));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		return null;
+		
+		
+		}
+		
+	}
+
+	
+	
+	
+
 

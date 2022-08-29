@@ -376,16 +376,62 @@ public class BuyDAOImpl implements BuyDAO {
 	}
 
 	
-	
 
+	
+	
+	
+	//신규 원자재 등록하기
 	@Override
-	public int updateBuy(BuyDTO buydto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insertPart(BuyDTO buydto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
+		
+		try {
+			
+			sql ="INSERT INTO part (partNo, part_name, part_price, part_stock) "
+					+ " VALUES (?, ?, ?, 0) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, buydto.getPartNo());
+			pstmt.setString(2, buydto.getPart_name());
+			pstmt.setInt(3, buydto.getPart_price());
+			
+			result = pstmt.executeUpdate();
+		
+	
+			
+	} catch (SQLIntegrityConstraintViolationException e) {
+			
+			if(e.getErrorCode()==1) {
+				System.out.println("중복 데이터 등록은 불가합니다.");
+			}else if (e.getErrorCode()==1400) {
+					System.out.println("필수 사항을 입력하지 않았습니다.");
+			}else {
+				System.out.println(e.toString());
+			}
+			throw e;
+			
+				
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+			
+		}finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
 	}
-	
-	
-	
 	
 	
 	
@@ -513,7 +559,7 @@ public class BuyDAOImpl implements BuyDAO {
 	
 	
 	
-	//---------------------------------
+	//------------------------------------------------------------------------------
 	// 구매 전표 등록
 	@Override
 	public int insertAccBuy(AccDTO accdto, EmpDTO empdto) throws SQLException {
@@ -537,7 +583,23 @@ public class BuyDAOImpl implements BuyDAO {
 			
 			
 			result = pstmt.executeUpdate();
-
+			pstmt.close();
+			pstmt = null;
+			
+			
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL , ?, ?, '251', ?, ?, '', '미승인', ?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, accdto.getAmount());
+			pstmt.setString(4, accdto.getDetail());
+			pstmt.setString(5, accdto.getStateDate());
+			
+			result = pstmt.executeUpdate();
+			
 			conn.commit();
 			
 	
@@ -601,7 +663,7 @@ public class BuyDAOImpl implements BuyDAO {
 
 	//등록전표조회 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	@Override
-	public List<AccDTO> listAccBuy(String accountSubNo) {
+	public List<AccDTO> listAccBuy() {
 		List<AccDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -611,16 +673,14 @@ public class BuyDAOImpl implements BuyDAO {
 			
 			
 			/////////////////////차변 대변 그거 만들어달라고 해야함
-			sql = "SELECT stateNo, empNo, accountNo, B.name, amount, detail, cancellation, stateCon, stateDate "
-					+ " FROM accounting A "
-					+ " JOIN accountsub B ON A.accountSubNo = B.accountSubNo "
-					+ " WHERE A.accountSubNo = ? ";
+			sql = "SELECT stateNo, c.t_account , accountNo, b.asub_name, amount, cancellation, stateCon, stateDate, empNo "
+					+ " FROM accounting a "
+					+ " JOIN accountsub b ON a.accountSubNo = b.accountSubNo "
+					+ " JOIN CATEGORY c ON c.categNo = b.categNo "
+					+ " WHERE A.accountSubNo = '153' OR A.accountSubNo = '251' ";
 			
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, accountSubNo);
-			
-			
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -629,14 +689,14 @@ public class BuyDAOImpl implements BuyDAO {
 				
 				
 				accdto.setStateNo(rs.getInt("StateNo"));
-				accdto.setEmpNo(rs.getString("empNo"));
+				accdto.setT_account(rs.getString("t_account"));
 				accdto.setAccountNo(rs.getString("accountNo"));
-				accdto.setName(rs.getString("name"));
+				accdto.setAsub_name(rs.getString("asub_name"));
 				accdto.setAmount(rs.getInt("amount"));
-				accdto.setDetail(rs.getString("detail"));
 				accdto.setCancellation(rs.getString("cancellation"));
 				accdto.setStateCon(rs.getString("stateCon"));
 				accdto.setStateDate(rs.getDate("stateDate").toString());
+				accdto.setEmpNo(rs.getString("empNo"));
 				
 				list.add(accdto);
 				
@@ -712,6 +772,9 @@ public class BuyDAOImpl implements BuyDAO {
 
 		return result;
 	}
+
+
+
 
 	
 	

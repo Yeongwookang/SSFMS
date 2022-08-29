@@ -12,17 +12,17 @@ public interface BuyDAO {
 	public List<BuyDTO> listShop();
 	
 	
-	//구매
+	//구매 + 원자재
 	public int insertBuy (BuyDTO buydto) throws SQLException;
-	public int updateBuy (BuyDTO buydto) throws SQLException;
 	public List<BuyDTO> listBuy();
 	public List<BuyDTO> partlistAll(String partNo);
+	public int insertPart (BuyDTO buydto) throws SQLException;
 	
 	
 	//전표등록
 	public int insertAccBuy (AccDTO accdto, EmpDTO empdto) throws SQLException;
 	public int updateAccBuy (AccDTO accdto) throws SQLException; ///전표취소-상태변경
-	public List<AccDTO> listAccBuy(String accountSubNo);
+	public List<AccDTO> listAccBuy();
 	
 	
 	

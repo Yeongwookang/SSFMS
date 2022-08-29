@@ -172,29 +172,29 @@ public class BuyUI {
 		String accountSubNo;
 		
 		try {
-			System.out.print("매입전표 조회 [원자재 매입코드는 153]: ");
-			accountSubNo = br.readLine();
+		//	System.out.print("매입전표 조회 [원자재 매입코드는 153/251]: ");
+		//	accountSubNo = br.readLine();
 			
-			List<AccDTO> list = buydao.listAccBuy(accountSubNo);
+			List<AccDTO> list = buydao.listAccBuy();
 			
 			if(list.size()==0) {
 				System.out.println("등록된 전표 내역이 없습니다. ");
 				return;
 			}
 			
-			System.out.println("전표일련번호\t사번\t계좌코드\t계정과목명\t금액\t상세내용\t\t\t취소상태\t전표상태\t전표날짜");
+			System.out.println("전표일련번호\t차대\t계좌코드\t계정과목명\t금액\t취소\t전표상태\t작성일자\t\t사번");
 			System.out.println("------------------------------------------------------------------------------------------------------------------");
 			
 			for(AccDTO accdto : list) {
 				System.out.print(accdto.getStateNo()+"\t");
-				System.out.print(accdto.getEmpNo()+"\t");
+				System.out.print(accdto.getT_account()+"\t");
 				System.out.print(accdto.getAccountNo()+"\t");
-				System.out.print(accdto.getName()+"\t");
+				System.out.print(accdto.getAsub_name()+"\t");
 				System.out.print(accdto.getAmount()+"\t");
-				System.out.print(accdto.getDetail()+"\t");
 				System.out.print(accdto.getCancellation()+"\t");
 				System.out.print(accdto.getStateCon()+"\t");
-				System.out.println(accdto.getStateDate()+"\t");
+				System.out.print(accdto.getStateDate()+"\t");
+				System.out.println(accdto.getEmpNo()+"\t");
 
 			}
 
@@ -244,11 +244,7 @@ public class BuyUI {
 		
 	}
 	
-	
-	private void insertPart() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 
 	protected void buyInsert() {
@@ -293,14 +289,6 @@ public class BuyUI {
 
 	
 	
-	protected void buyUpdate() {
-		
-
-		
-	}
-	
-	
-	
 	
 	protected void buyList() {
 		System.out.println("\n[발주현황조회] 발주현황 조회하기");
@@ -321,15 +309,6 @@ public class BuyUI {
 			
 		}
 		System.out.println();
-		
-	}
-	
-	
-	
-	protected void buyDelete() {
-		
-		
-
 		
 	}
 	
@@ -369,7 +348,38 @@ public class BuyUI {
 	}
 
 	
+	
+	
+	private void insertPart() {
+		System.out.println("\n[신규 원자재] 새로운 원자재 정보 추가하기");
+		
+		try {
+			
+			BuyDTO buydto = new BuyDTO();
+			
+			
+			System.out.print("원자재 코드[G_ + 숫자 3자리]: ");
+			buydto.setPartNo("G_" + br.readLine());
+			
+			System.out.print("원자재명: ");
+			buydto.setPart_name(br.readLine());
+			
+			System.out.print("원자재 단가: ");
+			buydto.setPart_price(Integer.parseInt(br.readLine()));
+		
+				
+			buydao.insertPart(buydto);
+			
+			System.out.println("[등록완료] 새로운 원자재가 등록되었습니다.");
+			
+			
+		} catch (Exception e) {
+			System.out.println("[등록실패] 데이터 등록이 실패했습니다.");
+		}
+		System.out.println();
 
+	}
+	
 	
 
 	
@@ -514,9 +524,6 @@ public class BuyUI {
 		try {
 			
 			BuyDTO buydto = new BuyDTO();
-			
-			//System.out.print("매입처 코드[숫자 4자]: ");
-			//buydto.setShop_No("SH" + br.readLine());
 			
 			System.out.print("사업자등록번호[10자]: ");
 			buydto.setShop_Num(br.readLine());

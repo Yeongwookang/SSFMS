@@ -14,7 +14,6 @@ public class AccDTO {
 	private String rank; 
 	private String asub_name;
 	
-	
 	public String getAsub_name() {
 		return asub_name;
 	}

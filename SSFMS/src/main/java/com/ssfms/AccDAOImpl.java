@@ -250,10 +250,8 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 		
 		try {
-			sql = "{ \"SELECT accounting (StateNo, empNo, accountNo, accountsubNo, amount, \"\r\n"
-					+ "					+ \" detail, cancellation, statecon, statedate)\"\r\n"
-					+ "					+ \" VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)\";\r\n"
-					+ "			 }";
+			sql = "\"SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate "
+					+ "FROM accounting";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -314,7 +312,7 @@ public class AccDAOImpl implements AccDAO {
 					+ "			 }";
 			
 			
-			pstmt = conn.prepareCall(sql);
+			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.executeUpdate();
 			

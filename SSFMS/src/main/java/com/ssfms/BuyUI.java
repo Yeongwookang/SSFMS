@@ -178,14 +178,14 @@ public class BuyUI {
 				return;
 			}
 			
-			System.out.println("전표일련번호\t사번\t계좌코드\t계정과목코드\t금액\t상세내용\t\t\t취소상태\t전표상태\t전표날짜");
+			System.out.println("전표일련번호\t사번\t계좌코드\t계정과목명\t금액\t상세내용\t\t\t취소상태\t전표상태\t전표날짜");
 			System.out.println("------------------------------------------------------------------------------------------------------------------");
 			
 			for(AccDTO accdto : list) {
 				System.out.print(accdto.getStateNo()+"\t");
 				System.out.print(accdto.getEmpNo()+"\t");
 				System.out.print(accdto.getAccountNo()+"\t");
-				System.out.print(accdto.getAccountSubNo()+"\t");
+				System.out.print(accdto.getName()+"\t");
 				System.out.print(accdto.getAmount()+"\t");
 				System.out.print(accdto.getDetail()+"\t");
 				System.out.print(accdto.getCancellation()+"\t");
@@ -214,13 +214,13 @@ public class BuyUI {
 				
 				System.out.println();
 				System.out.println("-----------------------------------------------------------------");
-				System.out.println("[1] 원자재 발주 [2] 발주수정 [3] 발주현황조회 [4] 발주취소 [5] 원자재 재고조회 [6] 뒤로가기 ");
+				System.out.println("[1] 원자재 발주 [2] 발주수정 [3] 발주현황조회 [4] 원자재 재고조회 [5] 뒤로가기 ");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.print("=> ");
 				
 				ch = Integer.parseInt(br.readLine());
 				
-				if(ch==6) {
+				if(ch==5) {
 					new BuyUI().menu();
 				}
 				
@@ -228,8 +228,7 @@ public class BuyUI {
 				case 1: buyInsert(); break;
 				case 2: buyUpdate(); break;
 				case 3: buyList(); break;
-				case 4: buyDelete(); break;
-				case 5: partList(); break;
+				case 4: partList(); break;
 				
 				}
 					
@@ -295,7 +294,7 @@ public class BuyUI {
 	protected void buyList() {
 		System.out.println("\n[발주현황조회] 발주현황 조회하기");
 
-		System.out.println("매입번호\t전표일련번호\t재료코드\t재료명\t매입일자\t매입수량\t매입금액\t매입처코드");
+		System.out.println("매입번호\t전표일련번호\t재료코드\t재료명\t\t\t\t\t\t매입일자\t\t매입수량\t매입금액\t매입처코드");
 		System.out.println("------------------------------------------------------------------------------------------------------------------");
 		
 		List<BuyDTO> list = buydao.listBuy();
@@ -307,7 +306,7 @@ public class BuyUI {
 			System.out.print(buydto.getBuy_Date()+"\t");
 			System.out.print(buydto.getBuy_qty()+"\t");
 			System.out.print(buydto.getBuy_price()+"\t");
-			System.out.print(buydto.getShop_No()+"\t");
+			System.out.println(buydto.getShop_No()+"\t");
 			
 		}
 		System.out.println();

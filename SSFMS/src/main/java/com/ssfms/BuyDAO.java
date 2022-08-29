@@ -15,7 +15,6 @@ public interface BuyDAO {
 	//구매
 	public int insertBuy (BuyDTO buydto) throws SQLException;
 	public int updateBuy (BuyDTO buydto) throws SQLException;
-	public int deleteBuy (BuyDTO buydto) throws SQLException;
 	public List<BuyDTO> listBuy();
 	public List<BuyDTO> partlistAll(String partNo);
 	

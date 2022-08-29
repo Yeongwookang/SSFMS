@@ -214,21 +214,20 @@ public class BuyUI {
 				
 				System.out.println();
 				System.out.println("-----------------------------------------------------------------");
-				System.out.println("[1] 원자재 발주 [2] 발주수정 [3] 발주현황조회 [4] 원자재 재고조회 [5] 뒤로가기 ");
+				System.out.println("[1] 원자재 발주 [2] 발주내역조회 [3] 원자재 재고조회 [4] 뒤로가기 ");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.print("=> ");
 				
 				ch = Integer.parseInt(br.readLine());
 				
-				if(ch==5) {
+				if(ch==4) {
 					new BuyUI().menu();
 				}
 				
 				switch(ch) {
 				case 1: buyInsert(); break;
-				case 2: buyUpdate(); break;
-				case 3: buyList(); break;
-				case 4: partList(); break;
+				case 2: buyList(); break;
+				case 3: partList(); break;
 				
 				}
 					
@@ -372,7 +371,7 @@ public class BuyUI {
 				
 				System.out.println();
 				System.out.println("-----------------------------------------------------------------");
-				System.out.println("[1] 반품등록 [2] 반품취소 [3] 뒤로가기 ");
+				System.out.println("[1] 반품등록 [2] 반품내역조회 [3] 뒤로가기 ");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.print("=> ");
 				

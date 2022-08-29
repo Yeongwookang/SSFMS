@@ -71,20 +71,26 @@ public class ProdDAOImpl implements ProdDAO {
 		PreparedStatement pstmt = null;
 		String sql;
 		try {
-			sql = "UPDATE part SET part_stock = part_stock - ? WHERE partNo = ?";
+
 			sql = "INSERT INTO STOCK(StockNo, prodNo, partNo, pStock, use, nStock, date)"
 					+ "VALUES(STOCK_seq.nextval, ?, ?, ?, ?, ?, SYSDATE )";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, pdto.getProdNo()); // 생산번호
 			pstmt.setString(2, pdto.getPartNo()); // 부품코드
-			pstmt.setInt(3, pdto.partStock(pdto.getPartNo())); // 기존 재고량
-			pstmt.setInt(4, pdto.getPart_stock()); // 사용량
-			pstmt.setInt(5, pdto.partStock(pdto.getPartNo()) - pdto.getPart_stock()); // 현재 재고량
+			int stock =readPart(pdto.getPartNo()).getPart_stock();
+			pstmt.setInt(3, stock); // 기존 재고량
+			pstmt.setInt(4, pdto.getQty()); // 사용량
+			pstmt.setInt(5, stock-pdto.getQty()); // 현재 재고량
+			if(stock-pdto.getQty()<0) {
+				System.out.println("현재 재고량보다 많이 사용할수 없습니다.");
+				return;
+			}
 			pstmt.executeUpdate();
 			pstmt.close();
 			
+			sql = "UPDATE part SET part_stock = part_stock - ? WHERE partNo = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, pdto.getPart_stock());
+			pstmt.setInt(1, stock-pdto.getQty());
 			pstmt.setString(2, pdto.getPartNo());
 			pstmt.executeUpdate();
 
@@ -117,6 +123,33 @@ public class ProdDAOImpl implements ProdDAO {
 	public int productStock(String productNo) throws SQLException {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	
+	@Override
+	public BuyDTO readPart(String partNo) throws SQLException {
+		PreparedStatement pstmt = null;
+		ResultSet rs=null;
+		String sql;
+		BuyDTO bdto = new BuyDTO();
+		
+		try {
+			sql="SELECT partNo, part_name, part_price, part_stock FROM PART WHERE partNo =? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, partNo);
+			rs=pstmt.executeQuery();
+			if (rs.next()) {
+				bdto.setPartNo(partNo);
+				bdto.setPart_name(rs.getString("part_name"));
+				bdto.setPart_price(rs.getInt("part_price"));
+				bdto.setPart_stock(rs.getInt("part_stock"));
+			}
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return bdto;
 	}
 
 }

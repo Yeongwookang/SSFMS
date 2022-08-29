@@ -13,14 +13,15 @@ public interface EmpDAO {
 	// 경력사항
 	public int insertCare(EmpDTO dto) throws SQLException;
 	public int updateCare(EmpDTO dto) throws SQLException;
-	public List<EmpDTO> listMember(String empNo);
+	// public List<EmpDTO> listMember(String empNo);
 	public List<EmpDTO> listCare();
 	// 연봉
 	public int insertAsal(EmpDTO adto) throws SQLException;
 	public int updateAsal(EmpDTO adto) throws SQLException;
 	public List<EmpDTO> listAsal();
 	// 급여관리
-	public int insertSett(EmpDTO dto) throws SQLException;
+	// public int insertSett(EmpDTO dto) throws SQLException;
+	public int insertSett(AccDTO accdto, EmpDTO empdto) throws SQLException;
 	public int updateSett(EmpDTO dto) throws SQLException;
 	public List<EmpDTO> listSett();
 	// 근태관리

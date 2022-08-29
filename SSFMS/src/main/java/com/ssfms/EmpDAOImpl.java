@@ -20,33 +20,46 @@ public class EmpDAOImpl implements EmpDAO {
 	@Override
 	public int insertEmp(EmpDTO dto) throws SQLException {
 		int result = 0;
-		// PreparedStatement pstmt = null;
-		CallableStatement cstmt = null;
-		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		// CallableStatement cstmt = null;
+		// ResultSet rs = null;
 		String sql;
 		
 		
 		try {
-			/*
+			conn.setAutoCommit(false);
+			
 			sql = "INSERT INTO emp(empNo, pwd, name, tel, rrn, email, addr, edu, account, hire_class) "
-					+ "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ "VALUES ( test_seq.NexTval, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getPwd());
+			pstmt.setString(2, dto.getName());
+			pstmt.setString(3, dto.getTel());
+			pstmt.setString(4, dto.getRrn());
+			pstmt.setString(5, dto.getEmail());
+			pstmt.setString(6, dto.getAddr());
+			pstmt.setString(7, dto.getEdu());
+			pstmt.setString(8, dto.getAccount());
+			pstmt.setString(9, dto.getHire_class());
+			
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "INSERT INTO career(empNo, carNo, div, Car_date, note, depNo, rankNo) "
+					+ "VALUES ( test_seq.currval, care_seq.nextval, '입사', sysdate, ?, ?, '01000')";
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, dto.getEmpNo());
-			pstmt.setString(2, dto.getPwd());
-			pstmt.setString(3, dto.getName());
-			pstmt.setString(4, dto.getTel());
-			pstmt.setString(5, dto.getRrn());
-			pstmt.setString(6, dto.getEmail());
-			pstmt.setString(7, dto.getAddr());
-			pstmt.setString(8, dto.getEdu());
-			pstmt.setString(9, dto.getAccount());
-			pstmt.setString(10, dto.getHire_class());
+			pstmt.setString(1, dto.getcNote());
+			pstmt.setString(2, dto.getDepNo());			
 			
-			result = pstmt.executeUpdate();
-			*/
+			result += pstmt.executeUpdate();
 			
+			conn.commit();
+			
+			/*
 			sql = "{ CALL insert_emp(?, ?, ?, ?, ?, ?, ?, ?, ?) }";
 			cstmt = conn.prepareCall(sql);
 			
@@ -63,8 +76,14 @@ public class EmpDAOImpl implements EmpDAO {
 			cstmt.executeUpdate();
 
 			result =1;
+			*/
 			
 		}catch (SQLIntegrityConstraintViolationException e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
 			// 기본키 제약 위반, NOT NULL 등의 제약 위반 - 무결성 제약 위반시 발생
 			if(e.getErrorCode() == 1) { // 기본키 중복
 				System.out.println("사번 중복으로 등록이 불가능합니다.");
@@ -91,9 +110,9 @@ public class EmpDAOImpl implements EmpDAO {
 			throw e;
 			
 		} finally {
-			if(cstmt != null) {
+			if(pstmt != null) {
 				try {
-					cstmt.close();
+					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
@@ -391,11 +410,7 @@ public class EmpDAOImpl implements EmpDAO {
 					+ "VALUES (ann_seq.NEXTVAL, sysdate, ?, ?)";
 			
 			pstmt = conn.prepareStatement(sql);
-			
-			/*
-			pstmt.setString(1, adto.getAsalNo());
-			pstmt.setString(2, adto.getSal_date());
-			*/
+
 			pstmt.setInt(1, adto.getAsal());
 			pstmt.setString(2, adto.getEmpNo());
 			
@@ -541,12 +556,14 @@ public class EmpDAOImpl implements EmpDAO {
 
 	// 급여 입력
 	@Override
-	public int insertSett(EmpDTO dto) throws SQLException {
+	public int insertSett(AccDTO accdto, EmpDTO empdto) throws SQLException {
 		int result = 0;
-		CallableStatement cstmt = null;
+		// CallableStatement cstmt = null;
+		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
+			/*
 			sql = "{ CALL insert_sett(?, ?, ?, ?, ?) }";
 			cstmt = conn.prepareCall(sql);
 			
@@ -558,6 +575,51 @@ public class EmpDAOImpl implements EmpDAO {
 			
 			cstmt.executeUpdate();
 			result =1;
+			*/
+			
+            conn.setAutoCommit(false);
+			
+            sql = "INSERT INTO settlement (settleNo, empNo, sal, tax, bonus, pay, pay_date)"
+            		+ "VALUES(sett_seq.NextVAl, ?, ?, ?, ?, ?, SYSDATE)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setInt(2, empdto.getSal());
+			pstmt.setInt(3, empdto.getTax());
+			pstmt.setInt(4, empdto.getBonus());
+			pstmt.setInt(5, empdto.getPay());
+			
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '503', ?, ?, '', '미승인', SYSDATE)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, accdto.getAmount());
+			pstmt.setString(4, accdto.getDetail());
+			
+			/*
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '517', ?, ?, '', '미승인', SYSDATE)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, accdto.getAmount());
+			pstmt.setString(4, accdto.getDetail());
+			*/
+			
+			result += pstmt.executeUpdate();
+			
+			conn.commit();
 			
 		}catch (SQLIntegrityConstraintViolationException e) {
 			// 기본키 제약 위반, NOT NULL 등의 제약 위반 - 무결성 제약 위반시 발생
@@ -586,9 +648,9 @@ public class EmpDAOImpl implements EmpDAO {
 			throw e;
 			
 		} finally {
-			if(cstmt != null) {
+			if(pstmt != null) {
 				try {
-					cstmt.close();
+					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
@@ -874,35 +936,19 @@ public class EmpDAOImpl implements EmpDAO {
 		int result = 0;
 		
 		try {
-			conn.setAutoCommit(false);
-			
-			sql = "INSERT INTO settlement (empNo, sal, tax, bonus, pay)VALUES";
-			
-			pstmt.setString(1, empdto.getEmpNo());
-			pstmt.setInt(2, empdto.getSal());
-			pstmt.setInt(3, empdto.getTax());
-			pstmt.setInt(4, empdto.getBonus());
-			pstmt.setInt(5, empdto.getPay());
-			
-			
-			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate) "
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '504', ?, ?, 'null', '미승인', ?) ";
+
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '503', ?, ?, '', '미승인', SYSDATE)";
+			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(2, accdto.getAccountNo());
 			pstmt.setInt(3, accdto.getAmount());
 			pstmt.setString(4, accdto.getDetail());
-			pstmt.setString(5, accdto.getStateDate());
 			
-			result = pstmt.executeUpdate();
-			
-			conn.commit();
+			result += pstmt.executeUpdate();
 			
 		} catch (SQLIntegrityConstraintViolationException e) {
-			try {
-				conn.rollback();
-			} catch (Exception e2) {
-			}
 			
 			if(e.getErrorCode() == 1) {
 				System.out.println("중복 데이터로 등록이 불가능합니다.");	
@@ -963,7 +1009,7 @@ public class EmpDAOImpl implements EmpDAO {
 			
 			sql = "UPDATE accounting SET "
 					+ " cancellation = 'O' "
-					+ " WHERE StateNo = ? AND stateCon = '미승인' AND accountSubNo = '153' ";
+					+ " WHERE StateNo = ? AND stateCon = '미승인' AND accountSubNo = '503' OR accountSubNo = '517' ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -1056,6 +1102,7 @@ public class EmpDAOImpl implements EmpDAO {
 		return list;
 	}
 	
+	/*
 	@Override
 	public List<EmpDTO> listMember(String empNo) {
 		EmpDTO dto = null;
@@ -1095,6 +1142,7 @@ public class EmpDAOImpl implements EmpDAO {
 		
 		
 		}
+		*/
 		
 	}
 

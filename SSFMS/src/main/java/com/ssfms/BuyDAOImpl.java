@@ -244,7 +244,7 @@ public class BuyDAOImpl implements BuyDAO {
 	
 	
 
-	
+	// -----------------------------------------------------------------------------------
 	//구매 이루어지는 것
 	@Override
 	public int insertBuy(BuyDTO buydto) throws SQLException {
@@ -257,8 +257,8 @@ public class BuyDAOImpl implements BuyDAO {
 			
 			conn.setAutoCommit(false);
 			sql = "INSERT INTO buy(buy_No, stateNo, partNo, buy_Date, buy_qty, buy_price, shop_No)"
-					+ " SELECT buy_No_seq.NEXTVAL, stateNo, ?, ?, ?, ?, ? FROM accounting "
-					+ " WHERE stateNum = ? ";
+					+ " SELECT 'B_'||TO_CHAR(buy_No_seq.NEXTVAL), stateNo, ?, ?, ?, ?, ? FROM accounting "
+					+ " WHERE stateNo = ? ";
 
 			pstmt = conn.prepareStatement(sql);
 			
@@ -266,13 +266,13 @@ public class BuyDAOImpl implements BuyDAO {
 			pstmt.setInt(2, buydto.getBuy_qty());
 			pstmt.setInt(3, buydto.getBuy_price());
 			pstmt.setString(4, buydto.getShop_No());
-			pstmt.setInt(5, buydto.getStateNo()); // state_No 가져와야함? 그냥 입력하자...ㅎ
+			pstmt.setInt(5, buydto.getStateNo());
 			
 			result = pstmt.executeUpdate();
 			pstmt.close();
 			pstmt = null;
 			
-			sql = "UPDATE part SET part_stock = ? "
+			sql = "UPDATE part SET part_stock += ? "
 					+ " WHERE partNo = ? ";
 			
 			pstmt.setInt(1, buydto.getPart_stock() + buydto.getBuy_qty());
@@ -346,6 +346,7 @@ public class BuyDAOImpl implements BuyDAO {
 	}
 
 
+	
 	
 	
 	// 발주리스트 전체조회

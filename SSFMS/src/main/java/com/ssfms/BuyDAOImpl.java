@@ -774,9 +774,155 @@ public class BuyDAOImpl implements BuyDAO {
 	}
 
 
-
-
 	
+	
+	/////////////////////////////반품 //////////////////////
+	// 반품 테이블에 데이터 등록 -> 재고 테이블에서 신청한 자재만큼 빠짐 -> 구매테이블에서 매입수량 0으로 변경 -> 전표에 반품으로 찍혀서 작성되어야함
+	//
+	@Override
+	public int insertBanpum(BuyDTO buydto) throws SQLException {
+		PreparedStatement pstmt= null;
+		PreparedStatement pstmt2 = null;
+		ResultSet rs = null;
+		String sql;
+		int result = 0;
+		
+		int qty = 0;
+		String pcode;
+		
+		try {
+			
+			// --------------------------------------------	 매입 신청수량 가져오기
+			conn.setAutoCommit(false);
+			
+			sql = "SELECT buy_qty, partNo FROM buy "
+					+ " WHERE buy_No = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, buydto.getBuy_No());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				qty = rs.getInt("buy_qty");
+				pcode = rs.getString("partNo");
+			}else {
+				return 0;
+			}
+		
+			rs.close();
+			rs = null;
+			pstmt.close();
+			pstmt = null;
+			
+			
+			// --------------------------------------------	 반품 테이블에 추가	
+			sql = "INSERT INTO banpum(ban_No, ban_Date, ban_qty, ban_Finish, ban_Memo)"
+					+ " VALUES (?, ?, ?, ?, ?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, buydto.getBuy_No());
+			pstmt.setString(2, buydto.getBan_Date());
+			pstmt.setInt(3, qty);
+			pstmt.setString(4, buydto.getBan_Date());  // 하루 추가하기? +1 일
+			pstmt.setString(5, buydto.getBan_Memo());
+
+			pstmt.executeUpdate();
+
+			pstmt.close();
+			pstmt = null;
+			
+			
+			// --------------------------------------------	 재고 테이블에서 수량 변경
+			sql = "UPDATE part SET part_stock = part_stock - ? "
+					+ " WHERE partNo = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, qty);
+			pstmt.setString(2, pcode);
+			
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt = null;
+			
+			
+			// --------------------------------------------	 구매 테이블에 매입수량 0으로 변경
+			sql = "UPDATE buy SET buy_qty = 0 , buy_price = 0 "
+					+ " WHERE buy_No = ? AND partNo = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, buydto.getBuy_No());
+			pstmt.setString(2, pcode);
+			
+			pstmt.executeUpdate();
+			
+			result = 1;
+			
+			conn.commit();
+
+			
+			// --------------------------------------------	 전표에 반품? 신청으로 등록
+
+			
+		} catch (SQLIntegrityConstraintViolationException e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			
+			if(e.getErrorCode() == 1) {
+				System.out.println("중복 데이터로 등록이 불가능합니다.");	
+			}else if (e.getErrorCode() == 1400) {
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			}else {
+				System.out.println(e.toString());
+			}
+			throw e;
+			
+		} catch (SQLDataException e) {
+			
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			
+			if(e.getErrorCode() == 1840 || e.getErrorCode()==1861) {
+				System.out.println("날짜 입력 형식 오류입니다.");
+			}else {
+				System.out.println(e.toString());
+			}
+			throw e;
+			
+		} catch (SQLException e) {
+			conn.rollback();
+			e.printStackTrace();
+			throw e;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+			
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
+		
+		
+		return result;
+	}
+
 	
 }
 

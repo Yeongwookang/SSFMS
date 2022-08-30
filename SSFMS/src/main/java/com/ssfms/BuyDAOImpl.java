@@ -402,6 +402,7 @@ public class BuyDAOImpl implements BuyDAO {
 		
 	
 			
+			
 	} catch (SQLIntegrityConstraintViolationException e) {
 			
 			if(e.getErrorCode()==1) {
@@ -730,9 +731,9 @@ public class BuyDAOImpl implements BuyDAO {
 	}
 
 
-	//전표상태 취소 
+	//전표상태 취소 !!!!!!!!!!!!!!!!!!!!!
 	@Override
-	public int updateAccBuy(AccDTO accdto) throws SQLException {
+	public int deleteAccBuy(AccDTO accdto) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 		int result = 0;
@@ -740,9 +741,8 @@ public class BuyDAOImpl implements BuyDAO {
 		
 		try {
 			
-			sql = "UPDATE accounting SET "
-					+ " cancellation = 'O' "
-					+ " WHERE StateNo = ? AND stateCon = '미승인' AND accountSubNo = '153' ";
+			sql = "DELETE FROM accounting "
+					+ " WHERE StateNo = ? AND stateCon = '미승인' AND (accountSubNo = '153' OR accountSubNo = '251') ";
 			
 			
 			pstmt = conn.prepareStatement(sql);
@@ -769,33 +769,31 @@ public class BuyDAOImpl implements BuyDAO {
 				}
 			}
 		}
-
 		return result;
 	}
 
 
 	
-	
 	/////////////////////////////반품 //////////////////////
 	// 반품 테이블에 데이터 등록 -> 재고 테이블에서 신청한 자재만큼 빠짐 -> 구매테이블에서 매입수량 0으로 변경 -> 전표에 반품으로 찍혀서 작성되어야함
-	//
+	// 
 	@Override
 	public int insertBanpum(BuyDTO buydto) throws SQLException {
 		PreparedStatement pstmt= null;
-		PreparedStatement pstmt2 = null;
 		ResultSet rs = null;
 		String sql;
 		int result = 0;
 		
 		int qty = 0;
-		String pcode;
+		String pcode, accn;
+		int bp = 0;
 		
 		try {
 			
 			// --------------------------------------------	 매입 신청수량 가져오기
 			conn.setAutoCommit(false);
 			
-			sql = "SELECT buy_qty, partNo FROM buy "
+			sql = "SELECT buy_qty, partNo, buy_price FROM buy "
 					+ " WHERE buy_No = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -805,6 +803,7 @@ public class BuyDAOImpl implements BuyDAO {
 			if(rs.next()) {
 				qty = rs.getInt("buy_qty");
 				pcode = rs.getString("partNo");
+				bp = rs.getInt("buy_price");
 			}else {
 				return 0;
 			}
@@ -848,6 +847,65 @@ public class BuyDAOImpl implements BuyDAO {
 			pstmt = null;
 			
 			
+			
+			// --------------------------------------------	 전표에 반품? 신청으로 등록!!
+			
+			
+			sql = "SELECT accountNo FROM accounting "
+					+ " WHERE stateNo = (SELECT stateNo FROM buy WHERE buy_No = ? ) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, buydto.getBuy_No());
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				accn = rs.getString("accountNo");
+			}else {
+				return 0;
+			}
+		
+			rs.close();
+			rs = null;
+			pstmt.close();
+			pstmt = null;
+
+
+			
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '153', ?, ?, '', '승인', ?) ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, buydto.getEmpNo());
+			pstmt.setString(2, accn);
+			pstmt.setInt(3, bp * -1 );
+			pstmt.setString(4, buydto.getBan_Memo());
+			pstmt.setString(5, buydto.getBan_Date());
+			
+			
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL , ?, ?, '251', ?, ?, '', '승인', ?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, buydto.getEmpNo());
+			pstmt.setString(2, accn);
+			pstmt.setInt(3, bp * -1 );
+			pstmt.setString(4, buydto.getBan_Memo());
+			pstmt.setString(5, buydto.getBan_Date());
+			
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+
+
+			
 			// --------------------------------------------	 구매 테이블에 매입수량 0으로 변경
 			sql = "UPDATE buy SET buy_qty = 0 , buy_price = 0 "
 					+ " WHERE buy_No = ? AND partNo = ? ";
@@ -859,13 +917,12 @@ public class BuyDAOImpl implements BuyDAO {
 			
 			pstmt.executeUpdate();
 			
+
 			result = 1;
 			
 			conn.commit();
 
 			
-			// --------------------------------------------	 전표에 반품? 신청으로 등록
-
 			
 		} catch (SQLIntegrityConstraintViolationException e) {
 			try {
@@ -912,7 +969,7 @@ public class BuyDAOImpl implements BuyDAO {
 				} catch (Exception e2) {
 				}
 			}
-			
+
 			try {
 				conn.setAutoCommit(true);
 			} catch (Exception e2) {
@@ -923,7 +980,157 @@ public class BuyDAOImpl implements BuyDAO {
 		return result;
 	}
 
+
 	
+	//반품 리스트 조회 
+	@Override
+	public List<BuyDTO> listBanpum() {
+		List<BuyDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			
+			sql = "SELECT ban_No, ban_date, ban_qty, ban_finish, ban_memo "
+					+ " FROM banpum ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				BuyDTO buydto = new BuyDTO();
+				
+				buydto.setBan_No(rs.getString("ban_No"));
+				buydto.setBan_Date(rs.getDate("ban_date").toString());
+				buydto.setBan_qty(rs.getInt("ban_qty"));
+				buydto.setBan_Finish(rs.getDate("ban_finish").toString());
+				buydto.setBan_Memo(rs.getString("ban_memo"));
+
+				list.add(buydto);
+				
+			}
+			
+			
+		} catch (Exception e) {
+
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+		}
+		
+		
+		return list;
+	}
+
+
+	
+	
+	
+	@Override
+	public List<BuyDTO> applyList() {
+		List<BuyDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		int result = 0;
+		
+		try {
+			sql = "SELECT partofferno, partNo, part_name, qty, offer_date "
+					+ " FROM partoffer ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				BuyDTO buydto = new BuyDTO();
+				
+				buydto.setPartOfferNo(rs.getInt("partofferno"));
+				buydto.setPartNo(rs.getString("partNo"));
+				buydto.setPart_name(rs.getString("part_name"));
+				buydto.setQty(rs.getInt("qty"));
+				buydto.setOffer_date(rs.getDate("offer_date").toString());
+				
+				list.add(buydto);
+			}
+			
+			
+		} catch (Exception e) {
+
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return list;
+	}
+
+
+	@Override
+	public int deleteApply(BuyDTO buydto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
+		
+		try {
+			
+			sql = "DELETE FROM partoffer "
+					+ " WHERE PartOfferNo = ?  ";
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, buydto.getPartOfferNo());
+			
+			result = pstmt.executeUpdate();
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+			
+		}finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+	
+
 }
 
 

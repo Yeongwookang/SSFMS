@@ -14,6 +14,8 @@ public class BuyDTO {
 	public void setAccountSubNo(String accountSubNo) {
 		this.accountSubNo = accountSubNo;
 	}
+	
+	private String empNo;
 	private String ban_No;
 	private String ban_Date;
 	private int ban_qty;
@@ -33,6 +35,30 @@ public class BuyDTO {
 	private String part_name;
 	private int part_price;
 	private int part_stock;
+	
+	
+	public int getPartOfferNo() {
+		return partOfferNo;
+	}
+	public void setPartOfferNo(int partOfferNo) {
+		this.partOfferNo = partOfferNo;
+	}
+	public int getQty() {
+		return qty;
+	}
+	public void setQty(int qty) {
+		this.qty = qty;
+	}
+	public String getOffer_date() {
+		return offer_date;
+	}
+	public void setOffer_date(String offer_date) {
+		this.offer_date = offer_date;
+	}
+
+	private int partOfferNo;
+	private int qty;
+	private String offer_date;
 	
 	
 	public String getBuy_No() {
@@ -167,9 +193,12 @@ public class BuyDTO {
 	public void setPart_stock(int part_stock) {
 		this.part_stock = part_stock;
 	}
-	
-	
-	
+	public String getEmpNo() {
+		return empNo;
+	}
+	public void setEmpNo(String empNo) {
+		this.empNo = empNo;
+	}
 	
 	
 

@@ -7,7 +7,6 @@ private String product_name;
 private int cost;
 private int price;
 private int stock;
-
 public String getProductNo() {
 	return productNo;
 }
@@ -38,5 +37,7 @@ public int getStock() {
 public void setStock(int stock) {
 	this.stock = stock;
 }
+
+
 
 }

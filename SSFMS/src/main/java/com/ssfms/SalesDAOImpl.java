@@ -32,18 +32,6 @@ public class SalesDAOImpl implements SalesDAO {
 	}
 
 	@Override
-	public List<SalesDTO> listSales() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<SalesDTO> listSales(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public int salesInsert(SalesDTO dto) throws SQLException {
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -51,16 +39,17 @@ public class SalesDAOImpl implements SalesDAO {
 
 		try {
 			sql = "INSERT INTO salesInsert (salesNo, stateNo, productCode, customer, sales, salesQty, dealDate)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+					+ " VALUES ('S'||TO_CHAR(sales_no_seq.NEXTVAL), ?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, dto.getSalesNo());
-			pstmt.setInt(2, dto.getStateNo());
-			pstmt.setString(3, dto.getProductCode());
-			pstmt.setString(4, dto.getCustomer());
-			pstmt.setInt(5, dto.getSales());
-			pstmt.setInt(6, dto.getSalesQty());
-			pstmt.setString(7, dto.getDealDate());	
+			pstmt.setInt(1, dto.getStateNo());
+			pstmt.setString(2, dto.getProductCode());
+			pstmt.setString(3, dto.getCustomer());
+			pstmt.setInt(4, dto.getSales());
+			pstmt.setInt(5, dto.getSalesQty());
+			pstmt.setString(6, dto.getDealDate());	
+			
+			result = pstmt.executeUpdate();
 
 		} catch (SQLIntegrityConstraintViolationException e) {
 
@@ -98,6 +87,14 @@ public class SalesDAOImpl implements SalesDAO {
 			}
 		}
 		return result;
+	}	
+
+	@Override
+	public SalesDTO salesRead(String salesNo) {
+		SalesDTO dto = null;
+		
+		
+		return null;
 	}
 
 	@Override
@@ -116,23 +113,24 @@ public class SalesDAOImpl implements SalesDAO {
 		try {
 			sql = "INSERT INTO taxBill(taxBillNum, salesNo, companyName, name, address, busStatue, currDate, valueSupply, taxAmount,"
 					+ "item, num, unitPrice, total, outAmount, note)"
-					+ " VALUES(?, sales_no_seq.nextval, ?, ?, ?, ?, SYSDATE, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ " VALUES(?, ?, ?, ?, ?, ?, SYSDATE, ?, ?, ?, ?, ?, ?, ?, ?)";
 			
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, dto.getTaxBillNum());
-			pstmt.setString(2, dto.getCompanyName());
-			pstmt.setString(3, dto.getName());
-			pstmt.setString(4, dto.getAddress());
-			pstmt.setString(5, dto.getBusStatue());
-			pstmt.setInt(6, dto.getValueSupply());
-			pstmt.setInt(7, dto.getTaxAmount());
-			pstmt.setString(8, dto.getItem());
-			pstmt.setInt(9, dto.getNum());
-			pstmt.setInt(10, dto.getUnitPrice());
-			pstmt.setInt(11, dto.getTotal());
-			pstmt.setInt(12, dto.getOutAmount());
-			pstmt.setString(13, dto.getNote());
+			pstmt.setInt(2, dto.getStateNo());
+			pstmt.setString(3, dto.getCompanyName());
+			pstmt.setString(4, dto.getName());
+			pstmt.setString(5, dto.getAddress());
+			pstmt.setString(6, dto.getBusStatue());
+			pstmt.setInt(7, dto.getValueSupply());
+			pstmt.setInt(8, dto.getTaxAmount());
+			pstmt.setString(9, dto.getItem());
+			pstmt.setInt(10, dto.getNum());
+			pstmt.setInt(12, dto.getUnitPrice());
+			pstmt.setInt(13, dto.getTotal());
+			pstmt.setInt(14, dto.getOutAmount());
+			pstmt.setString(14, dto.getNote());
 
 		} catch (SQLIntegrityConstraintViolationException e) {
 
@@ -172,6 +170,7 @@ public class SalesDAOImpl implements SalesDAO {
 
 		return result;
 	}
+
 
 
 }

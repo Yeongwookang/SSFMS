@@ -405,8 +405,8 @@ public class BuyUI {
 				}
 				
 				switch(ch) {
-				case 1: ; break;
-				case 2: ; break;
+				case 1: banpumInsert(); break;
+				case 2: banpumList(); break;
 				
 				}
 					
@@ -419,11 +419,44 @@ public class BuyUI {
 	
 	
 	protected void banpumInsert() {
+		System.out.println("\n[반품등록] 반품 원자재 등록하기 ");
 		
+		try {
+			BuyDTO buydto = new BuyDTO();
+
+			
+			System.out.print("반품 등록할 매입 코드: ");
+			buydto.setBuy_No(br.readLine());
+			
+			System.out.print("반품 등록일: ");
+			buydto.setBan_Date(br.readLine());
+			
+			System.out.print("상세 내용: ");
+			buydto.setBan_Memo(br.readLine());
+			
+			
+			int result = buydao.insertBanpum(buydto);
+			
+			
+			if(result ==0) {
+				System.out.println("[등록실패] 반품 신청할 매입 내역이 없습니다.");
+			}else {
+				System.out.println();
+				System.out.println("[등록완료] 반품등록이 완료되었습니다.");
+				System.out.println("감사합니다.");
+			}
+			
+			
+		} catch (Exception e) {
+			System.out.println("데이터 등록이 실패했습니다. ");
+		}
+		System.out.println();
+
+
 	}
 	
 	
-	protected void banpumDelete() {
+	protected void banpumList() {
 		
 	}
 	

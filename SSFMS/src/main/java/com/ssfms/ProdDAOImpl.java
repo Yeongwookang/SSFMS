@@ -180,7 +180,8 @@ public class ProdDAOImpl implements ProdDAO {
 		String sql;
 
 		try {
-			sql = "SELECT * FROM State_prod_view";
+			sql = "SELECT stateNo, t_account, empNo, accountNo, asub_name, amount, detail, cancellation, stateCon, "
+					+ " TO_char(stateDate,'YYYY-MM-DD')stateDate, dep, rank, name FROM State_prod_view";
 
 			pstmt = conn.prepareStatement(sql);
 

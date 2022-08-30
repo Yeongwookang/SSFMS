@@ -118,7 +118,7 @@ public class ProdUI {
 			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 
@@ -353,7 +353,7 @@ public class ProdUI {
 
 		while (true) {
 			try {
-				System.out.println("1. 제품재고리스트 2. 재고사용표 3. 돌아가기 ");
+				System.out.println("1. 생산 2. 재고사용표 3. 돌아가기 ");
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 3) {
 					return;

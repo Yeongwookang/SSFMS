@@ -2,6 +2,7 @@ package com.ssfms;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import com.util.DBConn;
 
@@ -335,11 +336,11 @@ public class SalesUI {
 		// 영업이익조회 = 매출-매출원가-판매비와 관리비
 		while (true) {
 		try {
-			System.out.println("[영업이익조회] 1.매출입력 2.매출조회 3.매출전표입력(차변/대변) 4.영업이익조회 5.영업부 메뉴로 돌아가기 => ");
+			System.out.println("[영업이익조회] 1.매출입력 2.매출조회 3.매출전표입력(차변/대변) 4.매출전표조회 5.영업이익조회 6.영업부 메뉴로 돌아가기 => ");
 
 			ch = Integer.parseInt(br.readLine());
 
-			if (ch == 5) {
+			if (ch == 6) {
 				SalesUI.this.menu();
 			}
 
@@ -354,6 +355,8 @@ public class SalesUI {
 				salesAccountInsert();
 				break;
 			case 4:
+				salesAccountCheck();
+			case 5:
 				operatingProfitCheck();
 			}
 		} catch (Exception e) {
@@ -363,7 +366,7 @@ public class SalesUI {
 	}
 
 	private void salesInsert() {
-		System.out.println("[매출입력]");
+		System.out.println("[매출입력(※전표번호가 있어야 입력이 가능합니다※)]");
 
 		try {
 			SalesDTO dto = new SalesDTO();
@@ -372,7 +375,7 @@ public class SalesUI {
 			dto.setStateNo(Integer.parseInt(br.readLine()));
 			
 			System.out.println("[제품코드]");
-			dto.setProductCode(br.readLine());
+			dto.setProductNo(br.readLine());
 			
 			System.out.println("[거래처]");
 			dto.setCustomer(br.readLine());
@@ -402,29 +405,21 @@ public class SalesUI {
 
 	private void salesCheck() {
 		System.out.println("[매출입력조회]");
-		String salesNo;
 		
-		try {
-			System.out.println("조회하실 매출의 매출번호를 입력하세요 >> ");
-			salesNo = br.readLine();
-
-			SalesDTO dto = dao.salesRead(salesNo);
-			if (dto == null) {
-				System.out.println("등록된 아이디가 아닙니다\n");
-				return;
-			}
-
-			dto.setSalesNo(br.readLine());
-			dto.setStateNo(Integer.parseInt(br.readLine()));
-			dto.setProductCode(br.readLine());
-			dto.setCustomer(br.readLine());
-			dto.setSales(Integer.parseInt(br.readLine()));
-			dto.setSalesQty(Integer.parseInt(br.readLine()));
-			dto.setDealDate(br.readLine());
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+		System.out.println("매출번호\t전표일련번호\t제품코드\t거래처\t매출액\t수량\t거래일시");
+		System.out.println("--------------------------------------------------------------------------------");
+		
+		List<SalesDTO> list = dao.listSales();
+		for(SalesDTO dto : list) {
+			System.out.print(dto.getSalesNo()+"\t");
+			System.out.print(dto.getStateNo()+"\t");
+			System.out.print(dto.getProductNo()+"\t");
+			System.out.print(dto.getCustomer()+"\t");
+			System.out.print(dto.getSales()+"\t");
+			System.out.print(dto.getSalesQty()+"\t");
+			System.out.print(dto.getDealDate()+"\t");
 		}
+		
 		System.out.println();
 		
 		
@@ -433,7 +428,71 @@ public class SalesUI {
 
 	private void salesAccountInsert() {
 		System.out.println("[매출전표입력(차변/대변)]");
+		
+		try {
+			EmpDTO empdto = new EmpDTO();
+			AccDTO accdto = new AccDTO();
 
+			
+			System.out.print("매입 신청자 사번: ");
+			empdto.setEmpNo(br.readLine());
+			
+			System.out.print("매입 신청 계좌코드: ");
+			accdto.setAccountNo(br.readLine());
+			
+			System.out.print("매입 신청 금액: ");
+			accdto.setAmount(Integer.parseInt(br.readLine()));
+			
+			System.out.print("상세 내용: ");
+			accdto.setDetail(br.readLine());
+			
+			System.out.print("매입 신청 일자: ");
+			accdto.setStateDate(br.readLine());
+			
+			dao.salesAccountInsert(empdto, accdto);
+			
+			System.out.println("매입전표 등록이 완료되었습니다.");
+			
+		} catch (NumberFormatException e) {
+			System.out.println("금액은 숫자만 입력 가능합니다.");
+		} catch (Exception e) {
+			System.out.println("데이터 등록이 실패했습니다. ");
+		}
+		System.out.println();
+
+	}
+
+	private void salesAccountCheck() {
+		System.out.println("[매출전표조회]");
+		
+		try {
+			List<AccDTO> list = dao.listSalesAccountInsert();
+			
+			if(list.size()==0) {
+				System.out.println("등록된 전표 내역이 없습니다. ");
+				return;
+			}
+			
+			System.out.println("전표일련번호\t차대\t계좌코드\t계정과목명\t금액\t취소\t전표상태\t작성일자\t\t사번");
+			System.out.println("------------------------------------------------------------------------------------------------------------------");
+			
+			for(AccDTO accdto : list) {
+				System.out.print(accdto.getStateNo()+"\t");
+				System.out.print(accdto.getT_account()+"\t");
+				System.out.print(accdto.getAccountNo()+"\t");
+				System.out.print(accdto.getAsub_name()+"\t");
+				System.out.print(accdto.getAmount()+"\t");
+				System.out.print(accdto.getCancellation()+"\t");
+				System.out.print(accdto.getStateCon()+"\t");
+				System.out.print(accdto.getStateDate()+"\t");
+				System.out.println(accdto.getEmpNo()+"\t");
+
+			}
+		} catch (Exception e) {
+			System.out.println("등록전표 조회에 실패했습니다. ");
+		}
+		System.out.println();
+		
 	}
 
 	private void operatingProfitCheck() {

@@ -7,13 +7,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface SalesDAO {
-	public int estimateInsertSales(SalesDTO dto) throws SQLException;	
-	public int updateSales(SalesDTO dto) throws SQLException;
+	public int estimateInsertSales(SalesDTO dto) throws SQLException;
 	public int taxBillInsert(SalesDTO dto) throws SQLException;
 	public int salesInsert(SalesDTO dto) throws SQLException;
-	public int salesAccountInsert(SalesDTO dto) throws SQLException;
+	public int salesAccountInsert(EmpDTO empdto, AccDTO accdto) throws SQLException;
 	
 	
 	public SalesDTO estimateRead(String id);
-	public SalesDTO salesRead(String salesNo);
-}
+	public List<SalesDTO> listSales();
+	public List<AccDTO> listSalesAccountInsert();
+	}

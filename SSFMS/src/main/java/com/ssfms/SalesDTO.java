@@ -6,7 +6,7 @@ public class SalesDTO {
 	//매출
 	private String salesNo;
 	private int stateNo;
-	private String productCode;
+	private String productNo;
 	private String customer;
 	private int sales;
 	private int salesQty;
@@ -40,11 +40,11 @@ public class SalesDTO {
 	public void setStateNo(int stateNo) {
 		this.stateNo = stateNo;
 	}
-	public String getProductCode() {
-		return productCode;
+	public String getProductNo() {
+		return productNo;
 	}
-	public void setProductCode(String productCode) {
-		this.productCode = productCode;
+	public void setProductNo(String productNo) {
+		this.productNo = productNo;
 	}
 	public String getCustomer() {
 		return customer;

@@ -16,4 +16,6 @@ public interface SalesDAO {
 	public SalesDTO estimateRead(String id);
 	public List<SalesDTO> listSales();
 	public List<AccDTO> listSalesAccountInsert();
+	public List<SalesDTO> listTaxBill();
+	public List<AccDTO> listMoney();
 	}

@@ -128,20 +128,6 @@ public class SalesDAOImpl implements SalesDAO {
 			conn.setAutoCommit(false);
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
 					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '412', ?, ?, '', '미승인', ?) ";
-			pstmt = conn.prepareStatement(sql);
-
-			pstmt.setString(1, empdto.getEmpNo());
-			pstmt.setString(2, accdto.getAccountNo());
-			pstmt.setInt(3, accdto.getAmount());
-			pstmt.setString(4, accdto.getDetail());
-			pstmt.setString(5, accdto.getStateDate());
-
-			result = pstmt.executeUpdate();
-			pstmt.close();
-			pstmt = null;
-
-			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL , ?, ?, '251', ?, ?, '', '미승인', ?) ";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -216,22 +202,19 @@ public class SalesDAOImpl implements SalesDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
-		
+
 		try {
-			
 			sql = "SELECT stateNo, c.t_account , accountNo, b.asub_name, amount, cancellation, stateCon, stateDate, empNo "
-					+ " FROM accounting a "
-					+ " JOIN accountsub b ON a.accountSubNo = b.accountSubNo "
+					+ " FROM accounting a " + " JOIN accountsub b ON a.accountSubNo = b.accountSubNo "
 					+ " JOIN CATEGORY c ON c.categNo = b.categNo "
 					+ " WHERE A.accountSubNo = '412' OR A.accountSubNo = '251' ";
-			
-			
+
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				AccDTO accdto = new AccDTO();
-				
+
 				accdto.setStateNo(rs.getInt("StateNo"));
 				accdto.setT_account(rs.getString("t_account"));
 				accdto.setAccountNo(rs.getString("accountNo"));
@@ -241,34 +224,29 @@ public class SalesDAOImpl implements SalesDAO {
 				accdto.setStateCon(rs.getString("stateCon"));
 				accdto.setStateDate(rs.getDate("stateDate").toString());
 				accdto.setEmpNo(rs.getString("empNo"));
-				
+
 				list.add(accdto);
-				
+
 			}
-			
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(rs != null) {
+			if (rs != null) {
 				try {
 					rs.close();
 				} catch (Exception e2) {
 				}
 			}
-			
-			if(pstmt!=null) {
+
+			if (pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
-			
-			
-		}	
-		
-		
+		}
+
 		return list;
 	}
 
@@ -281,24 +259,23 @@ public class SalesDAOImpl implements SalesDAO {
 		try {
 			sql = "INSERT INTO taxBill(taxBillNum, salesNo, companyName, name, address, busStatue, currDate, valueSupply, taxAmount,"
 					+ "item, num, unitPrice, total, outAmount, note)"
-					+ " VALUES(?, ?, ?, ?, ?, ?, SYSDATE, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ " VALUES(sales_no_seq.NEXTVAL, ?, ?, ?, ?, ?, SYSDATE, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setInt(1, dto.getTaxBillNum());
-			pstmt.setInt(2, dto.getStateNo());
-			pstmt.setString(3, dto.getCompanyName());
-			pstmt.setString(4, dto.getName());
-			pstmt.setString(5, dto.getAddress());
-			pstmt.setString(6, dto.getBusStatue());
-			pstmt.setInt(7, dto.getValueSupply());
-			pstmt.setInt(8, dto.getTaxAmount());
-			pstmt.setString(9, dto.getItem());
-			pstmt.setInt(10, dto.getNum());
-			pstmt.setInt(12, dto.getUnitPrice());
-			pstmt.setInt(13, dto.getTotal());
-			pstmt.setInt(14, dto.getOutAmount());
-			pstmt.setString(14, dto.getNote());
+			pstmt.setInt(1, dto.getStateNo());
+			pstmt.setString(2, dto.getCompanyName());
+			pstmt.setString(3, dto.getName());
+			pstmt.setString(4, dto.getAddress());
+			pstmt.setString(5, dto.getBusStatue());
+			pstmt.setInt(6, dto.getValueSupply());
+			pstmt.setInt(7, dto.getTaxAmount());
+			pstmt.setString(8, dto.getItem());
+			pstmt.setInt(9, dto.getNum());
+			pstmt.setInt(10, dto.getUnitPrice());
+			pstmt.setInt(11, dto.getTotal());
+			pstmt.setInt(12, dto.getOutAmount());
+			pstmt.setString(13, dto.getNote());
 
 		} catch (SQLIntegrityConstraintViolationException e) {
 
@@ -337,6 +314,65 @@ public class SalesDAOImpl implements SalesDAO {
 		}
 
 		return result;
+	}
+
+	@Override
+	public List<SalesDTO> listTaxBill() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<AccDTO> listMoney() {
+		List<AccDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT stateNo, c.t_account , accountNo, b.asub_name, amount, cancellation, stateCon, stateDate, empNo "
+					+ " FROM accounting a " + " JOIN accountsub b ON a.accountSubNo = b.accountSubNo "
+					+ " JOIN CATEGORY c ON c.categNo = b.categNo " + " WHERE A.accountSubNo = '120";
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				AccDTO accdto = new AccDTO();
+
+				accdto.setStateNo(rs.getInt("StateNo"));
+				accdto.setT_account(rs.getString("t_account"));
+				accdto.setAccountNo(rs.getString("accountNo"));
+				accdto.setAsub_name(rs.getString("asub_name"));
+				accdto.setAmount(rs.getInt("amount"));
+				accdto.setCancellation(rs.getString("cancellation"));
+				accdto.setStateCon(rs.getString("stateCon"));
+				accdto.setStateDate(rs.getDate("stateDate").toString());
+				accdto.setEmpNo(rs.getString("empNo"));
+
+				list.add(accdto);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+
+		}
+		return list;
 	}
 
 }

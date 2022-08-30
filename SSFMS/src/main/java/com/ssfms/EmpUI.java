@@ -21,7 +21,7 @@ public class EmpUI {
 				System.out.print("1.사원관리 2.경력관리 3.연봉관리 4.급여관리 5.근태관리 6.급여전표관리 7.돌아가기 => ");
 				ch = Integer.parseInt(br.readLine());
 				System.out.println();
-				}while(ch<1||ch>6);
+				}while(ch<1||ch>7);
 				
 				switch(ch) {
 				case 1: new EmpUI().menu1();
@@ -237,7 +237,6 @@ public class EmpUI {
 		}
 		
 		System.out.println();
-
 		
 	}
 	
@@ -481,15 +480,15 @@ public class EmpUI {
 			
 			accdto.setAmount(empdto.getSal());
 			
-			System.out.print("상세 내용: ");
-			accdto.setDetail(br.readLine());
+			// System.out.print("상세 내용: ");
+			// accdto.setDetail(br.readLine());
 			
 			// System.out.print("급여 신청 일자: ");
 			// accdto.setStateDate(br.readLine());
 			
-			// accdto.setAmount(empdto.getTax());
 			
-			dao.insertAccSett(accdto, empdto);
+			
+			dao.insertSett(accdto, empdto);
 			
 			System.out.println();
 			System.out.println("[등록완료] 매입전표 등록이 완료되었습니다.");
@@ -497,6 +496,7 @@ public class EmpUI {
 			
 			System.out.println("급여등록에 성공 했습니다.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("급여등록에 실패 했습니다.");
 		}
 		
@@ -781,34 +781,34 @@ public class EmpUI {
     }
     
     protected void acListAll() {
-System.out.println("\n[등록전표조회] 등록된 매입전표 리스트");
+        System.out.println("\n[등록전표조회] 등록된 매입전표 리스트");
 		
 		String accountSubNo;
 		
 		try {
-			System.out.print("급여전표 조회 [급여 코드는 503, 세금 코드는 517]: ");
-			accountSubNo = br.readLine();
+			// System.out.print("급여전표 조회 [급여 코드는 503, 세금 코드는 517]: ");
+			// accountSubNo = br.readLine();
 			
-			List<AccDTO> list = dao.listAccSett(accountSubNo);
+			List<AccDTO> list = dao.listAccSett();
 			
 			if(list.size()==0) {
 				System.out.println("등록된 전표 내역이 없습니다. ");
 				return;
 			}
 			
-			System.out.println("전표일련번호\t사번\t계좌코드\t계정과목코드\t금액\t상세내용\t\t\t취소상태\t전표상태\t전표날짜");
+			System.out.println("전표일련번호\t차대\t계좌코드\t계정과목명\t금액\t취소상태\t전표상태\t전표날짜\t\t사번");
 			System.out.println("------------------------------------------------------------------------------------------------------------------");
 			
 			for(AccDTO accdto : list) {
 				System.out.print(accdto.getStateNo()+"\t\t");
-				System.out.print(accdto.getEmpNo()+"\t");
+				System.out.print(accdto.getT_account()+"\t");
 				System.out.print(accdto.getAccountNo()+"\t");
-				System.out.print(accdto.getAccountSubNo()+"\t\t");
+				System.out.print(accdto.getAsub_name()+"\t");
 				System.out.print(accdto.getAmount()+"\t");
-				System.out.print(accdto.getDetail()+"\t\t\t");
 				System.out.print(accdto.getCancellation()+"\t");
 				System.out.print(accdto.getStateCon()+"\t");
-				System.out.println(accdto.getStateDate()+"\t");
+				System.out.print(accdto.getStateDate()+"\t");
+				System.out.println(accdto.getEmpNo()+"\t");
 
 			}
 

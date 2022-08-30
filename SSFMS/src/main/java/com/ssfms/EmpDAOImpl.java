@@ -593,29 +593,30 @@ public class EmpDAOImpl implements EmpDAO {
 			pstmt.close();
 			pstmt = null;
 			
+			// 월급(세금전)
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '503', ?, ?, '', '미승인', SYSDATE)";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '503', ?, '급여', '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(2, accdto.getAccountNo());
 			pstmt.setInt(3, accdto.getAmount());
-			pstmt.setString(4, accdto.getDetail());
+			// pstmt.setString(4, accdto.getDetail());
 			
-			/*
-			result = pstmt.executeUpdate();
+		
+			result += pstmt.executeUpdate();
 			pstmt.close();
 			pstmt = null;
 			
+			// 세금
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '517', ?, ?, '', '미승인', SYSDATE)";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '517', ?, '세금', '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(2, accdto.getAccountNo());
-			pstmt.setInt(3, accdto.getAmount());
-			pstmt.setString(4, accdto.getDetail());
-			*/
+			pstmt.setInt(3, empdto.getTax());
+			// pstmt.setString(4, accdto.getDetail());
 			
 			result += pstmt.executeUpdate();
 			
@@ -631,6 +632,12 @@ public class EmpDAOImpl implements EmpDAO {
 				System.out.println(e.toString());
 			}
 			
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+				
+			}
+			
 			throw e;
 			
 		} catch (SQLDataException e) {
@@ -640,11 +647,20 @@ public class EmpDAOImpl implements EmpDAO {
 			} else {
 				System.out.println(e.toString());
 			}
-			
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+				
+			}
 			throw e;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+				
+			}
 			throw e;
 			
 		} finally {
@@ -654,7 +670,9 @@ public class EmpDAOImpl implements EmpDAO {
 				} catch (Exception e2) {
 				}
 			}
+			conn.setAutoCommit(true);
 		}
+		
 		return result;
 	}
 
@@ -1040,7 +1058,7 @@ public class EmpDAOImpl implements EmpDAO {
 
 	// 월급 전표 리스트
 	@Override
-	public List<AccDTO> listAccSett(String accountSubNo) {
+	public List<AccDTO> listAccSett() {
 		List<AccDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -1048,30 +1066,30 @@ public class EmpDAOImpl implements EmpDAO {
 		
 		try {
 			
-			sql = "SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate  "
-					+ " FROM accounting "
-					+ " WHERE accountSubNo = ? ";
+			sql = "SELECT stateNo, c.t_account , accountNo, b.asub_name, amount, cancellation, stateCon, stateDate, empNo "
+					+ " FROM accounting a "
+					+ " JOIN accountsub b ON a.accountSubNo = b.accountSubNo "
+					+ " JOIN CATEGORY c ON c.categNo = b.categNo "
+					+ " WHERE A.accountSubNo = '503' OR A.accountSubNo = '517'  ";
 			
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, accountSubNo);
-			
-			
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				AccDTO accdto = new AccDTO();
 				
-			
+				
+				
 				accdto.setStateNo(rs.getInt("StateNo"));
-				accdto.setEmpNo(rs.getString("empNo"));
+				accdto.setT_account(rs.getString("t_account"));
 				accdto.setAccountNo(rs.getString("accountNo"));
-				accdto.setAccountSubNo(rs.getString("accountSubNo"));
+				accdto.setAsub_name(rs.getString("asub_name"));
 				accdto.setAmount(rs.getInt("amount"));
-				accdto.setDetail(rs.getString("detail"));
 				accdto.setCancellation(rs.getString("cancellation"));
 				accdto.setStateCon(rs.getString("stateCon"));
 				accdto.setStateDate(rs.getDate("stateDate").toString());
+				accdto.setEmpNo(rs.getString("empNo"));
 				
 				list.add(accdto);
 				

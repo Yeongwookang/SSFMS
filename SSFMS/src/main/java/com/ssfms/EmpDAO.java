@@ -31,7 +31,7 @@ public interface EmpDAO {
 	// 전표 등록
 	public int insertAccSett(AccDTO accdto, EmpDTO empdto) throws SQLException;
 	public int updateAccSett(AccDTO accdto) throws SQLException; ///전표취소-상태변경
-	public List<AccDTO> listAccSett(String accountSubNo);
+	public List<AccDTO> listAccSett();
 	
 	
 	

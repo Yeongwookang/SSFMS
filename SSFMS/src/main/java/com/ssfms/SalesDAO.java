@@ -15,6 +15,5 @@ public interface SalesDAO {
 	
 	
 	public SalesDTO estimateRead(String id);
-	public List<SalesDTO> listSales();
-	public List<SalesDTO> listSales(String name);
+	public SalesDTO salesRead(String salesNo);
 }

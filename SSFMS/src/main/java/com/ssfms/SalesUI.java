@@ -53,7 +53,7 @@ public class SalesUI {
 
 	protected void orderProcessing() {
 		int ch;
-
+		while (true) {
 		try {
 			System.out.println("\n[견적/주문관리] 1.견적서입력 2.견적서조회 3.주문서조회 4.주문서관리 5.영업부 메뉴로 돌아가기=> ");
 			ch = Integer.parseInt(br.readLine());
@@ -82,7 +82,7 @@ public class SalesUI {
 		}
 
 		System.out.println();
-
+		}
 	}
 
 	private void estimateInsert() {
@@ -281,20 +281,20 @@ public class SalesUI {
 			e.printStackTrace();
 		}
 	}
+	
 
-	private void banpumChenk() {
+	private void banpumInsert() {
 		System.out.println("[반품등록]");
 
 	}
 
-	private void banpumInsert() {
+	private void banpumChenk() {
 		System.out.println("[반품조회]");
-
 	}
 
 	protected void shippingManagement() {
 		int ch;
-
+		while (true) {
 		try {
 			System.out.println("\n[배송관리] 1.배송입력 2.배송조회 3.영업부 메뉴로 돌아가기 =>");
 			ch = Integer.parseInt(br.readLine());
@@ -305,17 +305,27 @@ public class SalesUI {
 
 			switch (ch) {
 			case 1:
-				banpumInsert();
+				shipInsert();
 				break;
 			case 2:
-				banpumChenk();
+				shipChenk();
 				break;
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		}
+	}
+	
+	private void shipInsert() {
+		// TODO Auto-generated method stub
+		
+	}
 
+	private void shipChenk() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	protected void operatingProfit() {
@@ -323,12 +333,13 @@ public class SalesUI {
 
 		// 매출데이터 입력후 전표에 차변, 대변 같이 넣기
 		// 영업이익조회 = 매출-매출원가-판매비와 관리비
+		while (true) {
 		try {
-			System.out.println("[영업이익조회] 1.매출입력 2.매출전표입력(차변/대변) 3.영업이익조회 4.영업부 메뉴로 돌아가기 => ");
+			System.out.println("[영업이익조회] 1.매출입력 2.매출조회 3.매출전표입력(차변/대변) 4.영업이익조회 5.영업부 메뉴로 돌아가기 => ");
 
 			ch = Integer.parseInt(br.readLine());
 
-			if (ch == 4) {
+			if (ch == 5) {
 				SalesUI.this.menu();
 			}
 
@@ -337,15 +348,18 @@ public class SalesUI {
 				salesInsert();
 				break;
 			case 2:
-				salesAccountInsert();
+				salesCheck();
 				break;
 			case 3:
+				salesAccountInsert();
+				break;
+			case 4:
 				operatingProfitCheck();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		}
 	}
 
 	private void salesInsert() {
@@ -353,9 +367,6 @@ public class SalesUI {
 
 		try {
 			SalesDTO dto = new SalesDTO();
-			
-			System.out.println("[매출번호]");
-			dto.setSalesNo(br.readLine());
 			
 			System.out.println("[전표일련번호]");
 			dto.setStateNo(Integer.parseInt(br.readLine()));
@@ -387,6 +398,38 @@ public class SalesUI {
 		System.out.println();
 
 	}
+	
+
+	private void salesCheck() {
+		System.out.println("[매출입력조회]");
+		String salesNo;
+		
+		try {
+			System.out.println("조회하실 매출의 매출번호를 입력하세요 >> ");
+			salesNo = br.readLine();
+
+			SalesDTO dto = dao.salesRead(salesNo);
+			if (dto == null) {
+				System.out.println("등록된 아이디가 아닙니다\n");
+				return;
+			}
+
+			dto.setSalesNo(br.readLine());
+			dto.setStateNo(Integer.parseInt(br.readLine()));
+			dto.setProductCode(br.readLine());
+			dto.setCustomer(br.readLine());
+			dto.setSales(Integer.parseInt(br.readLine()));
+			dto.setSalesQty(Integer.parseInt(br.readLine()));
+			dto.setDealDate(br.readLine());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
+		
+		
+		
+	}
 
 	private void salesAccountInsert() {
 		System.out.println("[매출전표입력(차변/대변)]");
@@ -400,7 +443,8 @@ public class SalesUI {
 
 	protected void taxBill() {
 		int ch;
-
+		
+		while (true) {
 		try {
 			System.out.println("\n[세금계산서] 1.세금계산서 입력 2.세금계산서 조회 3.영업부 메뉴로 돌아가기 =>");
 			ch = Integer.parseInt(br.readLine());
@@ -420,7 +464,7 @@ public class SalesUI {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		}
 	}
 
 	private void taxBillInsert() {
@@ -488,7 +532,7 @@ public class SalesUI {
 
 	protected void moneyBondManage() {
 		int ch;
-
+		while (true) {
 		try {
 			System.out.println("\n[수금/채권조회] 1.수금/채권 관리 2.나가기 => ");
 			ch = Integer.parseInt(br.readLine());
@@ -509,7 +553,7 @@ public class SalesUI {
 		}
 
 		System.out.println();
-
+		}
 	}
 
 	private void money() {

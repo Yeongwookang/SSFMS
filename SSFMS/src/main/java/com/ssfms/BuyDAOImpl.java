@@ -17,7 +17,7 @@ public class BuyDAOImpl implements BuyDAO {
 
 	
 	
-	//구매처 
+	//매입처 등록하기 !!! 
 	@Override
 	public int insertShop(BuyDTO buydto) throws SQLException {
 		PreparedStatement pstmt = null;

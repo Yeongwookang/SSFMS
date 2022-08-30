@@ -655,7 +655,7 @@ public class BuyUI {
 			System.out.print(buydto.getShop_Post()+ "\t");
 			System.out.print(buydto.getShop_addr()+ "\t");
 			System.out.println(buydto.getShop_Reg()+ "\t");
-
+			
 		}
 		System.out.println();
 		

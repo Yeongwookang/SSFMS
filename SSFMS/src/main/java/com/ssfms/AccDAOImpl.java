@@ -347,9 +347,10 @@ public class AccDAOImpl implements AccDAO {
 				try {
 					rs.close();
 				} catch (Exception e2) {
+					
 				}
 			}
-
+			
 			if(pstmt != null) {
 				try {
 					pstmt.close();

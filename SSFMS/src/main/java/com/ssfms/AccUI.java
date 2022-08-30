@@ -2,7 +2,6 @@ package com.ssfms;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.util.DBConn;
@@ -19,8 +18,14 @@ public class AccUI {
 		while (true) {
 			try {
 
-				System.out.print("회계 => \n" + "1. 전표등록 \t 2. 전표수정 \t 3. 전표삭제 \n"
-						+ "4. 전체 전표 조회 \t 5. 사원별 전표 조회 6. 계정과목 별 전표 조회 \n" + "7. 월별 총 매입매출 조회 8. 거래처 관리  9. 뒤로가기 ");
+				System.out.print("\t\t\t[회계] \n");
+				System.out.println("========================================================");
+				System.out.print("1. 전표등록 \t   2. 전표수정 \t 3. 전표삭제 \n");
+				System.out.println("--------------------------------------------------------");
+				System.out.print("4. 전체 전표 조회 \t   5. 사원별 전표 조회 6. 계정과목 별 전표 조회 \n"); 
+				System.out.println("--------------------------------------------------------");
+				System.out.print("7. 월별 매입매출 조회  8. 거래처 관리  9. 뒤로가기 \n ");		
+				System.out.println("========================================================");
 				ch = Integer.parseInt(br.readLine());
 
 				if (ch == 10) {
@@ -154,6 +159,7 @@ public class AccUI {
 		System.out.println("\n전체 전표 조회 ");
 		List<AccDTO> listAll = dao.listAccount();
 		for (AccDTO dto : listAll) {
+			
 			System.out.print(dto.getStateNo() + "\t");
 			System.out.print(dto.getEmpNo() + "\t");
 			System.out.print(dto.getAccountNo() + "\t");
@@ -183,6 +189,7 @@ public class AccUI {
 				return;
 			}
 			for (AccDTO dto : findByempNo) {
+				
 				System.out.print(dto.getStateNo() + "\t");
 				System.out.print(dto.getEmpNo() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
@@ -216,6 +223,7 @@ public class AccUI {
 			}
 
 			for (AccDTO dto : findByname) {
+				
 				System.out.print(dto.getStateNo() + "\t");
 				System.out.print(dto.getEmpNo() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
@@ -235,19 +243,54 @@ public class AccUI {
 	}
 
 	protected void findBycateg_Name() {
-		System.out.println("\n월별 총 매입/매출액 ");
+		System.out.println("\n월별 매입/매출 조회 ");
+		try {
+			BuyDAO bdao = new BuyDAOImpl();
+			List<BuyDTO>list = bdao.listBuy();
+			
+			
+			for(BuyDTO bdto : list) {
+				
+				System.out.print(bdto.getBuy_No()+ "\t");	
+				System.out.print(bdto.getStateNo()+ "\t");
+				System.out.print(bdto.getPartNo()+ "\t");
+				System.out.print(bdto.getPart_name()+ "\t");
+				System.out.print(bdto.getBuy_Date()+ "\t");
+				System.out.print(bdto.getBuy_qty()+ "\t");
+				System.out.print(bdto.getBuy_price()+ "\t");
+				System.out.print(bdto.getShop_No()+ "\t");
+				
+			}
+			System.out.println();
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 
 	}
 
 	protected void findBycustomer() {
 		
-		System.out.println("\n거래처 관리 ");
+		System.out.println("\n 전체 거래처 조회 ");
 		BuyDAO bdao = new BuyDAOImpl();
 		List<BuyDTO> list = bdao.listShop();
 
 		for (BuyDTO bdto : list) {
-			System.out.print(bdao.getClass() + "\t");
-
+			
+			System.out.print(bdto.getShop_No()+ "\t");
+			System.out.print(bdto.getShop_Num()+ "\t");
+			System.out.print(bdto.getShop_Name()+ "\t");
+			System.out.print(bdto.getShop_Boss()+ "\t");
+			System.out.print(bdto.getShop_Tel()+ "\t");
+			System.out.print(bdto.getShop_Post()+ "\t");
+			System.out.print(bdto.getShop_addr()+ "\t");
+			System.out.println(bdto.getShop_Reg()+ "\t");
+			
 		}
+		System.out.println();
+		
 	}
+
+	
 }

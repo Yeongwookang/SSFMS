@@ -29,8 +29,8 @@ public class AccUI {
 					case 1: new AccUI().menu1();
 					case 2: new AccUI().menu2();
 					case 3: new AccUI().menu3();
-					case 4: new AccUI().menu4();
-					case 5: new AccUI().menu5();
+					//case 4: new AccUI().menu4();
+					// case 5: new AccUI().menu5();
 					case 6: App.main(null); break;
 					}
 					
@@ -75,7 +75,7 @@ public class AccUI {
     			switch (ch) {
     			case 1: insert(); break;
 				case 2: update(); break;
-				case 3: listAll(); break;
+				case 3: delete(); break;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -357,6 +357,7 @@ public class AccUI {
 		
 	}
 
+	/*
 	protected void insert_accNo() {
 		System.out.println("\nr계좌코드 등록 ");
 		try {
@@ -392,7 +393,7 @@ public class AccUI {
 	}
 	
 
-	protected void update() {
+	protected void update_accNo() {
 		System.out.println("\n전표 수정 ");
 
 		try {
@@ -428,7 +429,7 @@ public class AccUI {
 		}
 	}
 
-	protected void delete() {
+	protected void delete_accNo() {
 		System.out.println("\n전표 삭제 ");
 		int stateNo;
 
@@ -445,5 +446,5 @@ public class AccUI {
 		System.out.println();
 
 	} 
-	
+	*/
 }

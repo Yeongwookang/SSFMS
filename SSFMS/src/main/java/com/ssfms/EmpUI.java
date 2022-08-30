@@ -7,6 +7,7 @@ import java.util.List;
 
 
 
+
 public class EmpUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private EmpDAO dao = new EmpDAOImpl();
@@ -46,12 +47,12 @@ public class EmpUI {
     	while(true) {
     		try {
     			do {
-    			System.out.print("1.사원등록 2.사원수정 3.사원리스트 4.돌아가기 => ");
+    			System.out.print("1.사원등록 2.사원수정 3.사원리스트 4.사번검색 5.돌아가기 => ");
     			ch = Integer.parseInt(br.readLine());
-    			}while(ch<1||ch>4);
+    			}while(ch<1||ch>5);
     			System.out.println();
     			
-    			if(ch==4) {
+    			if(ch==5) {
     				new EmpUI().menu();
     			}
     			
@@ -59,6 +60,7 @@ public class EmpUI {
     			case 1: insert(); break;
 				case 2: update(); break;
 				case 3: listAll(); break;
+				case 4: findByEmp(); break;
 				}
 			} catch (Exception e) {
 			}
@@ -180,18 +182,45 @@ public class EmpUI {
 	
 	}
 	
+	protected void findByEmp() {
+		System.out.println("\n사번 검색 !!!");
+		String id;
+		
+		try {
+			System.out.print("검색할 사번 ? ");
+			id = br.readLine();
+			
+			EmpDTO dto = dao.readEmp(id);
+			if(dto == null) {
+				System.out.println("등록된 사번이 아닙니다.\n");
+				return;
+			}
+			System.out.print(dto.getEmpNo() +"\t");
+			System.out.print(dto.getName() +"\t");
+			System.out.print(dto.getTel() +"\t");
+			System.out.print(dto.getEmail() +"\t");
+			System.out.print(dto.getAddr() +"\t");
+			System.out.print(dto.getEdu() +"\t");
+			System.out.print(dto.getAccount()+"\t");
+			System.out.println(dto.getHire_class());
+		} catch (Exception e) {
+		}
+		
+		System.out.println();
+	}
+	
 	// 경력사항 관리
 	public void menu2() { 
     	int ch;
     	while(true) {
     		try {
     			do {
-    			System.out.print("1.경력사항 입력 2.경력사항 수정 3.경력사항 리스트 4.돌아가기 => ");
+    			System.out.print("1.경력사항 입력 2.경력사항 수정 3.경력사항 리스트 4.사번검색 5.돌아가기 => ");
     			ch = Integer.parseInt(br.readLine());
     			}while(ch<1||ch>4);
     			System.out.println();
     			
-    			if(ch==4) {
+    			if(ch==5) {
     				new EmpUI().menu();
     			}
     			
@@ -199,6 +228,7 @@ public class EmpUI {
     			case 1: cinsert(); break;
 				case 2: cupdate(); break;
 				case 3: clistAll(); break;
+				case 4: findByEmpNo(); break;
 				}
 			} catch (Exception e) {
 			}
@@ -294,34 +324,34 @@ public class EmpUI {
 		}
 		System.out.println();
 	}
-    /*
+    // 사번으로 최신부서, 직급 검색
     protected void findByEmpNo() {
 		System.out.println("\n사번 검색 !!!");
-		String empNon;
+		String id;
 		
 		try {
-			System.out.print("검색할 아이디 ? ");
-			empNon = br.readLine();
+			System.out.print("검색할 사번 ? ");
+			id = br.readLine();
 			
-			EmpDTO dto = dao.listMember(empNon);
+			EmpDTO dto = dao.readMember(id);
 			if(dto == null) {
-				System.out.println("등록된 아이디가 아닙니다.\n");
+				System.out.println("등록된 사번이 아닙니다.\n");
 				return;
 			}
-			
-			System.out.println(dto.getCarNo()+"\t");
+			System.out.print(dto.getCarNo()+"\t");
 			System.out.print(dto.getEmpNo()+"\t");
 			System.out.print(dto.getcDiv()+"\t");
 			System.out.print(dto.getCar_date()+"\t");
 			System.out.print(dto.getcNote()+"\t");
 			System.out.print(dto.getDep()+"\t");
 			System.out.println(dto.getRank());
+			
 		} catch (Exception e) {
 		}
 		
 		System.out.println();
 	}
-	*/
+	
     
     // 연봉 관리
     public void menu3() { 
@@ -509,26 +539,49 @@ public class EmpUI {
 		try {
 			AccDTO accdto = new AccDTO();
     		EmpDTO empdto = new EmpDTO();
-			
+			// 정산코드
 			System.out.print("수정할 정산코드 ? ");
 			empdto.setSettleNo(br.readLine());
-			
+			// 전표일련번호
+			System.out.print("수정할 전표일련번호 ? ");
+			accdto.setStateNo(Integer.parseInt(br.readLine()));
+			// 사번
 			System.out.print("사번 ? ");
 			empdto.setEmpNo(br.readLine());
-
+			// 월급(세금전)
 			System.out.print("월급 ? ");
 			empdto.setSal(Integer.parseInt(br.readLine()));
 
-			System.out.print("세금 ? ");
-			empdto.setTax(Integer.parseInt(br.readLine()));
-
+			int tax = 0;
+			if(empdto.getSal()>=3000000) {
+				tax = (int) (empdto.getSal()*0.03);
+			}else if (empdto.getSal()>=2000000) {
+				tax = (int) (empdto.getSal()*0.02);
+			}else {
+				tax=0;
+			}
+			// 세금
+			empdto.setTax(tax);
+			// 보너스
 			System.out.print("보너스 ? ");
 			empdto.setBonus(Integer.parseInt(br.readLine()));
+			// 실급여
+			int rSal = empdto.getSal()- empdto.getTax();
+			empdto.setPay(rSal);
+			// 계좌코드
+			System.out.print("급여 신청 계좌코드: ");
+			accdto.setAccountNo(br.readLine());
+			// 실급여
+			accdto.setAmount(rSal);
 			
-			System.out.print("실수령액 ? ");
-			empdto.setPay(Integer.parseInt(br.readLine()));
+			int result = dao.updateSett(accdto, empdto);
 			
-			dao.updateSett(accdto, empdto);
+
+			if(result == 0) {
+				System.out.println("등록된 자료가 아닙니다.");
+			} else {
+				System.out.println("회원정보가 수정 되었습니다.");
+			}
 			
 			System.out.println("급여 수정에 성공 했습니다.");
 		} catch (Exception e) {
@@ -561,7 +614,7 @@ public class EmpUI {
     	while(true) {
     		try {
     			do {
-    			System.out.print("1.근태 등록 2.근태 수정 3.근태 리스트 4.돌아가기 => ");
+    			System.out.print("1.출근 2.퇴근 3.근태 리스트 4.돌아가기 => ");
     			ch = Integer.parseInt(br.readLine());
     			}while(ch<1||ch>4);
     			System.out.println();
@@ -581,25 +634,13 @@ public class EmpUI {
     }
     
     protected void atinsert() {
-        System.out.println("\n근태 등록하기 !!!");
+        System.out.println("\n출근 !!!");
 		
 		try {
 			EmpDTO dto = new EmpDTO();
 			
-			System.out.print("정산코드 ? ");
-			dto.setSettleNo(br.readLine());
-			
-			System.out.print("구분(시작/종료) ? ");
-			dto.setaDiv(br.readLine());
-			
-			System.out.print("시작일시 ? ");
-			dto.setsTime(br.readLine());
-			
-			System.out.print("종료일시 ? ");
-			dto.seteTime(br.readLine());
-
-			System.out.print("근로시간 ? ");
-			dto.setwTime(Integer.parseInt(br.readLine()));
+			System.out.print("사번 ? ");
+			dto.setEmpNo(br.readLine());
 			
 			System.out.print("비고 ? ");
 			dto.setaNote(br.readLine());
@@ -616,28 +657,16 @@ public class EmpUI {
 	
 	
     protected void atupdate() {
-        System.out.println("\n근태 정보 수정 !!!");
+        System.out.println("\n퇴근 !!!");
 		
 		try {
 			EmpDTO dto = new EmpDTO();
 			
-			System.out.print("수정할 근태코드 ? ");
+			System.out.print("금일 근태코드 ? ");
 			dto.setAttNo(br.readLine());
 			
-			System.out.print("정산코드 ? ");
-			dto.setSettleNo(br.readLine());
-			
-			System.out.print("구분(시작/종료) ? ");
-			dto.setaDiv(br.readLine());
-			
-			System.out.print("시작일시 ? ");
-			dto.setsTime(br.readLine());
-			
-			System.out.print("종료일시 ? ");
-			dto.seteTime(br.readLine());
-
-			System.out.print("근로시간 ? ");
-			dto.setwTime(Integer.parseInt(br.readLine()));
+			System.out.print("사번 ? ");
+			dto.setEmpNo(br.readLine());
 			
 			System.out.print("비고 ? ");
 			dto.setaNote(br.readLine());
@@ -658,12 +687,10 @@ public class EmpUI {
  		List<EmpDTO> list = dao.listAtt();
  		for(EmpDTO dto : list) {
 
+ 			System.out.print(dto.getEmpNo()+"\t");
  			System.out.print(dto.getAttNo() +"\t");
- 			System.out.print(dto.getaDiv() +"\t");
  			System.out.print(dto.getsTime() +"\t");
  			System.out.print(dto.geteTime() +"\t");
- 			System.out.print(dto.getwTime() +"\t");
- 			System.out.print(dto.getSettleNo()+"\t");
  			System.out.println(dto.getaNote());
 
  		}
@@ -768,7 +795,7 @@ public class EmpUI {
     protected void acListAll() {
         System.out.println("\n[등록전표조회] 등록된 매입전표 리스트");
 		
-		String accountSubNo;
+		// String accountSubNo;
 		
 		try {
 			// System.out.print("급여전표 조회 [급여 코드는 503, 세금 코드는 517]: ");
@@ -781,14 +808,14 @@ public class EmpUI {
 				return;
 			}
 			
-			System.out.println("전표일련번호\t차대\t계좌코드\t계정과목명\t금액\t취소상태\t전표상태\t전표날짜\t\t사번");
+			System.out.println("전표일련번호\t차대\t계좌코드\t계정과목명\t\t금액\t취소상태\t전표상태\t전표날짜\t\t사번");
 			System.out.println("------------------------------------------------------------------------------------------------------------------");
 			
 			for(AccDTO accdto : list) {
 				System.out.print(accdto.getStateNo()+"\t\t");
 				System.out.print(accdto.getT_account()+"\t");
 				System.out.print(accdto.getAccountNo()+"\t");
-				System.out.print(accdto.getAsub_name()+"\t");
+				System.out.print(accdto.getAsub_name()+"\t\t");
 				System.out.print(accdto.getAmount()+"\t");
 				System.out.print(accdto.getCancellation()+"\t");
 				System.out.print(accdto.getStateCon()+"\t");

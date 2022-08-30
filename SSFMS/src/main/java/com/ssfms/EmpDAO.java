@@ -9,11 +9,12 @@ public interface EmpDAO {
 	// 사원리스트
 	public int insertEmp(EmpDTO dto) throws SQLException;
 	public int updateEmp(EmpDTO dto) throws SQLException;
+	public EmpDTO readEmp(String empNo) throws SQLException;
 	public List<EmpDTO> listEmp();
 	// 경력사항
 	public int insertCare(EmpDTO dto) throws SQLException;
 	public int updateCare(EmpDTO dto) throws SQLException;
-	// public List<EmpDTO> listMember(String empNo);
+	public EmpDTO readMember(String empNo);
 	public List<EmpDTO> listCare();
 	// 연봉
 	public int insertAsal(EmpDTO adto) throws SQLException;
@@ -32,6 +33,7 @@ public interface EmpDAO {
 	public int insertAccSett(AccDTO accdto, EmpDTO empdto) throws SQLException;
 	public int updateAccSett(AccDTO accdto) throws SQLException; ///전표취소-상태변경
 	public List<AccDTO> listAccSett();
+	
 	
 	
 	

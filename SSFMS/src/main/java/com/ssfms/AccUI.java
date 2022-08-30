@@ -16,59 +16,73 @@ public class AccUI {
 		int ch;
 
 		while (true) {
-			try {
-
-				System.out.print("\t\t\t[회계] \n");
+			try { 
+					System.out.print("\t\t\t[회계] \n");
+					do {
+						System.out.print("1.전표관리 2. 전표조회  3. 매입매출 및 거래처 관리 4. 계좌관리 5.계정과목관리 6. [이전화면] => ");
+						ch = Integer.parseInt(br.readLine());
+						System.out.println();
+						}
+					while(ch<1||ch>6);
+					
+					switch(ch) {
+					case 1: new AccUI().menu1();
+					case 2: new AccUI().menu2();
+					case 3: new AccUI().menu3();
+					case 4: new AccUI().menu4();
+					case 5: new AccUI().menu5();
+					case 6: App.main(null); break;
+					}
+					
+				/*
 				System.out.println("========================================================");
 				System.out.print("1. 전표등록 \t   2. 전표수정 \t 3. 전표삭제 \n");
 				System.out.println("--------------------------------------------------------");
 				System.out.print("4. 전체 전표 조회 \t   5. 사원별 전표 조회 6. 계정과목 별 전표 조회 \n"); 
 				System.out.println("--------------------------------------------------------");
-				System.out.print("7. 월별 매입매출 조회  8. 거래처 관리  9. 뒤로가기 \n ");		
+				System.out.print("7. 월별 매입매출 조회  8. 거래처 관리 \n");		
+				System.out.println("--------------------------------------------------------");
+				System.out.print("9. 계좌 등록 \t    10. 계좌 수정 \t  11. 계좌 삭제 12. 전체 계좌 조회 \n");		
+				System.out.println("--------------------------------------------------------");
+				System.out.print("13. 계정과목 등록 14. 계정과목 수정 15. 계정과목 삭제. 16. 계정과목 조회 \n");
+				System.out.println("--------------------------------------------------------");
+				System.out.print("17.[이전화면으로 돌아가기]");
 				System.out.println("========================================================");
-				ch = Integer.parseInt(br.readLine());
-
-				if (ch == 10) {
-					DBConn.close();
-					return;
-				}
-
-				switch (ch) {
-				case 1:
-					insert();
-					break;
-				case 2:
-					update();
-					break;
-				case 3:
-					delete();
-					break;
-				case 4:
-					listAll();
-					break;
-				case 5:
-					findByempNo();
-					break;
-				case 6:
-					findByname();
-					break;
-				case 7:
-					findBycateg_Name();
-					break;
-				case 8:
-					findBycustomer();
-					break;
-				case 9:
-					App.main(null);
-					break;
-				}
-
+				System.out.print("[메뉴 버튼] : \n");
+				*/
+					
+		
 			} catch (Exception e) {
 			}
 		}
 
 	}
-
+	// 전표관리 
+	public void menu1() {
+		int ch;
+    	while(true) {
+    		try {
+    			do {
+    				System.out.print("1. 전표등록 2. 전표수정 3. 전표삭제 4. [이전화면] \n => ");
+    			ch = Integer.parseInt(br.readLine());
+    			}while(ch<1||ch>4);
+    			System.out.println();
+    			
+    			if(ch==4) {
+    				new AccUI().menu();
+    			}
+    			
+    			switch (ch) {
+    			case 1: insert(); break;
+				case 2: update(); break;
+				case 3: listAll(); break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+    	}
+    }
+	
 	protected void insert() {
 		System.out.println("\n전표 등록 ");
 		try {
@@ -100,6 +114,7 @@ public class AccUI {
 		}
 
 	}
+	
 
 	protected void update() {
 		System.out.println("\n전표 수정 ");
@@ -154,7 +169,31 @@ public class AccUI {
 		System.out.println();
 
 	}
-
+	// 전표조회
+	public void menu2() {
+		int ch;
+    	while(true) {
+    		try {
+    			do {
+    				System.out.print("1. 전체 전표 조회 2. 사원별 전표 조회 3. 계정과목 별 전표 조회 4. [이전화면] \n => ");
+    			ch = Integer.parseInt(br.readLine());
+    			}while(ch<1||ch>4);
+    			System.out.println();
+    			
+    			if(ch==4) {
+    				new AccUI().menu();
+    			}
+    			
+    			switch (ch) {
+    			case 1: listAll(); break;
+				case 2: findByempNo(); break;
+				case 3: findByname(); break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+    	}
+    }
 	protected void listAll() {
 		System.out.println("\n전체 전표 조회 ");
 		List<AccDTO> listAll = dao.listAccount();
@@ -204,6 +243,7 @@ public class AccUI {
 			System.out.println();
 
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		System.out.println();
 	}
@@ -242,6 +282,31 @@ public class AccUI {
 		System.out.println();
 	}
 
+	public void menu3() {
+		int ch;
+    	while(true) {
+    		try {
+    			do {
+    				System.out.print("1. 월별 매입매출 조회 2. 거래처 관리 3.[이전화면] \n =>");
+    			ch = Integer.parseInt(br.readLine());
+    			}while(ch<1||ch>3);
+    			System.out.println();
+    			
+    			if(ch==3) {
+    				new AccUI().menu();
+    			}
+    			
+    			switch (ch) {
+    			case 1: findBycateg_Name(); break;
+				case 2: findBycustomer(); break;
+				
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+    	}
+    }
+	
 	protected void findBycateg_Name() {
 		System.out.println("\n월별 매입/매출 조회 ");
 		try {
@@ -292,5 +357,93 @@ public class AccUI {
 		
 	}
 
+	protected void insert_accNo() {
+		System.out.println("\nr계좌코드 등록 ");
+		try {
+			AccDTO dto = new AccDTO();
+
+			System.out.print("계좌코드 : ");
+			dto.setaccountNo(br.readLine());
+
+			System.out.print("은행명 : ");
+			dto.setbankName(br.readLine());
+
+			System.out.print("계좌번호 : ");
+			dto.setaccountNum(br.readLine());
+
+			System.out.print("예금주성함 : ");
+			dto.setaccName(br.readLine());
+
+			System.out.print("거래액 : ");
+			dto.setbusAmount(Integer.parseInt(br.readLine()));
+
+
+			System.out.print("잔액 : ");
+			dto.setbalance(Integer.parseInt(br.readLine()));
+
+
+			dao.insertAccount(dto);
+
+			System.out.println("계좌가 등록 되었습니다.");
+		} catch (Exception e) {
+			System.out.println("등록 실패하였습니다.");
+		}
+
+	}
+	
+
+	protected void update() {
+		System.out.println("\n전표 수정 ");
+
+		try {
+			AccDTO dto = new AccDTO();
+
+			System.out.print("수정할 사원코드 : ");
+			dto.setEmpNo(br.readLine());
+
+			System.out.print("수정할 계좌코드 : ");
+			dto.setAccountNo(br.readLine());
+
+			System.out.print("수정할 계정과목코드 : ");
+			dto.setAccountSubNo(br.readLine());
+
+			System.out.print("수정할 금액 : ");
+			dto.setAmount(Integer.parseInt(br.readLine()));
+
+			System.out.print("수정할 상세내용 : ");
+			dto.setDetail(br.readLine());
+
+			System.out.print("수정할 취소여부 : ");
+			dto.setCancellation(br.readLine());
+
+			System.out.print("수정할 전표상태 : ");
+			dto.setStateCon(br.readLine());
+
+			dao.updateAccount(dto);
+
+			System.out.println("전표가 수정 되었습니다.");
+
+		} catch (Exception e) {
+			System.out.println("수정 실패");
+		}
+	}
+
+	protected void delete() {
+		System.out.println("\n전표 삭제 ");
+		int stateNo;
+
+		try {
+			System.out.print("삭제할 전표 번호 ? ");
+			stateNo = Integer.parseInt(br.readLine());
+
+			dao.deleteAccount(stateNo);
+
+			System.out.println("전표가 삭제 되었습니다.");
+		} catch (Exception e) {
+			System.out.println("전표 삭제 실패 !!!");
+		}
+		System.out.println();
+
+	} 
 	
 }

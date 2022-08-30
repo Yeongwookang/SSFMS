@@ -25,6 +25,10 @@ public class AccDAOImpl implements AccDAO {
 					+ " detail, cancellation, statecon, statedate)"
 					+ " VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)";
 			
+			sql = "INSERT INTO accounting (StateNo, empNo, accountNo, accountsubNo, amount, "
+					+ " detail, cancellation, statecon, statedate)"
+					+ " VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)";
+			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getEmpNo());
 			pstmt.setString(2, dto.getAccountNo());
@@ -145,7 +149,7 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 		
 		try {
-			sql = " SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate"
+			sql = " SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate "
 					+ "FROM accounting"
 					+ "WHERE stateNo = ? ";
 			

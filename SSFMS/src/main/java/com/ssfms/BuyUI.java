@@ -563,14 +563,8 @@ public class BuyUI {
 		}
 		
 		System.out.println();
-		
-		
-		
 	}
 	
-	
-
-
 
 
 	// 매입처관리

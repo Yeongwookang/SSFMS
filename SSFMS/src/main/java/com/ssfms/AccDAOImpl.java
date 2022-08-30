@@ -151,7 +151,7 @@ public class AccDAOImpl implements AccDAO {
 		try {
 			sql = " SELECT stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate "
 					+ "FROM accounting"
-					+ "WHERE stateNo = ? ";
+					+ " WHERE stateNo = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, stateNo);

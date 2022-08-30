@@ -478,7 +478,7 @@ public class EmpUI {
 			System.out.print("급여 신청 계좌코드: ");
 			accdto.setAccountNo(br.readLine());
 			
-			accdto.setAmount(empdto.getSal());
+			accdto.setAmount(rSal);
 			
 			// System.out.print("상세 내용: ");
 			// accdto.setDetail(br.readLine());
@@ -507,27 +507,28 @@ public class EmpUI {
         System.out.println("\n급여 수정 !!!");
 		
 		try {
-			EmpDTO dto = new EmpDTO();
+			AccDTO accdto = new AccDTO();
+    		EmpDTO empdto = new EmpDTO();
 			
 			System.out.print("수정할 정산코드 ? ");
-			dto.setSettleNo(br.readLine());
+			empdto.setSettleNo(br.readLine());
 			
 			System.out.print("사번 ? ");
-			dto.setEmpNo(br.readLine());
+			empdto.setEmpNo(br.readLine());
 
 			System.out.print("월급 ? ");
-			dto.setSal(Integer.parseInt(br.readLine()));
+			empdto.setSal(Integer.parseInt(br.readLine()));
 
 			System.out.print("세금 ? ");
-			dto.setTax(Integer.parseInt(br.readLine()));
+			empdto.setTax(Integer.parseInt(br.readLine()));
 
 			System.out.print("보너스 ? ");
-			dto.setBonus(Integer.parseInt(br.readLine()));
+			empdto.setBonus(Integer.parseInt(br.readLine()));
 			
 			System.out.print("실수령액 ? ");
-			dto.setPay(Integer.parseInt(br.readLine()));
+			empdto.setPay(Integer.parseInt(br.readLine()));
 			
-			dao.updateSett(dto);
+			dao.updateSett(accdto, empdto);
 			
 			System.out.println("급여 수정에 성공 했습니다.");
 		} catch (Exception e) {
@@ -704,30 +705,14 @@ public class EmpUI {
 			System.out.print("급여 신청자 사번: ");
 			empdto.setEmpNo(br.readLine());
 			
-			System.out.print("월급 ? ");
-			empdto.setSal(Integer.parseInt(br.readLine()));
-			
-			int tax = 0;
-			if(empdto.getSal()>=3000000) {
-				tax = (int) (empdto.getSal()*0.03);
-			}else if (empdto.getSal()>=2000000) {
-				tax = (int) (empdto.getSal()*0.02);
-			}else {
-				tax=0;
-			}
-
-			empdto.setTax(tax);
-
-			System.out.print("보너스 ? ");
-			empdto.setBonus(Integer.parseInt(br.readLine()));
-			
-			int rSal = empdto.getSal()- empdto.getTax();
-			empdto.setPay(rSal);
-			
 			System.out.print("급여 신청 계좌코드: ");
 			accdto.setAccountNo(br.readLine());
 			
-			accdto.setAmount(rSal);
+			System.out.print("급여 신청 계정과목코드: ");
+			accdto.setAccountSubNo(br.readLine());
+			
+			System.out.print("급여 신청 금액: ");
+			accdto.setAmount(Integer.parseInt(br.readLine()));
 			
 			System.out.print("상세 내용: ");
 			accdto.setDetail(br.readLine());

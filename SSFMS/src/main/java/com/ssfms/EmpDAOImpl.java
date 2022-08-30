@@ -28,7 +28,7 @@ public class EmpDAOImpl implements EmpDAO {
 		
 		try {
 			conn.setAutoCommit(false);
-			
+			// 사원리스트 등록
 			sql = "INSERT INTO emp(empNo, pwd, name, tel, rrn, email, addr, edu, account, hire_class) "
 					+ "VALUES ( test_seq.NexTval, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
@@ -47,6 +47,7 @@ public class EmpDAOImpl implements EmpDAO {
 			pstmt.close();
 			pstmt = null;
 			
+			// 경력사항 등록
 			sql = "INSERT INTO career(empNo, carNo, div, Car_date, note, depNo, rankNo) "
 					+ "VALUES ( test_seq.currval, care_seq.nextval, '입사', sysdate, ?, ?, '01000')";
 			
@@ -593,9 +594,22 @@ public class EmpDAOImpl implements EmpDAO {
 			pstmt.close();
 			pstmt = null;
 			
-			// 월급(세금전)
+			// 급여 : 차변
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
 					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '503', ?, '급여', '', '미승인', SYSDATE)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, empdto.getSal());
+			
+			result += pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			// 보통예금 : 대변
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '1031', ?, '보통예금', '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, empdto.getEmpNo());
@@ -608,7 +622,7 @@ public class EmpDAOImpl implements EmpDAO {
 			pstmt.close();
 			pstmt = null;
 			
-			// 세금
+			// 세금 : 대변
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
 					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '517', ?, '세금', '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
@@ -678,26 +692,71 @@ public class EmpDAOImpl implements EmpDAO {
 
 	// 급여 수정
 	@Override
-	public int updateSett(EmpDTO dto) throws SQLException {
+	public int updateSett(AccDTO accdto, EmpDTO empdto) throws SQLException {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
 		
 		
 		try {
-			sql = "UPDATE SETTLEMENT SET empNo=?, sal=?, tax=?, bonus=?, pay=?"
+			sql = "UPDATE SETTLEMENT SET empNo=?, sal=?, tax=?, bonus=?, pay=?, pay_date=SYSDATE"
 					+ "WHERE settleNo = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, dto.getEmpNo());
-			pstmt.setInt(2, dto.getSal());
-			pstmt.setInt(3, dto.getTax());
-			pstmt.setInt(4, dto.getBonus());
-			pstmt.setInt(5, dto.getPay());
-			pstmt.setString(6, dto.getSettleNo());
-
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setInt(2, empdto.getSal());
+			pstmt.setInt(3, empdto.getTax());
+			pstmt.setInt(4, empdto.getBonus());
+			pstmt.setInt(5, empdto.getPay());
+			
 			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			// 급여 : 차변
+			sql = "UPDATE accounting SET stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '503', ?, '급여', '', '미승인', SYSDATE)"
+					+ " WHERE stateNo = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, empdto.getSal());
+			
+			result += pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			// 보통예금 : 대변
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '1031', ?, '보통예금', '', '미승인', SYSDATE)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, accdto.getAmount());
+			// pstmt.setString(4, accdto.getDetail());
+			
+		
+			result += pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			// 세금 : 대변
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '517', ?, '세금', '', '미승인', SYSDATE)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, empdto.getTax());
+			// pstmt.setString(4, accdto.getDetail());
+			
+			result += pstmt.executeUpdate();
+			
+			conn.commit();
+
 			
 		}catch (SQLIntegrityConstraintViolationException e) {
 			if(e.getErrorCode() == 1400) {
@@ -946,7 +1005,7 @@ public class EmpDAOImpl implements EmpDAO {
 		return list;
 	}
 
-	// 월급 전표 등록
+	// 급여 전표 등록
 	@Override
 	public int insertAccSett(AccDTO accdto, EmpDTO empdto) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -956,15 +1015,16 @@ public class EmpDAOImpl implements EmpDAO {
 		try {
 
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '503', ?, ?, '', '미승인', SYSDATE)";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, ?, ?, ?, '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(2, accdto.getAccountNo());
-			pstmt.setInt(3, accdto.getAmount());
-			pstmt.setString(4, accdto.getDetail());
+			pstmt.setString(3, accdto.getAccountSubNo());
+			pstmt.setInt(4, accdto.getAmount());
+			pstmt.setString(5, accdto.getDetail());
 			
-			result += pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			
 		} catch (SQLIntegrityConstraintViolationException e) {
 			
@@ -1070,7 +1130,7 @@ public class EmpDAOImpl implements EmpDAO {
 					+ " FROM accounting a "
 					+ " JOIN accountsub b ON a.accountSubNo = b.accountSubNo "
 					+ " JOIN CATEGORY c ON c.categNo = b.categNo "
-					+ " WHERE A.accountSubNo = '503' OR A.accountSubNo = '517'  ";
+					+ " WHERE A.accountSubNo = '503' OR A.accountSubNo = '1031' OR A.accountSubNo = '517'  ";
 			
 			
 			pstmt = conn.prepareStatement(sql);

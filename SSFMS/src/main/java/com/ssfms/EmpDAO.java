@@ -22,7 +22,7 @@ public interface EmpDAO {
 	// 급여관리
 	// public int insertSett(EmpDTO dto) throws SQLException;
 	public int insertSett(AccDTO accdto, EmpDTO empdto) throws SQLException;
-	public int updateSett(EmpDTO dto) throws SQLException;
+	public int updateSett(AccDTO accdto, EmpDTO dto) throws SQLException;
 	public List<EmpDTO> listSett();
 	// 근태관리
 	public int insertAtt(EmpDTO dto) throws SQLException;

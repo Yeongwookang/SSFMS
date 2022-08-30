@@ -141,14 +141,15 @@ public class BuyUI {
 			System.out.print("취소할 전표일련번호: ");
 			accdto.setStateNo(Integer.parseInt(br.readLine()));
 			
-			int result = buydao.updateAccBuy(accdto);
+			int result = buydao.deleteAccBuy(accdto);
 			
 			if(result ==0) {
 				System.out.println("등록된 전표가 아니거나 승인된 전표입니다.");
-				System.out.println("(취소조건 : 미승인된 구매 전표만 취소 가능 ");
+				System.out.println("(취소조건 : 미승인된 구매 전표만 취소 가능) ");
 			}else {
 				System.out.println();
 				System.out.println("[취소완료] 매입전표가 취소되었습니다.");
+				System.out.println("(원자재/외상매입금 전표 모두 삭제 부탁드립니다.)");
 				System.out.println("감사합니다.");
 			}
 
@@ -431,9 +432,11 @@ public class BuyUI {
 			System.out.print("반품 등록일: ");
 			buydto.setBan_Date(br.readLine());
 			
+			System.out.print("반품 신청자 사번: ");
+			buydto.setEmpNo(br.readLine());
+			
 			System.out.print("상세 내용: ");
 			buydto.setBan_Memo(br.readLine());
-			
 			
 			int result = buydao.insertBanpum(buydto);
 			
@@ -457,6 +460,21 @@ public class BuyUI {
 	
 	
 	protected void banpumList() {
+		System.out.println("\n[반품내역조회] 반품 신청 리스트 조회하기 ");
+		
+		System.out.println("매입코드\t반품신청일\t\t반품수량\t반품처리일\t\t상세내용\t");
+		System.out.println("------------------------------------------------------------------------------------------------------------------");
+		
+		List<BuyDTO> list = buydao.listBanpum();
+		for(BuyDTO buydto : list) {
+			System.out.print(buydto.getBan_No()+ "\t");
+			System.out.print(buydto.getBan_Date()+ "\t");
+			System.out.print(buydto.getBan_qty()+ "\t");
+			System.out.print(buydto.getBan_Finish()+ "\t");
+			System.out.println(buydto.getBan_Memo()+ "\t");
+
+		}
+		System.out.println();
 		
 	}
 	
@@ -472,7 +490,7 @@ public class BuyUI {
 				
 				System.out.println();
 				System.out.println("-----------------------------------------------------------------");
-				System.out.println("[1] 매입요청 조회 [2] 매입요청 승인 [3] 뒤로가기 ");
+				System.out.println("[1] 매입요청 조회 [2] 매입요청삭제 [3] 뒤로가기 ");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.print("=> ");
 				
@@ -483,8 +501,8 @@ public class BuyUI {
 				}
 				
 				switch(ch) {
-				case 1: applyBuy(); break;
-				case 2: applyBuyUpdate(); break;
+				case 1: applylist(); break;
+				case 2: applyDelete(); break;
 				
 				}
 					
@@ -496,20 +514,59 @@ public class BuyUI {
 	}
 
 	
-	protected void applyBuyUpdate() {
-		// TODO Auto-generated method stub
+	protected void applylist() {
+	System.out.println("\n[매입요청 조회] 현재 조회되는 매입요청 조회하기 ");
+		
+		System.out.println("부품요청번호\t재료코드\t재료이름\t\t\t\t수량\t요청일자\t");
+		System.out.println("------------------------------------------------------------------------------------------------------------------");
+		
+		List<BuyDTO> list = buydao.applyList();
+		for(BuyDTO buydto : list) {
+			System.out.print(buydto.getPartOfferNo()+ "\t");
+			System.out.print(buydto.getPartNo()+ "\t");
+			System.out.print(buydto.getPart_name()+ "\t");
+			System.out.print(buydto.getQty()+ "\t");
+			System.out.println(buydto.getOffer_date()+ "\t");
+
+		}
+		System.out.println();
 		
 	}
+	
 
 
+	protected void applyDelete() {
+		System.out.println("\n[매입요청 삭제] 처리 완료한 매입요청 삭제하기 ");
+		System.out.println("(꼭 처리 완료 후 삭제해주세요.) ");
+		
+		try {
+			
+			BuyDTO buydto = new BuyDTO();
+			
+			System.out.print("취소할 부품요청코드: ");
+			buydto.setPartOfferNo(Integer.parseInt(br.readLine()));
+			
+			int result = buydao.deleteApply(buydto);
+			
+			
+			if(result ==0) {
+				System.out.println("등록된 매입요청이 아니거나 이미 삭제된 요청입니다.");
+			}else {
+				System.out.println();
+				System.out.println("[삭제완료] 매입요청이 삭제되었습니다.");
+				System.out.println("감사합니다.");
+			}
 
-
-
-	protected void applyBuy() {
-		// TODO Auto-generated method stub
+			
+		} catch (Exception e) {
+			System.out.println("[삭제실패] 매입요청 삭제가 실패했습니다. ");
+		}
+		
+		System.out.println();
+		
+		
 		
 	}
-
 	
 	
 

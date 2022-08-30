@@ -21,11 +21,17 @@ public interface BuyDAO {
 	
 	//전표등록
 	public int insertAccBuy (AccDTO accdto, EmpDTO empdto) throws SQLException;
-	public int updateAccBuy (AccDTO accdto) throws SQLException; ///전표취소-상태변경
+	public int deleteAccBuy (AccDTO accdto) throws SQLException; ///전표취소-상태변경
 	public List<AccDTO> listAccBuy();
 	
 	//반품등록
 	public int insertBanpum (BuyDTO buydto) throws SQLException;
+	public List<BuyDTO> listBanpum();
+	
+	//원자재요청 조회
+	public List<BuyDTO> applyList();
+	public int deleteApply (BuyDTO buydto) throws SQLException;
+	
 	
 	
 	

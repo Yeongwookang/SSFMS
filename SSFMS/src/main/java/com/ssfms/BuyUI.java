@@ -116,6 +116,7 @@ public class BuyUI {
 			System.out.println();
 			System.out.println("[등록완료] 매입전표 등록이 완료되었습니다.");
 			System.out.println("관리자 승인까지 1~2일의 기간이 소요됩니다. ");
+			System.out.println("감사합니다.");
 			
 			
 		} catch (NumberFormatException e) {
@@ -148,7 +149,7 @@ public class BuyUI {
 			}else {
 				System.out.println();
 				System.out.println("[취소완료] 매입전표가 취소되었습니다.");
-				System.out.println("관리자 승인까지 1~2일의 기간이 소요됩니다. ");
+				System.out.println("감사합니다.");
 			}
 
 			
@@ -172,9 +173,7 @@ public class BuyUI {
 		String accountSubNo;
 		
 		try {
-		//	System.out.print("매입전표 조회 [원자재 매입코드는 153/251]: ");
-		//	accountSubNo = br.readLine();
-			
+
 			List<AccDTO> list = buydao.listAccBuy();
 			
 			if(list.size()==0) {
@@ -275,6 +274,7 @@ public class BuyUI {
 			System.out.println();
 			System.out.println("[발주완료] 원자재 발주가 완료되었습니다.");
 			System.out.println("초고속 배송으로 발주 완료되었습니다. ");
+			System.out.println("감사합니다.");
 			
 			
 		} catch (NumberFormatException e) {
@@ -358,7 +358,7 @@ public class BuyUI {
 			BuyDTO buydto = new BuyDTO();
 			
 			
-			System.out.print("원자재 코드[G_ + 숫자 3자리]: ");
+			System.out.print("원자재 코드[숫자 3자리]: ");
 			buydto.setPartNo("G_" + br.readLine());
 			
 			System.out.print("원자재명: ");
@@ -371,6 +371,7 @@ public class BuyUI {
 			buydao.insertPart(buydto);
 			
 			System.out.println("[등록완료] 새로운 원자재가 등록되었습니다.");
+			System.out.println("감사합니다.");
 			
 			
 		} catch (Exception e) {

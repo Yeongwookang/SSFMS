@@ -82,9 +82,7 @@ public class BuyUI {
 			}
 			
 		}
-		
 	}
-	
 	
 	
 	

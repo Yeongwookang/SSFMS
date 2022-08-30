@@ -22,7 +22,8 @@ public class SalesDTO {
 	private int taxAmount;
 	private String item;
     private int num;
-    private int unitPrice;
+    private int currDate;
+	private int unitPrice;
     private int total;
     private int outAmount;
     private String note;
@@ -147,8 +148,9 @@ public class SalesDTO {
 	}
 	public void setDealDate(String dealDate) {
 		this.dealDate = dealDate;
+	}	
+    public int getCurrDate() {
+		return currDate;
 	}
-	
-	
 	
 }

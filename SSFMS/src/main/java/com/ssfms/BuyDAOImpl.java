@@ -257,7 +257,7 @@ public class BuyDAOImpl implements BuyDAO {
 		int result = 0;
 		
 		
-		String pname;
+		String pname, b_no = null;
 		int price=0;
 		String sname, saddr, sboss;
 		
@@ -286,7 +286,6 @@ public class BuyDAOImpl implements BuyDAO {
 			pstmt.close();
 			pstmt = null;
 			
-
 			
 			// --------------------------------------------	 구매 테이블에 발주 등록
 			sql = "INSERT INTO buy (buy_No, stateNo, partNo, buy_Date, buy_qty, buy_price, shop_No) "
@@ -343,37 +342,58 @@ public class BuyDAOImpl implements BuyDAO {
 			pstmt2.setString(2, buydto.getPartNo());
 			
 			pstmt2.executeUpdate();
+			
+			
 			pstmt2.close();
 			pstmt2 = null;
 			
 			
+			// --------------------------------------------	 해당 매입처에서 상호명, 주소 가져오기		
+			
+			sql = "SELECT buy_No_seq.CURRVAL FROM dual ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				b_no = rs.getString(1);
+
+			}
+			
+		
+			rs.close();
+			rs = null;
+			pstmt.close();
+			pstmt = null;
+
+
 			// --------------------------------------------		세금 계산서 발행
 			sql = "INSERT INTO BuyTaxBill (btb_No, buy_No, btb_sNo, btb_sBoss, btb_saddr, btb_Date, btb_pname, btb_price, btb_tax, "
 					+ " btb_qty, btb_pprice, btb_total, btb_misu, btb_con ) "
-					+ " VALUES ('TB'||TO_CHAR(btb_No_seq.NEXTVAL), 'B_'||TO_CHAR(buy_No_seq.CURRVAL), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
+					+ " VALUES ('TB'||TO_CHAR(btb_No_seq.NEXTVAL), 'B_'||?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, '정산완료' ) ";
 						 
 						
 			pstmt2 = conn.prepareStatement(sql);
 			
-			pstmt2.setString(1, sname); //상호명
-			pstmt2.setString(2, sboss); //대표명
-			pstmt2.setString(3, saddr); // 주소
-			pstmt2.setString(4, buydto.getBuy_Date()); // 매입일자
-			pstmt2.setString(5, pname); //재료명
-			pstmt2.setInt(6, price * buydto.getBuy_qty()); //매입금
-			pstmt2.setInt(7, (int)((price * buydto.getBuy_qty()) * 0.1)); //세액
-			pstmt2.setInt(8, buydto.getBuy_qty()); //수량
-			pstmt2.setInt(9, price); //단가 - 재료 단가
-			pstmt2.setInt(10, (int)((price * buydto.getBuy_qty()) * 0.1)); //합계금액
-			pstmt2.setInt(11, 0);
-			pstmt2.setString(12, "정산완료");
+			pstmt2.setString(1, b_no); //매입코드
+			pstmt2.setString(2, sname); //상호명
+			pstmt2.setString(3, sboss); //대표명
+			pstmt2.setString(4, saddr); // 주소
+			pstmt2.setString(5, buydto.getBuy_Date()); // 매입일자
+			pstmt2.setString(6, pname); //재료명
+			pstmt2.setInt(7, price * buydto.getBuy_qty()); //매입금
+			pstmt2.setInt(8, (int)((price * buydto.getBuy_qty()) * 0.1)); //세액
+			pstmt2.setInt(9, buydto.getBuy_qty()); //수량
+			pstmt2.setInt(10, price); //단가 - 재료 단가
+			pstmt2.setInt(11, (int)((price * buydto.getBuy_qty()) * 0.1)); //합계금액
 	
+			pstmt2.executeUpdate();
 			
 			result = 1;
 			
 			conn.commit();
-			
-			
+
 			
 		} catch (SQLIntegrityConstraintViolationException e) {
 			try {
@@ -402,6 +422,7 @@ public class BuyDAOImpl implements BuyDAO {
 			throw e;
 			
 		}catch (Exception e) {
+			conn.rollback();
 			e.printStackTrace();
 			throw e;
 			
@@ -431,8 +452,6 @@ public class BuyDAOImpl implements BuyDAO {
 		return result;
 		
 	}
-
-	
 
 	
 	
@@ -644,7 +663,7 @@ public class BuyDAOImpl implements BuyDAO {
 			pstmt.close();
 			pstmt = null;
 			
-			
+			// -----------------------
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
 					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL , ?, ?, '251', ?, ?, '', '미승인', ?) ";
 			
@@ -1109,6 +1128,7 @@ public class BuyDAOImpl implements BuyDAO {
 	
 	
 	
+	// 매입요청 조회하기 
 	@Override
 	public List<BuyDTO> applyList() {
 		List<BuyDTO> list = new ArrayList<>();
@@ -1160,6 +1180,7 @@ public class BuyDAOImpl implements BuyDAO {
 	}
 
 
+	// 매입요청 삭제하기
 	@Override
 	public int deleteApply(BuyDTO buydto) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -1208,12 +1229,53 @@ public class BuyDAOImpl implements BuyDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 	
+	//동일 전표등록 방지용 전표일련번호 검색하기
+	@Override
+	public int searchBuyState(BuyDTO buydto) throws SQLException {
+		PreparedStatement pstmt= null;
+		ResultSet rs = null;
+		int result = 0;
+		String sql;
+		
+		try {
+			
+			sql = "SELECT (SELECT stateNo FROM buy WHERE stateNo = ? ) FROM dual ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, buydto.getStateNo());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) { //처음 등록하면 발주 전표라면 0
+				result = 1;
+			} 
+ 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+			
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return result;
+	}
 
 }
-
-
-
 
 
 

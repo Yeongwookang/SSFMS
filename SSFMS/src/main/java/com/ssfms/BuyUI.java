@@ -266,14 +266,6 @@ public class BuyUI {
 			System.out.print("발주할 전표일련번호: ");
 			buydto.setStateNo(Integer.parseInt(br.readLine()));
 			
-			accdto = accdao.readAccount(buydto.getStateNo());
-			
-			if(accdto.getStateNo()==buydto.getStateNo()) {
-				System.out.println("이미 발주 완료한 전표 입니다.");
-				System.out.println("새로운 전표등록 후 승인받아 발주해주세요.");
-				return;
-			}
-			
 			System.out.print("발주할 원자재 코드: ");
 			buydto.setPartNo(br.readLine());
 			
@@ -288,6 +280,18 @@ public class BuyUI {
 			
 			
 			buydao.insertBuy(buydto);
+
+//			int result = buydao.searchBuyState(buydto);
+//
+//			if(result == 0) {
+//				buydao.insertBuy(buydto);
+//
+//			} else {
+//				System.out.println("\n이미 발주 완료한 전표 입니다.");
+//				System.out.println("새로운 전표등록 후 승인받아 발주해주세요.");
+//				return;
+//			}
+			
 			
 			System.out.println();
 			System.out.println("[발주완료] 원자재 발주가 완료되었습니다.");

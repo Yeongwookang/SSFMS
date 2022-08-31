@@ -13,10 +13,11 @@ public interface BuyDAO {
 	
 	
 	//구매 + 원자재
-	public int insertBuy (BuyDTO buydto) throws SQLException;
-	public List<BuyDTO> listBuy();
-	public List<BuyDTO> partlistAll(String partNo);
-	public int insertPart (BuyDTO buydto) throws SQLException;
+	public int insertBuy (BuyDTO buydto) throws SQLException; //원자재 발주
+	public List<BuyDTO> listBuy(); //구매내역 조회
+	public List<BuyDTO> partlistAll(String partNo); //원자재 재고조회
+	public int insertPart (BuyDTO buydto) throws SQLException; //원자재 등록
+	public int searchBuyState (BuyDTO buydto) throws SQLException;
 	
 	
 	//전표등록

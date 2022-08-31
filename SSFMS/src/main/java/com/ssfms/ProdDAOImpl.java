@@ -94,15 +94,35 @@ public class ProdDAOImpl implements ProdDAO {
 		return list;
 	}
 
+	
 	@Override
-	public void using_part(ProdDTO pdto) throws SQLException {
+	public void producing(List<ProdDTO>plist, List<ProdDTO>ulist) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
+		conn.setAutoCommit(false);
 		try {
-
+			sql= "INSERT INTO PRODUCTION (prodNo, stateNo,productNo,qty,cost,prod_Date) "
+					+ " VALUES(PRODUCTION_seq.nextval, ?,?,?,?, SYSDATE)";
+			pstmt=conn.prepareStatement(sql);
+			for(ProdDTO pdto:plist) {
+				pstmt.setInt(1,pdto.getStateNo()); // 전표번호
+				pstmt.setString(2, pdto.getProductNo()); // 제품코드
+				pstmt.setInt(3, pdto.getQty()); // 생산량
+				pstmt.setInt(4, pdto.getCost()); // 비용
+				pstmt.executeUpdate();
+				pstmt.close();
+				sql = "UPDATE product SET stock = stock + ? WHERE productNo = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1,pdto.getQty());
+				pstmt.setString(2, pdto.getProductNo());
+				pstmt.executeUpdate();
+			}
+			pstmt.close();
+			
 			sql = "INSERT INTO STOCK(StockNo, prodNo, partNo, pStock, use, nStock, date)"
 					+ "VALUES(STOCK_seq.nextval, ?, ?, ?, ?, ?, SYSDATE )";
 			pstmt = conn.prepareStatement(sql);
+			for(ProdDTO pdto:ulist) {
 			pstmt.setString(1, pdto.getProdNo()); // 생산번호
 			pstmt.setString(2, pdto.getPartNo()); // 부품코드
 			int stock = readPart(pdto.getPartNo()).getPart_stock();
@@ -114,6 +134,7 @@ public class ProdDAOImpl implements ProdDAO {
 				return;
 			}
 			pstmt.executeUpdate();
+
 			pstmt.close();
 
 			sql = "UPDATE part SET part_stock = part_stock - ? WHERE partNo = ?";
@@ -121,8 +142,14 @@ public class ProdDAOImpl implements ProdDAO {
 			pstmt.setInt(1, stock - pdto.getQty());
 			pstmt.setString(2, pdto.getPartNo());
 			pstmt.executeUpdate();
-
-		} catch (Exception e) {
+			}
+			
+			conn.commit();
+			conn.setAutoCommit(true);
+		} catch (SQLException e) {
+			conn.rollback();
+			e.printStackTrace();
+		}catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			if (pstmt != null) {
@@ -132,19 +159,6 @@ public class ProdDAOImpl implements ProdDAO {
 				}
 			}
 		}
-
-	}
-
-	@Override
-	public ProdDTO producing(ProdDTO pdto) throws SQLException {
-		PreparedStatement pstmt = null;
-		String sql;
-		try {
-			sql = "INSERT INTO ";
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return null;
 	}
 
 	@Override

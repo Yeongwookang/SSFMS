@@ -95,19 +95,17 @@ public class SalesUI {
 
 			System.out.println("견적서일련번호 : ");
 
-			// System.out.println("입력날짜(현재날짜) : ");
-
 			System.out.println("사업자등록번호 : ");
 
 			System.out.println("회사명 : ");
 
-			System.out.println("연락처 : ");
+			System.out.println("회사연락처 : ");
 
 			System.out.println("주문처 : ");
 
 			System.out.println("담당자 : ");
 
-			System.out.println("전화번호 : ");
+			System.out.println("주문처연락처 : ");
 
 			for (int i = 0; i < 10; i++) {
 				System.out.println("제품명 : ");
@@ -116,7 +114,7 @@ public class SalesUI {
 
 				/*
 				 * 
-				 * registNo(사업자등록번호) System.out.println("단가 : ");
+				 * System.out.println("단가 : ");
 				 * 
 				 * System.out.println("공급가액");
 				 * 
@@ -136,54 +134,6 @@ public class SalesUI {
 
 	}
 
-	/*
-	 * private void orderInsert() { System.out.println("[주문서 입력하세요]"); // 주문서는 입력,
-	 * 조회, 관리가 가능 => 주문서는 외부에서 입력하는 것 테이블생성해서 넣어놓기
-	 * 
-	 * try { SalesDTO dto = new SalesDTO();
-	 * 
-	 * System.out.println("주문서일련번호 (orderNo): ");
-	 * 
-	 * System.out.println("입력날짜(현재날짜) currDate: ");
-	 * 
-	 * System.out.println("주문처 orderPlace: ");
-	 * 
-	 * System.out.println("담당자 manager: ");
-	 * 
-	 * System.out.println("전화번호 tel : ");
-	 * 
-	 * System.out.println("남품예정일 deliveryDate : ");
-	 * 
-	 * System.out.println("회사명 companyName: ");
-	 * 
-	 * System.out.println("회사전화번호 companyTel: ");
-	 * 
-	 * System.out.println("회사사업자번호 companyNo: ");
-	 * 
-	 * "회사주소 companyAddress: ");
-	 * 
-	 * for (int i = 0; i < 10; i++) { System.out.println("제품명 productName : ");
-	 * 
-	 * System.out.println("수량 num : ");
-	 * 
-	 * System.out.println("단가 price : ");
-	 * 
-	 * System.out.println("공급가액  supplyValue ");
-	 * 
-	 * System.out.println("세액 tax : ");
-	 * 
-	 * System.out.println("비고 note : ");
-	 * 
-	 * //이거 수량 제외 다 적어놓고 수량만 적게끔하 }
-	 * 
-	 * System.out.println("합계 sum : ");
-	 * 
-	 * System.out.println("부가세 surtax : ");
-	 * 
-	 * System.out.println("총계 tot : ");
-	 * 
-	 */
-
 	private void estimateCheck() {
 		System.out.println("[견적서 조회]");
 
@@ -192,7 +142,6 @@ public class SalesUI {
 		} catch (Exception e) {
 
 		}
-
 	}
 
 	private void orderCheck() {
@@ -368,26 +317,27 @@ public class SalesUI {
 
 		try {
 			SalesDTO dto = new SalesDTO();
+			ProductDTO pdto = new ProductDTO();
 
 			System.out.println("[전표일련번호]");
 			dto.setStateNo(Integer.parseInt(br.readLine()));
 
 			System.out.println("[제품코드]");
-			dto.setProductNo(br.readLine());
+			pdto.setProductNo(br.readLine());
 
 			System.out.println("[거래처]");
 			dto.setCustomer(br.readLine());
 
 			System.out.println("[매출액]");
-			dto.setSales(Integer.parseInt(br.readLine()));
+			pdto.setPrice(Integer.parseInt(br.readLine()));
 
 			System.out.println("[수량]");
-			dto.setSalesQty(Integer.parseInt(br.readLine()));
+			pdto.setStock(Integer.parseInt(br.readLine()));
 
 			System.out.println("[거래일시]");
 			dto.setDealDate(br.readLine());
 
-			dao.salesInsert(dto);
+			dao.salesInsert(dto, pdto);
 
 			System.out.println("[매출이 입력되었습니다.]");
 
@@ -410,7 +360,7 @@ public class SalesUI {
 		for (SalesDTO dto : list) {
 			System.out.print(dto.getSalesNo() + "\t");
 			System.out.print(dto.getStateNo() + "\t");
-			System.out.print(dto.getProductNo() + "\t");
+			System.out.print(dto.getProductNo()+ "\t");
 			System.out.print(dto.getCustomer() + "\t");
 			System.out.print(dto.getSales() + "\t");
 			System.out.print(dto.getSalesQty() + "\t");
@@ -556,9 +506,6 @@ public class SalesUI {
 
 			System.out.println("[단가]");
 			dto.setUnitPrice(Integer.parseInt(br.readLine()));
-
-			System.out.println("[합계금액]");
-			dto.setTotal(Integer.parseInt(br.readLine()));
 
 			System.out.println("[미수금]");
 			dto.setOutAmount(Integer.parseInt(br.readLine()));

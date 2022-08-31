@@ -1046,7 +1046,7 @@ public class BuyDAOImpl implements BuyDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
-		int result = 0;
+
 		
 		try {
 			sql = "SELECT partofferno, partNo, part_name, qty, offer_date "

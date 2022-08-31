@@ -2,11 +2,10 @@ package com.ssfms;
 
 import java.io.BufferedReader;
 
+
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 
 import com.util.DBConn;
 
@@ -169,7 +168,6 @@ public class BuyUI {
 	protected void accList() {
 		System.out.println("\n[등록전표조회] 등록된 매입전표 리스트");
 		
-		String accountSubNo;
 		
 		try {
 

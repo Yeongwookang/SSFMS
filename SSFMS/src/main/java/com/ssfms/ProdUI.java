@@ -10,6 +10,8 @@ public class ProdUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private ProdDAO dao = new ProdDAOImpl();
 	private AccDAO adao = new AccDAOImpl();
+	List <ProdDTO> ulist =new ArrayList<>();
+	List <ProdDTO> plist =new ArrayList<>();
 
 	public void menu() {
 
@@ -313,8 +315,9 @@ public class ProdUI {
 				System.out.println("[ 승인, 처리 ] 상태인 전표는 취소할수 없습니다.");
 				return;
 			}
-			adao.deleteAccount(stateNo);
-			System.out.println("전표취소가 완료되었습니다.");
+			int result = adao.deleteAccount(stateNo);
+			if(result==1) {System.out.println("전표취소가 완료되었습니다.");}
+			System.out.println("전표가 취소되지 않았습니다.");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -327,7 +330,7 @@ public class ProdUI {
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = dao.listAccount_prod();
-			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t\t사번\t부서\t직급\t이름");
+			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름");
 			for (AccDTO adto : list) {
 				System.out.print(adto.getStateNo() + "\t");
 				System.out.print(adto.getT_account() + "\t");
@@ -353,18 +356,25 @@ public class ProdUI {
 
 		while (true) {
 			try {
-				System.out.println("1. 생산 2. 재고사용표 3. 돌아가기 ");
+				System.out.println("생산표와 재고사용표에는 프로그램 실행시 임시로 저장되며, 생산기록을 통해 기록해야 DB에 저장됩니다.");
+				System.out.println("1.생산제품입력 2.생산표보기 3.부품사용입력 4.부품사용표보기 5.생산기록 6.돌아가기 ");
 				ch = Integer.parseInt(br.readLine());
-				if (ch == 3) {
+				if (ch == 6) {
 					return;
 				}
 				switch (ch) {
 				case 1:
-					reg_product();
+					producing();
 					break;
 				case 2:
-					del_product();
+					list_producing(); break;
+				case 3:
+					using_part();
 					break;
+				case 4:
+					list_usingpart();break;
+				case 5: 
+					production(); break;
 				}
 			} catch (Exception e) {
 			}
@@ -373,7 +383,8 @@ public class ProdUI {
 
 	protected void using_part() {
 		ProdDTO pdto = new ProdDTO();
-		System.out.println("\n생산 출고");
+		
+		System.out.println("\n부품사용입력(생산기록을 통해 기록해야 DB에 제출됩니다.)");
 		try {
 			String partNo;
 			System.out.println("생산코드를 입력해주세요.");
@@ -387,22 +398,39 @@ public class ProdUI {
 				pdto.setPartNo(partNo);
 				System.out.println("사용한 재료의 갯수를 입력해주세요.");
 				pdto.setQty(Integer.parseInt(br.readLine()));
-				dao.using_part(pdto);
+				ulist.add(pdto);
 			}
-
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println();
 
 	}
+	protected void list_usingpart() {
+		System.out.println("\n생산표 보기 (임시저장)");
+		System.out.println("생산번호\t부품번호\t수량");
+		for(ProdDTO pdto : ulist) {
+			System.out.print(pdto.getProdNo()+"\t");
+			System.out.print(pdto.getPartNo()+"\t");
+			System.out.println(pdto.getQty()+"\t");	
+		}
+		System.out.println();
+	}
 
-	protected void Producing() {
-		System.out.println("\n부품관리");
+	protected void producing() {
+		System.out.println("\n생산제품 입력 (생산기록을 통해 기록해야 DB에 제출됩니다.)");
+		
 		try {
 			String ProductNo;
 			ProdDTO pdto = new ProdDTO();
 			System.out.println("승인된 전표번호를 입력해주세요.");
 			AccDTO adto = adao.readAccount(Integer.parseInt(br.readLine()));
+			if(!adto.getStateCon().equals("승인")) {
+				System.out.println("승인되지 않은 전표입니다.");
+				return;
+			}
 			pdto.setStateNo(adto.getStateNo());
 
 			while (true) {
@@ -416,15 +444,30 @@ public class ProdUI {
 				pdto.setQty(Integer.parseInt(br.readLine()));
 				System.out.println("생산 단가를 입력해주세요.");
 				pdto.setCost(Integer.parseInt(br.readLine()));
-				dao.producing(pdto);
+				plist.add(pdto);
 			}
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println();
+	}
+	protected void list_producing() {
+		System.out.println("\n생산표 보기 (임시저장)");
+		System.out.println("전표번호\t제품번호\t수량\t비용");
+		for(ProdDTO pdto : plist) {
+			System.out.print(pdto.getStateNo()+"\t");
+			System.out.print(pdto.getProductNo()+"\t");
+			System.out.print(pdto.getQty()+"\t");
+			System.out.println(pdto.getCost()+"\t");	
+		}
+		System.out.println();
 	}
 
-	protected void listAll() {
-		System.out.println("\n");
+	protected void production() {
+		System.out.println("\n생산등록 (DB등록)");
 
 	}
 }
+

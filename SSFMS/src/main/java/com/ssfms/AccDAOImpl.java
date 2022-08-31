@@ -128,10 +128,13 @@ public class AccDAOImpl implements AccDAO {
 			result = pstmt.executeUpdate();
 			pstmt.close();
 			pstmt = null;
+			conn.commit();
+			conn.setAutoCommit(true);
 			
 		} catch (SQLException e) {
 			try {
 				conn.rollback();
+				e.printStackTrace();
 			} catch (Exception e2) {
 			} 
 			

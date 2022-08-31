@@ -14,6 +14,36 @@ public class AccDTO {
 	private String rank; 
 	private String asub_name;
 	private String t_account;
+	private String bankName;
+	private String accountNum;
+	private int busAmount;
+	
+	public String getBankName() {
+		return bankName;
+	}
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+	public String getAccountNum() {
+		return accountNum;
+	}
+	public void setAccountNum(String accountNum) {
+		this.accountNum = accountNum;
+	}
+	public int getBusAmount() {
+		return busAmount;
+	}
+	public void setBusAmount(int busAmount) {
+		this.busAmount = busAmount;
+	}
+	public int getBalance() {
+		return balance;
+	}
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+	private int balance;
+	
 	
 	public String getT_account() {
 		return t_account;

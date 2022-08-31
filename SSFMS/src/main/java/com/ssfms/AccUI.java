@@ -452,6 +452,7 @@ public class AccUI {
 		System.out.println();
 	}
 
+	// 매입매출 및 거래처 관리
 	public void menu4() {
 		int ch;
 		while (true) {
@@ -526,37 +527,148 @@ public class AccUI {
 			System.out.println(bdto.getShop_Reg() + "\t");
 
 		}
+
 		System.out.println();
+	}
+
+	// 계좌관리
+	public void menu5() {
+		
+		protected void insertAccountNo() {
+			System.out.println("\n계좌 등록 ");
+			AccDTO adto = new AccDTO();
+			try {
+				AccDTO adto = new AccDTO();
+
+				System.out.print("계좌코드 : ");
+				adto.setAccountNo(br.readLine());
+
+				System.out.print("은행명 : ");
+				adto.setBankName(br.readLine());
+
+				System.out.print("계좌번호 : ");
+				adto.setAccountNum(Integer.parseInt(br.readLine()));
+
+				System.out.print("예금주성함");
+				adto.setName(br.readLine());
+
+				System.out.print("거래액 : ");
+				adto.setBusAmount(Integer.parseInt(br.readLine()));
+
+				System.out.print("잔액 : ");
+				adto.setBalance(Integer.parseInt(br.readLine()));
+
+				
+				dao.insertAccount(adto);
+
+				System.out.println("계좌정보가 등록 되었습니다.");
+			} catch (Exception e) {
+				System.out.println("등록 실패하였습니다.");
+			}
+
+		}
+
+		protected void updateAccountNo() {
+			System.out.println("\n계좌 수정 ");
+
+			try {
+				AccDTO dto = new AccDTO();
+
+				System.out.print("계좌코드 : ");
+				dto.setAccountNo(br.readLine());
+
+				System.out.print("은행명 : ");
+				dto.setBankName(br.readLine());
+
+				System.out.print("계좌번호 : ");
+				dto.setAccountNum(Integer.parseInt(br.readLine()));
+
+				System.out.print("예금주성함");
+				dto.setName(br.readLine());
+
+				System.out.print("거래액 : ");
+				dto.setBusAmount(Integer.parseInt(br.readLine()));
+
+				System.out.print("잔액 : ");
+				dto.setBalance(Integer.parseInt(br.readLine()));
+
+				dao.updateAccount(dto);
+
+				System.out.println("계좌정보가 수정 되었습니다.");
+
+			} catch (Exception e) {
+				System.out.println("수정 실패");
+			}
+		}
+
+		protected void deleteAccountNo() {
+			System.out.println("\n계좌 삭제 ");
+			int accountNo;
+
+			try {
+				System.out.print("삭제할 계좌정보 ? ");
+				set.AccountNo = Integer.parseInt(br.readLine());
+
+				adao.deleteAccount(setAccountNo);
+
+				System.out.println("계좌정보가 삭제 되었습니다.");
+			} catch (Exception e) {
+				System.out.println("계좌 삭제 실패 !!!");
+			}
+			System.out.println();
+
+		}
+		protected void listaccountNo() {
+
+			System.out.println("\n 전체 계좌 조회 ");
+			AccDAO adao = new AccDAOImpl();
+			List<AccDAO> list = adao.listAccountNo();
+
+			for (AccDAO adto : list) {
+
+				System.out.print(adto.get() + "\t");
+				
+
+			}
+
+			System.out.println();
+		}
 
 	}
 
+	// 계정과목관리
+	public void menu6() {
+		
+		
+		  protected void insert_accNo() { System.out.println("\nr계좌코드 등록 "); 
+		  try {
+		  AccDTO dto = new AccDTO();
+		  
+		 System.out.print("계좌코드 : "); dto.setaccountNo(br.readLine());
+		  
+		 System.out.print("은행명 : "); dto.setbankName(br.readLine());
+		 
+		 System.out.print("계좌번호 : "); dto.setaccountNum(br.readLine());
+		  
+		 System.out.print("예금주성함 : "); dto.setaccName(br.readLine());
+		 
+		System.out.print("거래액 : ");
+		 dto.setbusAmount(Integer.parseInt(br.readLine()));
+		  
+		 
+		 System.out.print("잔액 : "); dto.setbalance(Integer.parseInt(br.readLine()));
+		 
+		 
+		 dao.insertAccount(dto);
+		 
+		 System.out.println("계좌가 등록 되었습니다."); } catch (Exception e) {
+		  System.out.println("등록 실패하였습니다."); }
+		  }
+		  
+		
+	}
+
 	/*
-	 * protected void insert_accNo() { System.out.println("\nr계좌코드 등록 "); try {
-	 * AccDTO dto = new AccDTO();
-	 * 
-	 * System.out.print("계좌코드 : "); dto.setaccountNo(br.readLine());
-	 * 
-	 * System.out.print("은행명 : "); dto.setbankName(br.readLine());
-	 * 
-	 * System.out.print("계좌번호 : "); dto.setaccountNum(br.readLine());
-	 * 
-	 * System.out.print("예금주성함 : "); dto.setaccName(br.readLine());
-	 * 
-	 * System.out.print("거래액 : ");
-	 * dto.setbusAmount(Integer.parseInt(br.readLine()));
-	 * 
-	 * 
-	 * System.out.print("잔액 : "); dto.setbalance(Integer.parseInt(br.readLine()));
-	 * 
-	 * 
-	 * dao.insertAccount(dto);
-	 * 
-	 * System.out.println("계좌가 등록 되었습니다."); } catch (Exception e) {
-	 * System.out.println("등록 실패하였습니다."); }
-	 * 
-	 * }
-	 * 
-	 * 
 	 * protected void update_accNo() { System.out.println("\n전표 수정 ");
 	 * 
 	 * try { AccDTO dto = new AccDTO();

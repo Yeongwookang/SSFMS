@@ -188,8 +188,8 @@ public class AccDAOImpl implements AccDAO {
 				}
 			}
 		}
-		
-		if(dto == null) {
+
+		if (dto == null) {
 			return null;
 		}
 
@@ -440,7 +440,7 @@ public class AccDAOImpl implements AccDAO {
 
 		return list;
 	}
-	
+
 	public List<AccDTO> listapproval() throws SQLException {
 		List<AccDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
@@ -500,13 +500,12 @@ public class AccDAOImpl implements AccDAO {
 
 		return list;
 	}
-
-
+// 한번에 승인
 	public void producing(List<AccDTO> listNapproval) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 		conn.setAutoCommit(false);
-		
+
 		try {
 			sql = "UPDATE INTO accounting (StateCon)" + " VALUES(?)";
 
@@ -538,6 +537,233 @@ public class AccDAOImpl implements AccDAO {
 			}
 		}
 	}
+
+	// 계좌등록
+	@Override
+	public int insertAccountNo(AccDTO adto) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "INSERT INTO account (accountNo, bankName, accountNum, name,busAmount,balance  "
+					+ " VALUES(?,?,?,?,?,?)";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, adto.getAccountNo());
+			pstmt.setString(2, adto.getBankName());
+			pstmt.setString(3, adto.getAccountNum());
+			pstmt.setString(4, adto.getName());
+			pstmt.setInt(5, adto.getAmount());
+			pstmt.setInt(6, adto.getBalance());
+
+			pstmt.executeUpdate();
+			result = 1;
+
+		} catch (SQLIntegrityConstraintViolationException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("동일한 계좌번호가 존재합니다.");
+			} else if (e.getErrorCode() == 1400) { // NOT NULL
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			throw e;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+
+				}
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public int updateAccountNo(AccDTO adto) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "UPDATE INTO account (accountNo, bankName, accountNum, name,busAmount,balance  "
+					+ " VALUES(?,?,?,?,?,?)";
+
+			pstmt = conn.prepareCall(sql);
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, adto.getAccountNo());
+			pstmt.setString(2, adto.getBankName());
+			pstmt.setString(3, adto.getAccountNum());
+			pstmt.setString(4, adto.getName());
+			pstmt.setInt(5, adto.getAmount());
+			pstmt.setInt(6, adto.getBalance());
+
+			pstmt.executeUpdate();
+			result = 1;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public int deleteAccountNo(int accountNo) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			conn.setAutoCommit(false);
+
+			sql = "DELETE FROM account WHERE accountNo = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1, accountNo);
+
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			conn.commit();
+			conn.setAutoCommit(true);
+
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+				e.printStackTrace();
+			} catch (Exception e2) {
+				e.printStackTrace();
+			}
+
+		}
+
+		return result;
+	}
+
+	@Override
+	public AccDTO readAccountNO(int setAccountNo) throws SQLException {
+		AccDTO adto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = " SELECT account (accountNo, bankName, accountNum, name,busAmount,balance "
+					+ "FROM account" + " WHERE setAccountNo = ? ";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, setAccountNo);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				adto = new AccDTO();
+
+				adto.setStateNo(rs.getInt("setAccountNo"));
+				pstmt.setString(1, adto.getAccountNo());
+				pstmt.setString(2, adto.getBankName());
+				pstmt.setString(3, adto.getAccountNum());
+				pstmt.setString(4, adto.getName());
+				pstmt.setInt(5, adto.getAmount());
+				pstmt.setInt(6, adto.getBalance());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+
+		if (adto == null) {
+			return null;
+		}
+
+		return adto;
+	}
+	
+
+	@Override
+	public List<AccDTO> listAccountNo() throws SQLException {
+		List<AccDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT account (accountNo, bankName, accountNum, name,busAmount,balance FROM State_view";
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.executeUpdate();
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				AccDTO adto = new AccDTO();
+
+				pstmt.setString(1, adto.getAccountNo());
+				pstmt.setString(2, adto.getBankName());
+				pstmt.setString(3, adto.getAccountNum());
+				pstmt.setString(4, adto.getName());
+				pstmt.setInt(5, adto.getAmount());
+				pstmt.setInt(6, adto.getBalance());
+
+				list.add(adto);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+
+		}
+
+		return list;
+	}
+
 }
-
-

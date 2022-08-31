@@ -109,6 +109,7 @@ public class EmpUI {
 			dao.insertEmp(dto);
 			
 			System.out.println("사원등록에 성공 했습니다.");
+			System.out.println("등록된 사번 : "+dto.getEmpNo());
 		} catch (Exception e) {
 			System.out.println("사원등록에 실패 했습니다.");
 		}
@@ -219,7 +220,7 @@ public class EmpUI {
     	while(true) {
     		try {
     			do {
-    			System.out.print("1.경력사항 입력 2.경력사항 수정 3.경력사항 리스트 4.사번검색 5.돌아가기 => ");
+    			System.out.print("1.경력사항 입력 2.경력사항 수정 3.경력사항 리스트 4.직급&경력검색 5.돌아가기 => ");
     			ch = Integer.parseInt(br.readLine());
     			}while(ch<1||ch>5);
     			System.out.println();
@@ -266,6 +267,7 @@ public class EmpUI {
 			dao.insertCare(dto);
 			
 			System.out.println("경력등록에 성공 했습니다.");
+			System.out.println("등록된 경력코드 : "+dto.getCarNo());
 		} catch (Exception e) {
 			System.out.println("경력등록에 실패 했습니다.");
 		}
@@ -407,6 +409,7 @@ public class EmpUI {
 			dao.insertAsal(adto);
 			
 			System.out.println("연봉등록에 성공 했습니다.");
+			System.out.println("등록된 연봉코드 : "+adto.getAccountNo());
 		} catch (Exception e) {
 			System.out.println("연봉등록에 실패 했습니다.");
 		}
@@ -516,7 +519,8 @@ public class EmpUI {
 			System.out.print("급여 신청 계좌코드: ");
 			accdto.setAccountNo(br.readLine());
 			
-			accdto.setAmount(rSal);
+			int kSal = rSal + empdto.getBonus();
+			accdto.setAmount(kSal);
 			
 			// System.out.print("상세 내용: ");
 			// accdto.setDetail(br.readLine());
@@ -524,15 +528,15 @@ public class EmpUI {
 			// System.out.print("급여 신청 일자: ");
 			// accdto.setStateDate(br.readLine());
 			
-			
-			
 			dao.insertSett(accdto, empdto);
+			
 			
 			System.out.println();
 			System.out.println("[등록완료] 매입전표 등록이 완료되었습니다.");
 			System.out.println("관리자 승인까지 1~2일의 기간이 소요됩니다. ");
 			
 			System.out.println("급여등록에 성공 했습니다.");
+			System.out.println("등록된 급여코드 : "+empdto.getSettleNo());
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("급여등록에 실패 했습니다.");
@@ -580,7 +584,8 @@ public class EmpUI {
 			System.out.print("급여 신청 계좌코드: ");
 			accdto.setAccountNo(br.readLine());
 			// 실급여
-			accdto.setAmount(rSal);
+			int kSal = rSal + empdto.getBonus();
+			accdto.setAmount(kSal);
 			
 			int result = dao.updateSett(accdto, empdto);
 			
@@ -659,6 +664,7 @@ public class EmpUI {
 			dao.insertAtt(dto);
 			
 			System.out.println("출근에 성공 했습니다.");
+			System.out.println("등록된 근태코드 : "+dto.getAttNo());
 		} catch (Exception e) {
 			System.out.println("출근에 실패 했습니다.");
 		}

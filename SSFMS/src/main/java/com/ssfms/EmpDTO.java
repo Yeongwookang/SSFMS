@@ -101,6 +101,7 @@ public class EmpDTO {
 	public void setAccountSubNo(String accountSubNo) {
 		this.accountSubNo = accountSubNo;
 	}
+	
 	public String getEmpNo() {
 		return empNo;
 	}

@@ -13,9 +13,10 @@ public interface SalesDAO {
 	public int salesAccountInsert(EmpDTO empdto, AccDTO accdto) throws SQLException;
 	
 	
-	public SalesDTO estimateRead(String id);
+	public List<SalesDTO> estimateRead();
 	public List<SalesDTO> listSales();
 	public List<AccDTO> listSalesAccountInsert();
 	public List<SalesDTO> listTaxBill();
 	public List<AccDTO> listMoney();
+	public List<SalesDTO> orderRead();
 	}

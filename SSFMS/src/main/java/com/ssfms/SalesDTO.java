@@ -1,8 +1,41 @@
 package com.ssfms;
 
-
-//임시 변경사항있음
 public class SalesDTO {
+	//견적서
+	private String estimateNo;
+	//private String companyName;
+	private String comRegiNo;
+	private String tel;
+	private String orderCom;
+	//private String name;
+	private String orderComTel;
+	private String eDate;
+	//private String productNo;
+	private String productName; 
+	//private int num; 
+	private int eCos;
+	private int ePrice;
+	//private int note;
+	
+	//주문서
+	private String orderNo;
+	private String oDate;
+	//private String orderCom;
+	private String oName;
+	private String oTel;
+	private String expDeliDate;
+	//private String companyName;
+	//private String comRegiNo;
+	private String comAddress;
+	private String comTel;
+	//private String productNo;
+	//private String productName;
+	private int orderNum;
+	private int oCost;
+	private int oPrice;
+	private int oTotal;
+	private String orderNote;
+	
 	//매출
 	private String salesNo;
 	private int stateNo;
@@ -154,6 +187,134 @@ public class SalesDTO {
 	}
 	public void setTotal(int total) {
 		this.total = total;
+	}
+	
+	public String getEstimateNo() {
+		return estimateNo;
+	}
+	public void setEstimateNo(String estimateNo) {
+		this.estimateNo = estimateNo;
+	}
+	public String getComRegiNo() {
+		return comRegiNo;
+	}
+	public void setComRegiNo(String comRegiNo) {
+		this.comRegiNo = comRegiNo;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+	public String getOrderCom() {
+		return orderCom;
+	}
+	public void setOrderCom(String orderCom) {
+		this.orderCom = orderCom;
+	}
+	public String getOrderComTel() {
+		return orderComTel;
+	}
+	public void setOrderComTel(String orderComTel) {
+		this.orderComTel = orderComTel;
+	}
+	public String geteDate() {
+		return eDate;
+	}
+	public void seteDate(String eDate) {
+		this.eDate = eDate;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public int geteCos() {
+		return eCos;
+	}
+	public void seteCos(int eCos) {
+		this.eCos = eCos;
+	}
+	public int getePrice() {
+		return ePrice;
+	}
+	public void setePrice(int ePrice) {
+		this.ePrice = ePrice;
+	}
+	
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+	public String getoDate() {
+		return oDate;
+	}
+	public void setoDate(String oDate) {
+		this.oDate = oDate;
+	}
+	public String getoName() {
+		return oName;
+	}
+	public void setoName(String oName) {
+		this.oName = oName;
+	}
+	public String getoTel() {
+		return oTel;
+	}
+	public void setoTel(String oTel) {
+		this.oTel = oTel;
+	}
+	public String getExpDeliDate() {
+		return expDeliDate;
+	}
+	public void setExpDeliDate(String expDeliDate) {
+		this.expDeliDate = expDeliDate;
+	}
+	public String getComAddress() {
+		return comAddress;
+	}
+	public void setComAddress(String comAddress) {
+		this.comAddress = comAddress;
+	}
+	public String getComTel() {
+		return comTel;
+	}
+	public void setComTel(String comTel) {
+		this.comTel = comTel;
+	}
+	public int getOrderNum() {
+		return orderNum;
+	}
+	public void setOrderNum(int orderNum) {
+		this.orderNum = orderNum;
+	}
+	public int getoCost() {
+		return oCost;
+	}
+	public void setoCost(int oCost) {
+		this.oCost = oCost;
+	}
+	public int getoPrice() {
+		return oPrice;
+	}
+	public void setoPrice(int oPrice) {
+		this.oPrice = oPrice;
+	}
+	public int getoTotal() {
+		return num*oPrice;
+	}
+	public void setoTotal(int oTotal) {
+		this.oTotal = oTotal;
+	}
+	public String getOrderNote() {
+		return orderNote;
+	}
+	public void setOrderNote(String orderNote) {
+		this.orderNote = orderNote;
 	}
 	
 }

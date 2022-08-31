@@ -13,17 +13,181 @@ import com.util.DBConn;
 
 public class SalesDAOImpl implements SalesDAO {
 	private Connection conn = DBConn.getConnection();
+	
 
 	@Override
 	public int estimateInsertSales(SalesDTO dto) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
+
+		try {
+			conn.setAutoCommit(false);
+			sql = "INSERT INTO estimate (estimateNo, companyName, comRegiNo, tel, orderCom, name, orderComTel, eDate, "
+					+ "productNo, productName, num, eCost, ePrice, note)"
+					+ " VALUES (estimate_no_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, SYSDATE, ?, ?, ?, ?, ?, ?) ";
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, dto.getCompanyName());
+			pstmt.setString(2, dto.getComRegiNo());
+			pstmt.setString(3, dto.getTel());
+			pstmt.setString(4, dto.getOrderCom());
+			pstmt.setString(5, dto.getName());
+			pstmt.setString(6, dto.getOrderComTel());
+			pstmt.setString(7, dto.getProductNo());
+			pstmt.setString(8, dto.getProductName());
+			pstmt.setInt(9, dto.getNum());
+			pstmt.setInt(10, dto.geteCos());
+			pstmt.setInt(11, dto.getePrice());
+			pstmt.setString(12, dto.getNote());
+			
+
+			result = pstmt.executeUpdate();
+
+			conn.commit();
+
+		} catch (
+
+		SQLIntegrityConstraintViolationException e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+
+			if (e.getErrorCode() == 1) {
+				System.out.println("중복 데이터로 등록이 불가능합니다.");
+			} else if (e.getErrorCode() == 1400) {
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			throw e;
+
+		} catch (SQLDataException e) {
+
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+
+			if (e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
+				System.out.println("날짜 입력 형식 오류입니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			throw e;
+
+		} catch (SQLException e) {
+			conn.rollback();
+			throw e;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
+
+		return result;
 	}
 
 	@Override
-	public SalesDTO estimateRead(String id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<SalesDTO> estimateRead() {
+		List<SalesDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT estimateNo, companyName, comRegiNo, tel, orderCom, name, orderComTel, eDate, "
+					+ "productNo, productName, num, eCost, ePrice, note FROM estimate";
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				SalesDTO dto = new SalesDTO();
+
+				dto.setEstimateNo(rs.getString("estimateNo"));
+				dto.setCompanyName(rs.getString("companyName"));
+				dto.setComRegiNo(rs.getString("comRegiNo"));
+				dto.setTel(rs.getString("tel"));
+				dto.setOrderCom(rs.getString("orderCom"));
+				dto.setName(rs.getString("name"));
+				dto.setOrderComTel(rs.getString("orderComTel"));
+				dto.seteDate(rs.getString("eDate"));
+				dto.setProductNo(rs.getString("productNo"));
+				dto.setProductName(rs.getString("productName"));
+				dto.setNum(rs.getInt("num"));
+				dto.seteCos(rs.getInt("eCost"));
+				dto.setePrice(rs.getInt("ePrice"));
+				dto.setNote(rs.getString("note"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+
+		}
+
+		return list;
+	}
+	
+
+	@Override
+	public List<SalesDTO> orderRead() {
+		List<SalesDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT orderNo, oDate, orderCom, oName, oTel, expDeliDate, companyName, comRegiNo, "
+					+ "comAddress, comTel, productNo, productName, num, oCost, oPrice, total, note FROM orderBill";
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				SalesDTO dto = new SalesDTO();
+
+				dto.setOrderNo(rs.getString("orderNo"));
+				dto.setoDate(rs.getString("oDate"));
+				dto.setOrderCom(rs.getString("orderCom"));
+				dto.setoName(rs.getString("oName"));
+				dto.setoTel(rs.getString("oTel"));
+				dto.setExpDeliDate(rs.getString("expDeliDate"));
+				dto.setCompanyName(rs.getString("companyName"));
+				dto.setComRegiNo(rs.getString("comRegiNo"));
+				dto.setComAddress(rs.getString("comAddress"));
+				dto.setComTel(rs.getString("comTel"));
+				dto.setProductNo(rs.getString("productNo"));
+				dto.setProductName(rs.getString("productName"));
+				dto.setNum(rs.getInt("num"));
+				dto.setoCost(rs.getInt("oCost"));
+				dto.setoPrice(rs.getInt("oPrice"));
+				dto.setTotal(rs.getInt("total"));
+				dto.setNote(rs.getString("note"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+
+		}
+
+		return list;
 	}
 
 	@Override
@@ -413,5 +577,6 @@ public class SalesDAOImpl implements SalesDAO {
 		}
 		return list;
 	}
+
 
 }

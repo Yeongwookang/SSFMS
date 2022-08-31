@@ -87,46 +87,49 @@ public class SalesUI {
 	}
 
 	private void estimateInsert() {
+		char ch;
+		
 		System.out.println("[견적서 입력하세요]");
 		// 견적서는 입력과 조회만 가능. 입력후 30일까지만 보관하고 30일이 지나면 삭제
 
 		try {
 			SalesDTO dto = new SalesDTO();
 
-			System.out.println("견적서일련번호 : ");
-
 			System.out.println("사업자등록번호 : ");
-
-			System.out.println("회사명 : ");
+			dto.setEstimateNo(br.readLine());
 
 			System.out.println("회사연락처 : ");
+			dto.setTel(br.readLine());
 
 			System.out.println("주문처 : ");
+			dto.setOrderCom(br.readLine());
 
-			System.out.println("담당자 : ");
+			System.out.println("주문처담당자 : ");
+			dto.setName(br.readLine());
 
-			System.out.println("주문처연락처 : ");
-
-			for (int i = 0; i < 10; i++) {
-				System.out.println("제품명 : ");
-
+			System.out.println("주문처연락처 : ");	
+			dto.setOrderComTel(br.readLine());
+			
+			while(true) {
+				System.out.println("제품코드 : ");
+				dto.setProductNo(br.readLine());
+				
 				System.out.println("수량 : ");
-
-				/*
-				 * 
-				 * System.out.println("단가 : ");
-				 * 
-				 * System.out.println("공급가액");
-				 * 
-				 * System.out.println("세액 : ");
-				 * 
-				 * System.out.println("비고 : ");
-				 */
+				dto.setNum(Integer.parseInt(br.readLine()));
+				
+				System.out.print("추가를 계속 하시겟습니까[Y/N] ? ");
+				ch = (char)System.in.read();
+				System.in.skip(2); // 엔터버림. 맥은 1로 해야 함
+				if(ch!='Y' && ch !='y') {
+					break;
+				}
+				
 			}
-
+			
 			System.out.println("결제방식 : ");
-
-			dao.estimateInsertSales(dto);
+			dto.setNote(br.readLine());
+			
+			dao.estimateInsertSales(dto);			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -137,15 +140,53 @@ public class SalesUI {
 	private void estimateCheck() {
 		System.out.println("[견적서 조회]");
 
-		try {
-			System.out.println("조회할 견적서의 일련번호 입력 : ");
-		} catch (Exception e) {
+		System.out.println("견적서일련번호\t회사명\t사업자등록번호\t회사연락처\t주문처\t주문\t거래일시");
+		System.out.println("--------------------------------------------------------------------------------");
 
+		List<SalesDTO> list = dao.estimateRead();
+		for (SalesDTO dto : list) {
+			System.out.print(dto.getSalesNo() + "\t");
+			System.out.print(dto.getStateNo() + "\t");
+			System.out.print(dto.getProductNo()+ "\t");
+			System.out.print(dto.getCustomer() + "\t");
+			System.out.print(dto.getSales() + "\t");
+			System.out.print(dto.getSalesQty() + "\t");
+			System.out.println(dto.getDealDate() + "\t");
 		}
+
+		System.out.println();
 	}
 
 	private void orderCheck() {
+		System.out.println("[주문서 조회]");
+		
+		System.out.println("주문서일련번호\t입력날짜\t주문처\t주문처담당자\t주문처전화번호\t납품예정일\t회사명\t회사사업자번호"
+				+ "\t회사주소\t회사전화번호\t제품코드\t제품명\t수량\t단가\t판매가\t합계\t비고");
+		System.out.println("--------------------------------------------------------------------------------");
 
+		List<SalesDTO> list = dao.orderRead();
+		for (SalesDTO dto : list) {		
+			
+			System.out.print(dto.getOrderNo() + "\t");
+			System.out.print(dto.getoDate() + "\t");
+			System.out.print(dto.getOrderCom()+ "\t");
+			System.out.print(dto.getoName() + "\t");
+			System.out.print(dto.getoTel() + "\t");
+			System.out.print(dto.getExpDeliDate() + "\t");
+			System.out.print(dto.getCompanyName() + "\t");
+			System.out.print(dto.getComRegiNo() + "\t");
+			System.out.print(dto.getComAddress() + "\t");
+			System.out.print(dto.getComTel() + "\t");
+			System.out.print(dto.getProductNo() + "\t");
+			System.out.print(dto.getProductName() + "\t");
+			System.out.print(dto.getOrderNum() + "\t");
+			System.out.print(dto.getoCost() + "\t");
+			System.out.print(dto.getoPrice() + "\t");
+			System.out.print(dto.getoTotal() + "\t");
+			System.out.println(dto.getOrderNote() + "\t");
+		}
+
+		System.out.println();
 	}
 
 	private void manage() {

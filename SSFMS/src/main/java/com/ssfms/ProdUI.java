@@ -327,7 +327,7 @@ public class ProdUI {
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = dao.listAccount_prod();
-			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t\t사번\t부서\t직급\t이름");
+			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름");
 			for (AccDTO adto : list) {
 				System.out.print(adto.getStateNo() + "\t");
 				System.out.print(adto.getT_account() + "\t");

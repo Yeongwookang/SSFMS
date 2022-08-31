@@ -189,6 +189,38 @@ public class SalesDAOImpl implements SalesDAO {
 
 		return list;
 	}
+	
+	@Override
+	public int deleteOrder(SalesDTO dto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
+		
+		try {
+			
+			sql = "DELETE FROM shop WHERE shop_No = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getOrderNo());
+			result = pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+			
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+
+		
+		return result;
+	}
+	
 
 	@Override
 	public int salesInsert(SalesDTO dto, ProductDTO pdto) throws SQLException {
@@ -577,6 +609,5 @@ public class SalesDAOImpl implements SalesDAO {
 		}
 		return list;
 	}
-
 
 }

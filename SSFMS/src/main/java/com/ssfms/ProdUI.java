@@ -89,7 +89,7 @@ public class ProdUI {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
-			} else if(e.getErrorCode()==1400) {
+			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
 		} catch (Exception e) {
@@ -110,7 +110,7 @@ public class ProdUI {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
 			}
-			if(e.getErrorCode()==2292) {
+			if (e.getErrorCode() == 2292) {
 				System.out.println("⚜ 하위테이블에 값이 있습니다. ⚜");
 			}
 		} catch (Exception e) {
@@ -136,7 +136,7 @@ public class ProdUI {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
-			}else if(e.getErrorCode()==1400) {
+			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
 		} catch (Exception e) {
@@ -227,7 +227,7 @@ public class ProdUI {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
-			}else if(e.getErrorCode()==1400) {
+			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
 		} catch (Exception e) {
@@ -256,10 +256,9 @@ public class ProdUI {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
-			}
-			else if(e.getErrorCode()==2292) {
+			} else if (e.getErrorCode() == 2292) {
 				System.out.println("⚜ 하위테이블에 값이 있습니다. ⚜");
-			}else if(e.getErrorCode()==1400) {
+			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
 		} catch (Exception e) {
@@ -284,7 +283,7 @@ public class ProdUI {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
-			}else if(e.getErrorCode()==1400) {
+			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
 		} catch (Exception e) {
@@ -338,7 +337,7 @@ public class ProdUI {
 			adto.setStateCon("미승인");
 
 			adao.insertAccount(adto);
-			
+
 			System.out.println("\n⚜ 생산전표등록(대변) [부품사용]");
 			adto.setAccountSubNo("153");
 
@@ -350,7 +349,7 @@ public class ProdUI {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
-			}else if(e.getErrorCode()==1400) {
+			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
 		} catch (Exception e) {
@@ -383,10 +382,9 @@ public class ProdUI {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
-			}
-			else if(e.getErrorCode()==2292) {
+			} else if (e.getErrorCode() == 2292) {
 				System.out.println("⚜ 하위테이블에 값이 있습니다. ⚜");
-			}else if(e.getErrorCode()==1400) {
+			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
 		} catch (Exception e) {
@@ -473,7 +471,7 @@ public class ProdUI {
 			ProdDTO pdto = new ProdDTO();
 			System.out.print("⚜ 승인된 전표번호를 입력해주세요.  ");
 			AccDTO adto = adao.readAccount(Integer.parseInt(br.readLine()));
-			if(adto==null) {
+			if (adto == null) {
 				System.out.println("⚜ 없는 전표입니다. ⚜");
 			}
 			if (!adto.getStateCon().equals("승인")) {
@@ -504,9 +502,9 @@ public class ProdUI {
 
 	protected void list_producing() {
 		System.out.println("\n⚜ 생산표 보기 (임시저장) ⚜");
-		System.out.println("⚜ 전표번호 제품번호\t수량\t비용\t ⚜");
+		System.out.println("⚜ 전표번호\t제품번호\t수량\t비용\t ⚜");
 		for (ProdDTO pdto : plist) {
-			System.out.print("⚜ " + pdto.getStateNo() + "\t ");
+			System.out.print("⚜ " + pdto.getStateNo() + "\t");
 			System.out.print(pdto.getProductNo() + "\t");
 			System.out.print(pdto.getQty() + "\t");
 			System.out.println(pdto.getCost() + "\t");
@@ -525,7 +523,9 @@ public class ProdUI {
 		System.out.println("\n⚜ 부품사용입력(4.생산기록을 통해 기록해야 DB에 제출됩니다.) ⚜");
 		try {
 			String partNo;
-			System.out.print("⚜ 생산코드를 입력해주세요.  ");
+			System.out.print("⚜ 전표번호를 입력해주세요.  ");
+			pdto.setStateNo(Integer.parseInt(br.readLine()));
+			System.out.print("⚜ 생산번호를 입력해주세요.  ");
 			pdto.setProdNo(br.readLine());
 			while (true) {
 				System.out.print("⚜ 사용한 재료의 코드를 입력해주세요. [입력 종료: 0]  ");
@@ -550,7 +550,8 @@ public class ProdUI {
 		System.out.println("\n⚜ 생산표 보기 (임시저장) ⚜");
 		System.out.println("⚜ 생산번호\t부품번호\t수량\t⚜");
 		for (ProdDTO pdto : ulist) {
-			System.out.print("⚜ " + pdto.getProdNo() + "\t");
+			System.out.print("⚜ " + pdto.getStateNo() + "\t ");
+			System.out.print(pdto.getProdNo() + "\t");
 			System.out.print(pdto.getPartNo() + "\t");
 			System.out.println(pdto.getQty() + "\t");
 		}
@@ -570,11 +571,12 @@ public class ProdUI {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
-			}
-			if(e.getErrorCode()==2292) {
+			} else if (e.getErrorCode() == 2292) {
 				System.out.println("⚜ 하위테이블에 값이 있습니다. ⚜");
+			} else if (e.getErrorCode() == 1400) {
+				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

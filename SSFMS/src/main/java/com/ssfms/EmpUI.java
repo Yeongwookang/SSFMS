@@ -168,6 +168,10 @@ public class EmpUI {
 		System.out.println("\n사원전체 리스트 !!!");
 		
 		List<EmpDTO> list = dao.listEmp();
+		
+		System.out.println("사번\t이름\t전화번호\t\t이메일\t\t\t주소\t\t학력사항\t급여통장\t\t고용형태");
+		System.out.println("------------------------------------------------------------------------------------------------------------------");
+		
 		for(EmpDTO dto : list) {
 			System.out.print(dto.getEmpNo() +"\t");
 			System.out.print(dto.getName() +"\t");
@@ -217,7 +221,7 @@ public class EmpUI {
     			do {
     			System.out.print("1.경력사항 입력 2.경력사항 수정 3.경력사항 리스트 4.사번검색 5.돌아가기 => ");
     			ch = Integer.parseInt(br.readLine());
-    			}while(ch<1||ch>4);
+    			}while(ch<1||ch>5);
     			System.out.println();
     			
     			if(ch==5) {
@@ -312,6 +316,8 @@ public class EmpUI {
         System.out.println("\n경력사항 리스트 !!!");
 		
 		List<EmpDTO> list = dao.listCare();
+		System.out.println("경력번호\t구분\t일시\t\t\t부서코드\t직급코드\t사번");
+		System.out.println("--------------------------------------------------------------------------------");
 		for(EmpDTO dto : list) {
 
 			System.out.print(dto.getCarNo() +"\t");
@@ -440,6 +446,8 @@ public class EmpUI {
         System.out.println("\n연봉 리스트 !!!");
 		
 		List<EmpDTO> list = dao.listAsal();
+		System.out.println("연봉코드\t계약일자\t\t\t계약연봉\t사번");
+		System.out.println("----------------------------------------------------------------");
 		for(EmpDTO dto : list) {
 			System.out.print(dto.getAsalNo() +"\t");
 			System.out.print(dto.getSal_date() +"\t");
@@ -595,6 +603,8 @@ public class EmpUI {
         System.out.println("\n급여 리스트 !!!");
 		
 		List<EmpDTO> list = dao.listSett();
+		System.out.println("정산코드\t사번\t월급\t세금\t보너스\t실수령액\t정산일자");
+		System.out.println("---------------------------------------------------------------------------");
 		for(EmpDTO dto : list) {
 
 			System.out.print(dto.getSettleNo() +"\t");
@@ -602,7 +612,8 @@ public class EmpUI {
 			System.out.print(dto.getSal() +"\t");
 			System.out.print(dto.getTax() +"\t");
 			System.out.print(dto.getBonus() +"\t");
-			System.out.println(dto.getPay());
+			System.out.print(dto.getPay()+"\t");
+			System.out.println(dto.getPay_date());
 
 		}
 		System.out.println();
@@ -647,9 +658,9 @@ public class EmpUI {
 
 			dao.insertAtt(dto);
 			
-			System.out.println("근태등록에 성공 했습니다.");
+			System.out.println("출근에 성공 했습니다.");
 		} catch (Exception e) {
-			System.out.println("근태등록에 실패 했습니다.");
+			System.out.println("출근에 실패 했습니다.");
 		}
 		
 		System.out.println();
@@ -673,9 +684,9 @@ public class EmpUI {
 			
 			dao.updateAtt(dto);
 			
-			System.out.println("근태 수정에 성공 했습니다.");
+			System.out.println("퇴근에 성공 했습니다.");
 		} catch (Exception e) {
-			System.out.println("근태 수정에 실패 했습니다.");
+			System.out.println("퇴근에 실패 했습니다.");
 		}
 		
 		System.out.println();
@@ -685,6 +696,8 @@ public class EmpUI {
     	 System.out.println("\n근태 리스트 !!!");
  		
  		List<EmpDTO> list = dao.listAtt();
+ 		System.out.println("사번\t근태코드\t출근\t\t\t퇴근\t\t\t비고");
+		System.out.println("----------------------------------------------------------------------------");
  		for(EmpDTO dto : list) {
 
  			System.out.print(dto.getEmpNo()+"\t");
@@ -723,22 +736,22 @@ public class EmpUI {
     }
     
     protected void acInsert() {
-    	System.out.println("\n구입전표등록!!!");
+    	System.out.println("\n전표등록!!!");
     	
     	try {
     		AccDTO accdto = new AccDTO();
     		EmpDTO empdto = new EmpDTO();
     		
-			System.out.print("급여 신청자 사번: ");
+			System.out.print("신청자 사번: ");
 			empdto.setEmpNo(br.readLine());
 			
-			System.out.print("급여 신청 계좌코드: ");
+			System.out.print("신청 계좌코드: ");
 			accdto.setAccountNo(br.readLine());
 			
-			System.out.print("급여 신청 계정과목코드: ");
+			System.out.print("신청 계정과목코드: ");
 			accdto.setAccountSubNo(br.readLine());
 			
-			System.out.print("급여 신청 금액: ");
+			System.out.print("신청 금액: ");
 			accdto.setAmount(Integer.parseInt(br.readLine()));
 			
 			System.out.print("상세 내용: ");

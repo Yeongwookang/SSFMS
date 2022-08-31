@@ -99,6 +99,7 @@ public class EmpDAOImpl implements EmpDAO {
 			} else {
 				System.out.println(e.toString());
 			}
+			
 
 			throw e;
 

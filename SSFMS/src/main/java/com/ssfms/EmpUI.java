@@ -109,7 +109,7 @@ public class EmpUI {
 			dao.insertEmp(dto);
 			
 			System.out.println("사원등록에 성공 했습니다.");
-			System.out.println("등록된 사번 : "+dto.getEmpNo());
+			System.out.println("[ 등록된 사번 : "+dto.getEmpNo()+" ]");
 		} catch (Exception e) {
 			System.out.println("사원등록에 실패 했습니다.");
 		}
@@ -267,7 +267,7 @@ public class EmpUI {
 			dao.insertCare(dto);
 			
 			System.out.println("경력등록에 성공 했습니다.");
-			System.out.println("등록된 경력코드 : "+dto.getCarNo());
+			System.out.println("[ 등록된 경력코드 : "+dto.getCarNo()+" ]");
 		} catch (Exception e) {
 			System.out.println("경력등록에 실패 했습니다.");
 		}
@@ -334,7 +334,7 @@ public class EmpUI {
 	}
     // 사번으로 최신부서, 직급 검색
     protected void findByEmpNo() {
-		System.out.println("\n사번 검색 !!!");
+		System.out.println("\n최신부서&직급 검색 !!!");
 		String id;
 		
 		try {
@@ -391,14 +391,6 @@ public class EmpUI {
 		
 		try {
 			EmpDTO adto = new EmpDTO();
-			
-			/*
-			System.out.print("연봉코드 ? ");
-			adto.setAsalNo(br.readLine());
-			
-			System.out.print("계약일자 ? ");
-			adto.setSal_date(br.readLine());
-			*/
 
 			System.out.print("계약연봉 ? ");
 			adto.setAsal(Integer.parseInt(br.readLine()));
@@ -409,7 +401,7 @@ public class EmpUI {
 			dao.insertAsal(adto);
 			
 			System.out.println("연봉등록에 성공 했습니다.");
-			System.out.println("등록된 연봉코드 : "+adto.getAccountNo());
+			System.out.println("[ 등록된 연봉코드 : "+adto.getAccountNo()+" ]");
 		} catch (Exception e) {
 			System.out.println("연봉등록에 실패 했습니다.");
 		}
@@ -664,7 +656,7 @@ public class EmpUI {
 			dao.insertAtt(dto);
 			
 			System.out.println("출근에 성공 했습니다.");
-			System.out.println("등록된 근태코드 : "+dto.getAttNo());
+			System.out.println("[ 등록된 근태코드 : "+dto.getAttNo()+" ]");
 		} catch (Exception e) {
 			System.out.println("출근에 실패 했습니다.");
 		}
@@ -762,10 +754,7 @@ public class EmpUI {
 			
 			System.out.print("상세 내용: ");
 			accdto.setDetail(br.readLine());
-			
-			// System.out.print("급여 신청 일자: ");
-			// accdto.setStateDate(br.readLine());
-			
+
 			dao.insertAccSett(accdto, empdto);
 			
 			System.out.println();

@@ -22,7 +22,6 @@ public class EmpDAOImpl implements EmpDAO {
 	public int insertEmp(EmpDTO dto) throws SQLException {
 		int result = 0;
 		PreparedStatement pstmt = null;
-		// CallableStatement cstmt = null;
 		ResultSet rs = null;
 		String sql;
 
@@ -71,21 +70,6 @@ public class EmpDAOImpl implements EmpDAO {
 			}
 
 			conn.commit();
-
-			/*
-			 * sql = "{ CALL insert_emp(?, ?, ?, ?, ?, ?, ?, ?, ?) }"; cstmt =
-			 * conn.prepareCall(sql);
-			 * 
-			 * cstmt.setString(1, dto.getPwd()); cstmt.setString(2, dto.getName());
-			 * cstmt.setString(3, dto.getTel()); cstmt.setString(4, dto.getRrn());
-			 * cstmt.setString(5, dto.getEmail()); cstmt.setString(6, dto.getAddr());
-			 * cstmt.setString(7, dto.getEdu()); cstmt.setString(8, dto.getAccount());
-			 * cstmt.setString(9, dto.getHire_class());
-			 * 
-			 * cstmt.executeUpdate();
-			 * 
-			 * result =1;
-			 */
 
 		} catch (SQLIntegrityConstraintViolationException e) {
 			try {
@@ -216,7 +200,7 @@ public class EmpDAOImpl implements EmpDAO {
 
 		try {
 
-			sql = "SELECT empNo, name, tel, email, addr, edu, account, hire_class FROM emp";
+			sql = "SELECT empNo, name, tel, email, addr, edu, account, hire_class FROM emp ORDER BY empNo";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -389,7 +373,7 @@ public class EmpDAOImpl implements EmpDAO {
 
 		try {
 
-			sql = "SELECT carNo, div, car_date, depNo, rankNo, empNo FROM career";
+			sql = "SELECT carNo, div, car_date, depNo, rankNo, empNo FROM career ORDER BY carNo";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -555,7 +539,7 @@ public class EmpDAOImpl implements EmpDAO {
 
 		try {
 
-			sql = "SELECT asalNo, sal_date, asal, empNo FROM annual_salary";
+			sql = "SELECT asalNo, sal_date, asal, empNo FROM annual_salary ORDER BY asalNo";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -597,22 +581,11 @@ public class EmpDAOImpl implements EmpDAO {
 	@Override
 	public int insertSett(AccDTO accdto, EmpDTO empdto) throws SQLException {
 		int result = 0;
-		// CallableStatement cstmt = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 
 		try {
-			/*
-			 * sql = "{ CALL insert_sett(?, ?, ?, ?, ?) }"; cstmt = conn.prepareCall(sql);
-			 * 
-			 * cstmt.setString(1, dto.getEmpNo()); cstmt.setInt(2, dto.getSal());
-			 * cstmt.setInt(3, dto.getTax()); cstmt.setInt(4, dto.getBonus());
-			 * cstmt.setInt(5, dto.getPay());
-			 * 
-			 * cstmt.executeUpdate(); result =1;
-			 */
-
 			conn.setAutoCommit(false);
 
 			sql = "INSERT INTO settlement (settleNo, empNo, sal, tax, bonus, pay, pay_date)"
@@ -665,7 +638,6 @@ public class EmpDAOImpl implements EmpDAO {
 			pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(2, accdto.getAccountNo());
 			pstmt.setInt(3, accdto.getAmount());
-			// pstmt.setString(4, accdto.getDetail());
 
 			result += pstmt.executeUpdate();
 			pstmt.close();
@@ -679,7 +651,6 @@ public class EmpDAOImpl implements EmpDAO {
 			pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(2, accdto.getAccountNo());
 			pstmt.setInt(3, empdto.getTax());
-			// pstmt.setString(4, accdto.getDetail());
 
 			result += pstmt.executeUpdate();
 			pstmt.close();
@@ -900,7 +871,7 @@ public class EmpDAOImpl implements EmpDAO {
 
 		try {
 
-			sql = "SELECT settleNo, empNo, sal, tax, bonus, pay, pay_date FROM settlement";
+			sql = "SELECT settleNo, empNo, sal, tax, bonus, pay, pay_date FROM settlement ORDER BY settleNo";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -945,7 +916,6 @@ public class EmpDAOImpl implements EmpDAO {
 	@Override
 	public int insertAtt(EmpDTO dto) throws SQLException {
 		int result = 0;
-		// CallableStatement cstmt = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -1066,7 +1036,7 @@ public class EmpDAOImpl implements EmpDAO {
 
 		try {
 
-			sql = "SELECT attNo, sTime, eTime, empNo, note FROM attendance";
+			sql = "SELECT attNo, sTime, eTime, empNo, note FROM attendance ORDER BY attNo";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -1184,7 +1154,7 @@ public class EmpDAOImpl implements EmpDAO {
 
 		try {
 
-			sql = "UPDATE accounting SET " + " cancellation = 'O' " + " WHERE StateNo = ? AND stateCon = '미승인'";
+			sql = "UPDATE accounting SET cancellation = 'O' WHERE StateNo = ? AND stateCon = '미승인'";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -1212,7 +1182,7 @@ public class EmpDAOImpl implements EmpDAO {
 		return result;
 	}
 
-	// 월급 전표 리스트
+	// 급여 전표 리스트
 	@Override
 	public List<AccDTO> listAccSett() {
 		List<AccDTO> list = new ArrayList<>();
@@ -1225,7 +1195,8 @@ public class EmpDAOImpl implements EmpDAO {
 			sql = "SELECT stateNo, c.t_account , accountNo, b.asub_name, amount, cancellation, stateCon, stateDate, empNo "
 					+ " FROM accounting a " + " JOIN accountsub b ON a.accountSubNo = b.accountSubNo "
 					+ " JOIN CATEGORY c ON c.categNo = b.categNo "
-					+ " WHERE A.accountSubNo = '503' OR A.accountSubNo = '1031' OR A.accountSubNo = '517'  OR A.accountSubNo = '803' ";
+					+ " WHERE A.accountSubNo = '503' OR A.accountSubNo = '1031' OR A.accountSubNo = '517'  OR A.accountSubNo = '803' "
+					+ " ORDER BY stateNo";
 
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();

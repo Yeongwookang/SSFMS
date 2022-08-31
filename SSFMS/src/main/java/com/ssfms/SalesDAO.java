@@ -12,6 +12,7 @@ public interface SalesDAO {
 	public int salesInsert(SalesDTO dto, ProductDTO pdto) throws SQLException;
 	public int salesAccountInsert(EmpDTO empdto, AccDTO accdto) throws SQLException;
 	public int deleteOrder(SalesDTO dto) throws SQLException;
+	public int insertRelease(SalesDTO dto) throws SQLException;
 	
 	
 	public List<SalesDTO> estimateRead();

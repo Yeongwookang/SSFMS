@@ -221,6 +221,29 @@ public class SalesDAOImpl implements SalesDAO {
 		return result;
 	}
 	
+	@Override
+	public int insertRelease(SalesDTO dto) throws SQLException {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql;
+		
+		try {
+			sql = "INSERT INTO release (releaseNo, orderNo, releaseAval, releaseDate) "
+					+ " VALUES ((release_no_seq.NEXTVAL), ?, ?, SYSDATE)";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getOrderNo());
+			pstmt.setString(2, dto.getReleaseAval());
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 
 	@Override
 	public int salesInsert(SalesDTO dto, ProductDTO pdto) throws SQLException {

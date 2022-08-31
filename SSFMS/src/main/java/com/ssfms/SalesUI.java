@@ -239,20 +239,31 @@ public class SalesUI {
 
 	}
 
-	private void releaseCheck() {
+	private void releaseInsert() {
+		
 		System.out.println("[출고등록]");
 
 		try {
-
-			System.out.println("주문서 일련번호 입력 > ");
+			SalesDTO dto = new SalesDTO();
+			System.out.println("주문서 일련번호 입력 >> ");
+			dto.setOrderNo(br.readLine());
+			
+			System.out.println("출고날짜 >> ");
+			dto.setRelDate(br.readLine());
+			
+			dao.insertRelease(dto);
+			
+			System.out.println("제품출고등록을 완료하였습니다.");
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println();
 
 	}
+	
 
-	private void releaseInsert() {
+	private void releaseCheck() {
 		System.out.println("[출고조회]");
 
 		System.out.println("주문서 일련번호 입력 > ");

@@ -36,6 +36,11 @@ public class SalesDTO {
 	private int oTotal;
 	private String orderNote;
 	
+	
+	//출고
+	private String releaseAval;
+	private String relDate;
+	
 	//매출
 	private String salesNo;
 	private int stateNo;
@@ -315,6 +320,18 @@ public class SalesDTO {
 	}
 	public void setOrderNote(String orderNote) {
 		this.orderNote = orderNote;
+	}
+	public String getReleaseAval() {
+		return "출고등록완료";
+	}
+	public void setReleaseAval(String releaseAval) {
+		this.releaseAval = releaseAval;
+	}
+	public String getRelDate() {
+		return relDate;
+	}
+	public void setRelDate(String relDate) {
+		this.relDate = relDate;
 	}
 	
 }

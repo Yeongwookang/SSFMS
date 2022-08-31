@@ -134,6 +134,7 @@ public class AccDAOImpl implements AccDAO {
 		} catch (SQLException e) {
 			try {
 				conn.rollback();
+				e.printStackTrace();
 			} catch (Exception e2) {
 			} 
 			

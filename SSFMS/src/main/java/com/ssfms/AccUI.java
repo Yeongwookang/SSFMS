@@ -20,11 +20,18 @@ public class AccUI {
 
 		while (true) {
 			try {
-				System.out.print("\t\t\t[회계] \n");
+				System.out.print("\t\t   [회계] \n");
 				do {
-					System.out.print("1.전표관리 2. 승인관리 3. 전표조회  4. 매입매출 및 거래처 관리 5. 계좌관리 6.계정과목관리 7. [이전화면] => ");
+					System.out.println("=================================================");
+					System.out.print("(1) 전표관리      (2) 승인관리      (3) 전표조회\n");
+					System.out.print("(4) 월 매입/매출 조회 및 거래처 관리\n"); 
+					System.out.println("(5) 계좌관리      (6) 계정과목관리   (7)[이전화면]");
+					System.out.println("=================================================");
+					System.out.print("[메뉴 버튼] : ");
 					ch = Integer.parseInt(br.readLine());
+					
 					System.out.println();
+					
 				} while (ch < 1 || ch > 7);
 
 				switch (ch) {
@@ -35,7 +42,7 @@ public class AccUI {
 				case 3:
 					new AccUI().menu3();
 				case 4:
-					new AccUI().menu5();
+					new AccUI().menu4();
 				case 5:
 					new AccUI().menu5();
 				case 6:
@@ -57,7 +64,11 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.print("1. 전표등록 2. 전표수정 3. 전표삭제 4. [이전화면] \n => ");
+					System.out.println(" < 전표관리 > ");
+					System.out.println("-------------------------------------------------");
+					System.out.print("(1) 전표등록   (2) 전표수정   (3) 전표삭제   (4)[이전화면] \n");
+					System.out.println("-------------------------------------------------");
+					System.out.print("[메뉴 버튼] : ");
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 4);
 				System.out.println();
@@ -175,7 +186,12 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.print("1. 미승인전표 출력 2. 승인처리 3. [이전화면] \n => ");
+					System.out.println(" < 승인관리 > ");
+					System.out.println("-------------------------------------------------");
+					System.out.print("1. 미승인전표 출력      2. 승인처리      3. [이전화면] \n");
+					System.out.println("-------------------------------------------------");
+					System.out.print("[메뉴 버튼] : ");
+					
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 3);
 				System.out.println();
@@ -329,7 +345,12 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.print("1. 전체 전표 조회 2. 사원별 전표 조회 3. 계정과목 별 전표 조회 4. [이전화면] \n => ");
+					System.out.println(" < 전표조회 > ");
+					System.out.println("-------------------------------------------------");
+					System.out.print("1. 전체 전표  2. 사원별 조회  3. 계정과목별 조회  4.[이전화면]\n");
+					System.out.println("-------------------------------------------------");
+					System.out.print("[메뉴 버튼] : ");
+					
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 4);
 				System.out.println();
@@ -463,7 +484,12 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.print("1. 월별 매입매출 조회 2. 거래처 관리 3.[이전화면] \n =>");
+					System.out.println(" < 기간별 매입/매출 조회 및 거래처 관리 > ");
+					System.out.println("-------------------------------------------------");
+					System.out.print("1. 월별 매입매출 조회    2. 거래처 관리     3.[이전화면] \n");
+					System.out.println("-------------------------------------------------");
+					System.out.print("[메뉴 버튼] : ");
+					
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 3);
 				System.out.println();
@@ -542,7 +568,11 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.print("1. 계좌등록 2. 계좌수정 3. 계좌삭제 4.계좌리스트 5.[이전화면] \n =>");
+					System.out.println(" < 은행계좌관리 > ");
+					System.out.println("-------------------------------------------------");
+					System.out.print("1. 계좌등록  2. 계좌수정  3. 계좌삭제  4.계좌리스트 5.[이전화면] \n");
+					System.out.println("-------------------------------------------------");
+					System.out.print("[메뉴 버튼] : ");
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 5);
 				System.out.println();
@@ -686,7 +716,11 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.print("1. 계정과목 등록 2. 계정과목 수정 3. 계정과목 삭제 4. 계정과목 리스트 5.[이전화면] \n =>");
+					System.out.println(" < 계정과목관리 > ");
+					System.out.println("---------------------------------------------------------------");
+					System.out.print("1. 계정과목 등록 2. 계정과목 수정 3. 계정과목 삭제 4. 계정과목 조회 5.[이전화면] \n");
+					System.out.println("---------------------------------------------------------------");
+					System.out.print("[메뉴 버튼] : ");
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 5);
 				System.out.println();

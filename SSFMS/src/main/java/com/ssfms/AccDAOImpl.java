@@ -440,6 +440,67 @@ public class AccDAOImpl implements AccDAO {
 
 		return list;
 	}
+	
+	public List<AccDTO> listapproval() throws SQLException {
+		List<AccDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT stateNo, t_account, empNo, accountNo, asub_name, amount, detail, cancellation, stateCon, "
+					+ " TO_char(stateDate,'YYYY-MM-DD')stateDate, dep, rank, name FROM State_view "
+					+ " WHERE StateCon = '승인' ";
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.executeUpdate();
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				AccDTO dto = new AccDTO();
+
+				dto.setStateNo(rs.getInt("stateNo"));
+				dto.setT_account(rs.getString("t_account"));
+				dto.setEmpNo(rs.getString("empNo"));
+				dto.setAccountNo(rs.getString("accountNo"));
+				dto.setAsub_name(rs.getString("asub_name"));
+				dto.setAmount(rs.getInt("amount"));
+				dto.setDetail(rs.getString("detail"));
+				dto.setCancellation(rs.getString("cancellation"));
+				dto.setStateCon(rs.getString("stateCon"));
+				dto.setStateDate(rs.getString("stateDate"));
+				dto.setDep(rs.getString("dep"));
+				dto.setRank(rs.getString("rank"));
+				dto.setName(rs.getString("name"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+
+				}
+			}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+
+		}
+
+		return list;
+	}
+
 
 	public void producing(List<AccDTO> listNapproval) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -478,3 +539,5 @@ public class AccDAOImpl implements AccDAO {
 		}
 	}
 }
+
+

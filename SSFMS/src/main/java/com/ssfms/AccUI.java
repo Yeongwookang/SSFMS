@@ -40,24 +40,6 @@ public class AccUI {
 					break;
 				}
 
-				/*
-				 * System.out.println("========================================================"
-				 * ); System.out.print("1. 전표등록 \t   2. 전표수정 \t 3. 전표삭제 \n");
-				 * System.out.println("--------------------------------------------------------"
-				 * ); System.out.print("4. 전체 전표 조회 \t   5. 사원별 전표 조회 6. 계정과목 별 전표 조회 \n");
-				 * System.out.println("--------------------------------------------------------"
-				 * ); System.out.print("7. 월별 매입매출 조회  8. 거래처 관리 \n");
-				 * System.out.println("--------------------------------------------------------"
-				 * );
-				 * System.out.print("9. 계좌 등록 \t    10. 계좌 수정 \t  11. 계좌 삭제 12. 전체 계좌 조회 \n");
-				 * System.out.println("--------------------------------------------------------"
-				 * ); System.out.print("13. 계정과목 등록 14. 계정과목 수정 15. 계정과목 삭제. 16. 계정과목 조회 \n");
-				 * System.out.println("--------------------------------------------------------"
-				 * ); System.out.print("17.[이전화면으로 돌아가기]");
-				 * System.out.println("========================================================"
-				 * ); System.out.print("[메뉴 버튼] : \n");
-				 */
-
 			} catch (Exception e) {
 			}
 		}
@@ -270,7 +252,7 @@ public class AccUI {
 					break;
 				case 3:
 					listapproval();
-					break;	
+					break;
 				}
 
 			} catch (Exception e) {
@@ -279,17 +261,12 @@ public class AccUI {
 		}
 	}
 
-	
 	protected void update_approval_N() {
-		
-		
-		try {
-		
-				System.out.println("\n승인할 전표번호?  ");
-				AccDTO dto =  dao.readAccount(Integer.parseInt(br.readLine()));
 
-			
-			
+		try {
+			System.out.println("\n승인할 전표번호?  ");
+			AccDTO dto = dao.readAccount(Integer.parseInt(br.readLine()));
+
 			dto.setStateCon("승인");
 
 			dao.updateAccount(dto);
@@ -300,11 +277,11 @@ public class AccUI {
 			System.out.println("승인 실패");
 		}
 	}
-	
+
 	protected void update_approval_All() {
-		
+
 	}
-	
+
 	protected void listapproval() {
 		System.out.println("\n승인 전표 목록 ");
 
@@ -313,7 +290,7 @@ public class AccUI {
 			List<AccDTO> listapproval = dao.listAccount();
 
 			if (listapproval.size() == 0) {
-				System.out.println("미승인된 전표가 없습니다.\n");
+				System.out.println("승인된 전표가 없습니다.\n");
 				return;
 			}
 
@@ -340,9 +317,7 @@ public class AccUI {
 		}
 		System.out.println();
 	}
-	
-	
-	
+
 	// 전표조회
 	public void menu3() {
 		int ch;

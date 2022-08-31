@@ -14,6 +14,6 @@ public interface AccDAO {
 	public List<AccDTO> listAccount_emp(String empNo)throws SQLException;
 	public List<AccDTO> listAccount_subNo(String accountSubNo)throws SQLException;
 	public List<AccDTO> listNapproval()throws SQLException;
-	
+	public List<AccDTO> listapproval()throws SQLException;
 } 
 

@@ -28,11 +28,9 @@ public class ProdDAOImpl implements ProdDAO {
 			pstmt.setInt(4, pdto.getPrice());
 			pstmt.setInt(5, pdto.getStock());
 			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		} finally {
 			if (pstmt != null) {
 				try {
@@ -53,10 +51,8 @@ public class ProdDAOImpl implements ProdDAO {
 			pstmt.setString(1, productNo);
 			pstmt.executeUpdate();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		} finally {
 			if (pstmt != null) {
 				try {
@@ -89,7 +85,7 @@ public class ProdDAOImpl implements ProdDAO {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 		return list;
 	}
@@ -115,8 +111,8 @@ public class ProdDAOImpl implements ProdDAO {
 				pdto.setPart_stock(rs.getInt("part_stock"));
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		}catch (Exception e) {
+			throw e;
 		}
 		return pdto;
 	}
@@ -159,7 +155,7 @@ public class ProdDAOImpl implements ProdDAO {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		} finally {
 			if (rs != null) {
 				try {
@@ -208,8 +204,8 @@ public class ProdDAOImpl implements ProdDAO {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
+			throw e;
+		}finally {
 			if (rs != null) {
 				try {
 					rs.close();
@@ -246,11 +242,8 @@ public class ProdDAOImpl implements ProdDAO {
 			}
 			conn.commit();
 			
-		} catch (SQLException e) {
-			conn.rollback();
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		} finally {
 			try {
 				conn.setAutoCommit(true);
@@ -272,11 +265,8 @@ public class ProdDAOImpl implements ProdDAO {
 				pstmt.setInt(1, pdto.getPartOfferNo());
 				pstmt.executeUpdate();
 			}
-		} catch (SQLException e) {
-			conn.rollback();
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 
 		conn.commit();
@@ -313,7 +303,7 @@ public class ProdDAOImpl implements ProdDAO {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		} finally {
 			if (rs != null) {
 				try {
@@ -386,11 +376,8 @@ public void producing(List<ProdDTO>plist, List<ProdDTO>ulist) throws SQLExceptio
 		
 		conn.commit();
 		
-	} catch (SQLException e) {
-		conn.rollback();
-		e.printStackTrace();
-	}catch (Exception e) {
-		e.printStackTrace();
+	} catch (Exception e) {
+		throw e;
 	} finally {
 		if (pstmt != null) {
 			try {
@@ -401,7 +388,7 @@ public void producing(List<ProdDTO>plist, List<ProdDTO>ulist) throws SQLExceptio
 		try {
 			conn.setAutoCommit(true);
 		} catch (Exception e2) {
-			e2.printStackTrace();
+			throw e2;
 		}
 	}
 }

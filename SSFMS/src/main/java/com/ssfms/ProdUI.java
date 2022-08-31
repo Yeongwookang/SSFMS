@@ -85,7 +85,13 @@ public class ProdUI {
 			pdto.setPrice(Integer.parseInt(br.readLine()));
 			pdto.setStock(0);
 			dao.reg_product(pdto);
-			System.out.println("\n⚜ 제품 등록이 완료되었습니다.");
+			System.out.println("\n⚜ 제품 등록이 완료되었습니다. ⚜");
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
+			} else if(e.getErrorCode()==1400) {
+				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -100,9 +106,17 @@ public class ProdUI {
 			dao.del_product(productNo);
 			System.out.println("\n⚜ 등록된 제품이 삭제되었습니다.  ");
 
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
+			}
+			if(e.getErrorCode()==2292) {
+				System.out.println("⚜ 하위테이블에 값이 있습니다. ⚜");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	protected void list_product() {
@@ -119,9 +133,16 @@ public class ProdUI {
 				System.out.println(pdto.getStock() + "\t");
 			}
 
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
+			}else if(e.getErrorCode()==1400) {
+				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public void partStockMenu() {
@@ -167,6 +188,10 @@ public class ProdUI {
 				System.out.println(bdto.getPart_stock() + "\t");
 			}
 			System.out.println();
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -200,10 +225,15 @@ public class ProdUI {
 			System.out.println("⚜ 부품구매 요청이 완료되었습니다. ⚜");
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
+			}else if(e.getErrorCode()==1400) {
+				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	protected void buy_offer_cancel() {
@@ -223,9 +253,19 @@ public class ProdUI {
 			}
 			dao.buy_offer_cancel(list);
 			System.out.println("⚜ 부품 구매요청이 취소되었습니다. ⚜");
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
+			}
+			else if(e.getErrorCode()==2292) {
+				System.out.println("⚜ 하위테이블에 값이 있습니다. ⚜");
+			}else if(e.getErrorCode()==1400) {
+				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	protected void list_buy_offer() {
@@ -242,6 +282,12 @@ public class ProdUI {
 				System.out.println(pdto.getOffer_date() + "\t");
 			}
 		} catch (SQLException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
+			}else if(e.getErrorCode()==1400) {
+				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -275,28 +321,38 @@ public class ProdUI {
 	}
 
 	protected void insert_Prod_state() {
-		System.out.println("\n⚜ 생산전표등록");
+		System.out.println("\n⚜ 생산전표등록(차변) [제품생산]");
 		try {
 			AccDTO adto = new AccDTO();
 
 			System.out.print("⚜ 사번 : ");
 			adto.setEmpNo(br.readLine());
-
-			System.out.print("⚜ 계좌코드 : [기본 계좌 60001]");
-			adto.setAccountNo(br.readLine());
-
-			System.out.print("⚜ 계정과목코드 : [ 기본 101 ]");
-			adto.setAccountSubNo(br.readLine());
+			adto.setAccountNo("60001");
+			adto.setAccountSubNo("150");
 
 			System.out.print("⚜ 금액 : ");
 			adto.setAmount(Integer.parseInt(br.readLine()));
 
 			System.out.print("⚜ 상세내용 : ");
 			adto.setDetail(br.readLine());
+			adto.setStateCon("미승인");
 
+			adao.insertAccount(adto);
+			
+			System.out.println("\n⚜ 생산전표등록(대변) [부품사용]");
+			adto.setAccountSubNo("153");
+
+			System.out.print("⚜ 상세내용 : ");
+			adto.setDetail(br.readLine());
 			adao.insertAccount(adto);
 
 			System.out.println("⚜ 전표가 등록 되었습니다. ⚜");
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
+			}else if(e.getErrorCode()==1400) {
+				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -324,6 +380,15 @@ public class ProdUI {
 			}
 			System.out.println("⚜ 전표가 취소되지 않았습니다. ⚜");
 
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
+			}
+			else if(e.getErrorCode()==2292) {
+				System.out.println("⚜ 하위테이블에 값이 있습니다. ⚜");
+			}else if(e.getErrorCode()==1400) {
+				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -349,6 +414,10 @@ public class ProdUI {
 				System.out.print(adto.getDep() + "\t");
 				System.out.print(adto.getRank() + "\t");
 				System.out.println(adto.getName());
+			}
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -404,6 +473,9 @@ public class ProdUI {
 			ProdDTO pdto = new ProdDTO();
 			System.out.print("⚜ 승인된 전표번호를 입력해주세요.  ");
 			AccDTO adto = adao.readAccount(Integer.parseInt(br.readLine()));
+			if(adto==null) {
+				System.out.println("⚜ 없는 전표입니다. ⚜");
+			}
 			if (!adto.getStateCon().equals("승인")) {
 				System.out.println("⚜ 승인되지 않은 전표입니다. ⚜");
 				return;
@@ -444,7 +516,7 @@ public class ProdUI {
 
 	protected void plist_purge() {
 		plist = new ArrayList<>();
-		System.out.println("초기화 되었습니다");
+		System.out.println("⚜ 초기화 되었습니다 ⚜");
 	}
 
 	protected void using_part() {
@@ -487,7 +559,7 @@ public class ProdUI {
 
 	protected void ulist_purge() {
 		ulist = new ArrayList<>();
-		System.out.println("초기화 되었습니다");
+		System.out.println("⚜  초기화 되었습니다 ⚜");
 	}
 
 	protected void production() {
@@ -495,8 +567,17 @@ public class ProdUI {
 		try {
 			dao.producing(plist, ulist);
 			System.out.println("⚜ DB 저장 완료! ⚜");
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
+			}
+			if(e.getErrorCode()==2292) {
+				System.out.println("⚜ 하위테이블에 값이 있습니다. ⚜");
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 }

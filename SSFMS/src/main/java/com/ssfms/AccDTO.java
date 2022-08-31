@@ -17,7 +17,14 @@ public class AccDTO {
 	private String bankName;
 	private String accountNum;
 	private int busAmount;
+	private String categNo;
 	
+	public String getCategNo() {
+		return categNo;
+	}
+	public void setCategNo(String categNo) {
+		this.categNo = categNo;
+	}
 	public String getBankName() {
 		return bankName;
 	}

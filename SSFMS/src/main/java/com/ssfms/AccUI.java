@@ -11,6 +11,8 @@ public class AccUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private AccDAO dao = new AccDAOImpl();
 	private BuyDAO bdao = new BuyDAOImpl();
+	private AccDAO adao = new AccDAOImpl();
+	private AccDAO sdao = new AccDAOImpl();
 
 	public void menu() {
 
@@ -32,9 +34,12 @@ public class AccUI {
 					new AccUI().menu2();
 				case 3:
 					new AccUI().menu3();
-				// case 4: new AccUI().menu5();
-				case 5: 
+				case 4:
 					new AccUI().menu5();
+				case 5:
+					new AccUI().menu5();
+				case 6:
+					new AccUI().menu6();
 				case 7:
 					App.main(null);
 					break;
@@ -553,11 +558,11 @@ public class AccUI {
 				case 2:
 					updateAccountNo();
 					break;
-					
+
 				case 3:
 					deleteAccountNo();
 					break;
-					
+
 				case 4:
 					listaccountNo();
 					break;
@@ -568,158 +573,233 @@ public class AccUI {
 			}
 		}
 	}
+
+	protected void insertAccountNo() {
+		System.out.println("\n계좌 등록 ");
 		
-		protected void insertAccountNo() {
-			System.out.println("\n계좌 등록 ");
+		try {
 			AccDTO adto = new AccDTO();
-			try {
-				AccDTO adto = new AccDTO();
 
-				System.out.print("계좌코드 : ");
-				adto.setAccountNo(br.readLine());
+			System.out.print("계좌코드 : ");
+			adto.setAccountNo(br.readLine());
 
-				System.out.print("은행명 : ");
-				adto.setBankName(br.readLine());
+			System.out.print("은행명 : ");
+			adto.setBankName(br.readLine());
 
-				System.out.print("계좌번호 : ");
-				adto.setAccountNum(Integer.parseInt(br.readLine()));
+			System.out.print("계좌번호 : ");
+			adto.setAccountNum(br.readLine());
 
-				System.out.print("예금주성함");
-				adto.setName(br.readLine());
+			System.out.print("예금주성함");
+			adto.setName(br.readLine());
 
-				System.out.print("거래액 : ");
-				adto.setBusAmount(Integer.parseInt(br.readLine()));
+			System.out.print("거래액 : ");
+			adto.setBusAmount(Integer.parseInt(br.readLine()));
 
-				System.out.print("잔액 : ");
-				adto.setBalance(Integer.parseInt(br.readLine()));
+			System.out.print("잔액 : ");
+			adto.setBalance(Integer.parseInt(br.readLine()));
 
-				
-				dao.insertAccount(adto);
+			dao.insertAccount(adto);
 
-				System.out.println("계좌정보가 등록 되었습니다.");
-			} catch (Exception e) {
-				System.out.println("등록 실패하였습니다.");
-			}
-
+			System.out.println("계좌정보가 등록 되었습니다.");
+		} catch (Exception e) {
+			System.out.println("등록 실패하였습니다.");
 		}
 
-		protected void updateAccountNo() {
-			System.out.println("\n계좌 수정 ");
+	}
 
-			try {
-				AccDTO adto = new AccDTO();
+	protected void updateAccountNo() {
+		System.out.println("\n계좌 수정 ");
 
-				System.out.print("계좌코드 : ");
-				adto.setAccountNo(br.readLine());
+		try {
+			AccDTO adto = new AccDTO();
 
-				System.out.print("은행명 : ");
-				adto.setBankName(br.readLine());
+			System.out.print("계좌코드 : ");
+			adto.setAccountNo(br.readLine());
 
-				System.out.print("계좌번호 : ");
-				adto.setAccountNum(Integer.parseInt(br.readLine()));
+			System.out.print("은행명 : ");
+			adto.setBankName(br.readLine());
 
-				System.out.print("예금주성함");
-				adto.setName(br.readLine());
+			System.out.print("계좌번호 : ");
+			adto.setAccountNum(br.readLine());
 
-				System.out.print("거래액 : ");
-				adto.setBusAmount(Integer.parseInt(br.readLine()));
+			System.out.print("예금주성함");
+			adto.setName(br.readLine());
 
-				System.out.print("잔액 : ");
-				adto.setBalance(Integer.parseInt(br.readLine()));
+			System.out.print("거래액 : ");
+			adto.setBusAmount(Integer.parseInt(br.readLine()));
 
-				dao.updateAccount(adto);
+			System.out.print("잔액 : ");
+			adto.setBalance(Integer.parseInt(br.readLine()));
 
-				System.out.println("계좌정보가 수정 되었습니다.");
+			dao.updateAccount(adto);
 
-			} catch (Exception e) {
-				System.out.println("수정 실패");
+			System.out.println("계좌정보가 수정 되었습니다.");
+
+		} catch (Exception e) {
+			System.out.println("수정 실패");
+		}
+	}
+
+	protected void deleteAccountNo() {
+		System.out.println("\n계좌 삭제 ");
+		int accountNo;
+
+		try {
+			System.out.print("삭제할 계좌코드 ? ");
+			accountNo = Integer.parseInt(br.readLine());
+
+			sdao.deleteAccount(accountNo);
+
+			System.out.println("계좌정보가 삭제 되었습니다.");
+		} catch (Exception e) {
+			System.out.println("계좌정보 삭제 실패 !!!");
+		}
+		System.out.println();
+
+	}
+
+	protected void listaccountNo() {
+		System.out.println("\n 전체 계좌 조회 ");
+		try {
+			List<AccDTO> list = new ArrayList<>();
+			list = sdao.listAccountNo();
+			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름");
+			for (AccDTO adto : list) {
+				System.out.print(adto.getAccountNo() + "\t");
+				System.out.print(adto.getBankName() + "\t");
+				System.out.print(adto.getAccountNum() + "\t");
+				System.out.print(adto.getName() + "\t");
+				System.out.print(adto.getBusAmount() + "\t\t");
+				System.out.println(adto.getBalance() + "\t");
+
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		protected void deleteAccountNo() {
-			System.out.println("\n계좌 삭제 ");
-			int accountNo;
+	}
 
+	// 계정과목관리
+	public void menu6() {
+
+		int ch;
+		while (true) {
 			try {
-				System.out.print("삭제할 계좌정보 ? ");
-				set.AccountNo = Integer.parseInt(br.readLine());
+				do {
+					System.out.print("1. 계정과목 등록 2. 계정과목 수정 3. 계정과목 삭제 4. 계정과목 리스트 5.[이전화면] \n =>");
+					ch = Integer.parseInt(br.readLine());
+				} while (ch < 1 || ch > 5);
+				System.out.println();
 
-				adao.deleteAccount(setAccountNo);
+				if (ch == 5) {
+					new AccUI().menu();
+				}
 
-				System.out.println("계좌정보가 삭제 되었습니다.");
-			} catch (Exception e) {
-				System.out.println("계좌 삭제 실패 !!!");
-			}
-			System.out.println();
+				switch (ch) {
+				case 1:
+					insertAccSub();
+					break;
+				case 2:
+					updateAccSub();
+					break;
 
-		}
-		protected void listaccountNo() {
-			System.out.println("\n 전체 계좌 조회 ");
-			try {
-				List<AccDTO> list = new ArrayList<>();
-				list = adao.listaccountNo();
-				System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름");
-				for (AccDTO adto : list) {
-					System.out.print(adto.getAccountNo() + "\t");
-					System.out.print(adto.getBankName() + "\t");
-					System.out.print(adto.getAccountNum() + "\t");
-					System.out.print(adto.getName() + "\t");
-					System.out.print(adto.getBusAmount() + "\t\t");
-					System.out.println(adto.getBalance() + "\t");
-					
+				case 3:
+					deleteAccSub();
+					break;
+
+				case 4:
+					listAccSub();
+					break;
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 		}
-	
-
-	// 계정과목관리
-	public void menu6() {
-		
-		  protected void insert_accNo() { System.out.println("\n계정과목 등록 "); 
-		  
-		 
-		  }
 	}
 
-	/*
-	 * protected void update_accNo() { System.out.println("\n전표 수정 ");
-	 * 
-	 * try { AccDTO dto = new AccDTO();
-	 * 
-	 * System.out.print("수정할 사원코드 : "); dto.setEmpNo(br.readLine());
-	 * 
-	 * System.out.print("수정할 계좌코드 : "); dto.setAccountNo(br.readLine());
-	 * 
-	 * System.out.print("수정할 계정과목코드 : "); dto.setAccountSubNo(br.readLine());
-	 * 
-	 * System.out.print("수정할 금액 : ");
-	 * dto.setAmount(Integer.parseInt(br.readLine()));
-	 * 
-	 * System.out.print("수정할 상세내용 : "); dto.setDetail(br.readLine());
-	 * 
-	 * System.out.print("수정할 취소여부 : "); dto.setCancellation(br.readLine());
-	 * 
-	 * System.out.print("수정할 전표상태 : "); dto.setStateCon(br.readLine());
-	 * 
-	 * dao.updateAccount(dto);
-	 * 
-	 * System.out.println("전표가 수정 되었습니다.");
-	 * 
-	 * } catch (Exception e) { System.out.println("수정 실패"); } }
-	 * 
-	 * protected void delete_accNo() { System.out.println("\n전표 삭제 "); int stateNo;
-	 * 
-	 * try { System.out.print("삭제할 전표 번호 ? "); stateNo =
-	 * Integer.parseInt(br.readLine());
-	 * 
-	 * dao.deleteAccount(stateNo);
-	 * 
-	 * System.out.println("전표가 삭제 되었습니다."); } catch (Exception e) {
-	 * System.out.println("전표 삭제 실패 !!!"); } System.out.println();
-	 * 
-	 * }
-	 */
+	protected void insertAccSub() {
+		System.out.println("\n계정과목 등록 ");
+
+		try {
+			AccDTO sdto = new AccDTO();
+
+			System.out.print("계정과목코드 : ");
+			sdto.setAccountSubNo(br.readLine());
+
+			System.out.print("계정과목명 : ");
+			sdto.setName(br.readLine());
+
+			System.out.print("분류코드 : ");
+			sdto.setCategNo(br.readLine());
+
+			dao.insertAccSub(sdto);
+
+			System.out.println("계좌정보가 등록 되었습니다.");
+		} catch (Exception e) {
+			System.out.println("등록 실패하였습니다.");
+		}
+
+	}
+
+	protected void updateAccSub() {
+		System.out.println("\n계정과목 수정 ");
+
+		try {
+			AccDTO sdto = new AccDTO();
+
+			System.out.print("계정과목코드 : ");
+			sdto.setAccountSubNo(br.readLine());
+
+			System.out.print("계정과목명 : ");
+			sdto.setName(br.readLine());
+
+			System.out.print("분류코드 : ");
+			sdto.setCategNo(br.readLine());
+
+			dao.updateAccSub(sdto);
+
+			System.out.println("계정과목이 수정 되었습니다.");
+
+		} catch (Exception e) {
+			System.out.println("수정 실패");
+		}
+	}
+
+	protected void deleteAccSub() {
+		System.out.println("\n계정과목 삭제 ");
+		int accountNo;
+
+		try {
+			System.out.print("삭제할 계정과목 코드 ? ");
+			accountNo = Integer.parseInt(br.readLine());
+
+			sdao.deleteAccount(accountNo);
+
+			System.out.println("계정과목이 삭제 되었습니다.");
+		} catch (Exception e) {
+			System.out.println("계정과목 삭제 실패 !!!");
+		}
+		System.out.println();
+
+	}
+
+	protected void listAccSub() {
+		System.out.println("\n 전체 계정과목 조회 ");
+		try {
+			List<AccDTO> list = new ArrayList<>();
+			list = sdao.listAccSub();
+			System.out.println("계정과목코드\t계정과목명\t분류코드");
+			for (AccDTO sdto : list) {
+				System.out.print(sdto.getAccountNo() + "\t");
+				System.out.print(sdto.getBankName() + "\t");
+				System.out.print(sdto.getAccountNum() + "\t");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 }

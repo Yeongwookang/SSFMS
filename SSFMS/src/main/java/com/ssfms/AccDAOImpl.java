@@ -13,6 +13,8 @@ import com.util.DBConn;
 public class AccDAOImpl implements AccDAO {
 	private Connection conn = DBConn.getConnection();
 
+//==================================================================================
+	// 전표관련
 	@Override
 	public int insertAccount(AccDTO dto) throws SQLException {
 		int result = 0;
@@ -141,7 +143,8 @@ public class AccDAOImpl implements AccDAO {
 
 		return result;
 	}
-
+//==================================================================================
+	// 전표조회
 	@Override
 	public AccDTO readAccount(int stateNo) throws SQLException {
 		AccDTO dto = null;
@@ -379,7 +382,8 @@ public class AccDAOImpl implements AccDAO {
 
 		return list;
 	}
-
+//==================================================================================	
+	// 승인관련
 	@Override
 	public List<AccDTO> listNapproval() throws SQLException {
 		List<AccDTO> list = new ArrayList<>();
@@ -537,7 +541,7 @@ public class AccDAOImpl implements AccDAO {
 			}
 		}
 	}
-
+//==================================================================================
 	// 계좌등록
 	@Override
 	public int insertAccountNo(AccDTO adto) throws SQLException {
@@ -742,6 +746,224 @@ public class AccDAOImpl implements AccDAO {
 				pstmt.setInt(6, adto.getBalance());
 
 				list.add(adto);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+
+		}
+
+		return list;
+	}
+//==================================================================================
+	// 계정과목 관련
+	@Override
+	public int insertAccSub(AccDTO sdto) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "INSERT INTO accountSub (accountSubNo, name, categNo "
+					+ " VALUES(?,?,?)";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, sdto.getAccountSubNo());
+			pstmt.setString(2, sdto.getName());
+			pstmt.setString(3, sdto.getCategNo());
+
+			pstmt.executeUpdate();
+			result = 1;
+
+		} catch (SQLIntegrityConstraintViolationException e) {
+			if (e.getErrorCode() == 1) {
+				System.out.println("이미 등록된 계정코드 입니다.");
+			} else if (e.getErrorCode() == 1400) { // NOT NULL
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			throw e;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+
+				}
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public int updateAccSub(AccDTO sdto) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "UPDATE INTO accountSub (accountSubNo, name, categNo "
+					+ " VALUES(?,?,?)";
+
+			pstmt = conn.prepareCall(sql);
+
+			pstmt.setString(1, sdto.getAccountSubNo());
+			pstmt.setString(2, sdto.getName());
+			pstmt.setString(3, sdto.getCategNo());
+
+			pstmt.executeUpdate();
+
+			result = 1;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+
+		return result;
+	}
+
+	
+
+	@Override
+	public int deleteAccSub(int accountSubNo) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			conn.setAutoCommit(false);
+
+			sql = "DELETE FROM accountSub WHERE accountSubNo = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setInt(1, accountSubNo);
+
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			conn.commit();
+			conn.setAutoCommit(true);
+
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+				e.printStackTrace();
+			} catch (Exception e2) {
+				e.printStackTrace();
+			}
+
+		}
+
+		return result;
+	}
+
+	
+
+	@Override
+	public AccDTO readAccSub(int accountSubNo) throws SQLException {
+		AccDTO sdto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = " SELECT accountSubNo, name, categNo "
+					+ "FROM accountSub" + " WHERE accountSubNo = ? ";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, accountSubNo);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				sdto = new AccDTO();
+
+				pstmt.setString(1, sdto.getAccountSubNo());
+				pstmt.setString(2, sdto.getName());
+				pstmt.setString(3, sdto.getCategNo());
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+
+		if (sdto == null) {
+			return null;
+		}
+
+		return sdto;
+	}
+
+	@Override
+	public List<AccDTO> listAccSub() throws SQLException {
+		List<AccDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT accountSubNo, name, categNo FROM State_view ";
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.executeUpdate();
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				AccDTO sdto = new AccDTO();
+
+				pstmt.setString(1, sdto.getAccountSubNo());
+				pstmt.setString(2, sdto.getName());
+				pstmt.setString(3, sdto.getCategNo());
+				
+				list.add(sdto);
 			}
 
 		} catch (Exception e) {

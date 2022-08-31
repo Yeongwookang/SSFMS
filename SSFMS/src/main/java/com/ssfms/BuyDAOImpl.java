@@ -1227,15 +1227,65 @@ public class BuyDAOImpl implements BuyDAO {
 	@Override
 	public List<BuyDTO> listBuyTaxBill() {
 		List<BuyDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
 		
+		try {
+			sql = "SELECT btb_No, buy_No, btb_sNo, btb_sBoss, btb_saddr, btb_Date, btb_pname, btb_price, btb_tax, btb_qty, btb_pprice, btb_total, btb_misu, btb_con  "
+					+ " FROM BuyTaxBill ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			
+			while(rs.next()) {
+				BuyDTO buydto = new BuyDTO();
+				
+				buydto.setBtb_No(rs.getString("btb_No"));
+				buydto.setBuy_No(rs.getString("buy_No"));
+				buydto.setShop_Name(rs.getString("btb_sNo"));
+				buydto.setShop_Boss(rs.getString("btb_sBoss"));
+				buydto.setShop_addr(rs.getString("btb_saddr"));
+				buydto.setBuy_Date(rs.getDate("btb_Date").toString());
+				buydto.setPart_name(rs.getString("btb_pname"));
+				buydto.setBuy_price(rs.getInt("btb_price"));
+				buydto.setBtb_tax(rs.getInt("btb_tax"));
+				buydto.setBuy_qty(rs.getInt("btb_qty"));
+				buydto.setPart_price(rs.getInt("btb_pprice"));
+				buydto.setBtb_total(rs.getInt("btb_total"));
+				buydto.setBtb_misu(rs.getInt("btb_misu"));
+				buydto.setBtb_con(rs.getString("btb_con"));
+				
+				
+				list.add(buydto);
+			}
+			
+			
+		} catch (Exception e) {
+
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
 		
-		
-		
-		
-		return null;
+		return list;
 	}
 
-
+	
+	
 	
 	
 	

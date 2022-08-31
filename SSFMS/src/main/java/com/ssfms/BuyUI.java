@@ -2,8 +2,6 @@ package com.ssfms;
 
 import java.io.BufferedReader;
 
-
-
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -245,19 +243,44 @@ public class BuyUI {
 	
 
 
-
+	//세금 계산서 출력하기
 	private void listTaxAll() {
-		// TODO Auto-generated method stub
+		System.out.println("\n[세금계산서 출력] 매입에 따른 세금계산서 출력하기 ");
+		System.out.println("[반품의 경우 세금계산서 합계금액이 0원으로 표기됩니다.]");
+		
+		System.out.println("등록번호\t매입번호\t상호명\t\t대표명\t주소\t\t\t매입일자\t\t재료명\t\t\t\t\t\t매입금\t세액\t수량\t단가\t합계금액\t미수금\t구분");
+		System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		
+		List<BuyDTO> list = buydao.listBuyTaxBill();
+		for(BuyDTO buydto : list) {
+			System.out.print(buydto.getBtb_No()+ "\t");
+			System.out.print(buydto.getBuy_No()+ "\t");
+			System.out.print(buydto.getShop_Name()+ "\t");
+			System.out.print(buydto.getShop_Boss()+ "\t");
+			System.out.print(buydto.getShop_addr()+ "\t");
+			System.out.print(buydto.getBuy_Date()+ "\t");
+			System.out.print(buydto.getPart_name()+ "\t");
+			System.out.print(buydto.getBuy_price()+ "\t");
+			System.out.print(buydto.getBtb_tax()+ "\t");
+			System.out.print(buydto.getBuy_qty()+ "\t");
+			System.out.print(buydto.getPart_price()+ "\t");
+			System.out.print(buydto.getBtb_total()+ "\t");
+			System.out.print(buydto.getBtb_misu()+ "\t");
+			System.out.println(buydto.getBtb_con()+ "\t");
+
+
+		}
+		System.out.println();
 		
 	}
-
+	
 
 
 
 
 	protected void buyInsert() {
 		System.out.println("\n[원자재 발주] 원자재 발주하기");
-		System.out.println("[조건 : 전표 상태 '승인' / 계정과목 코드 '153'만 발주가능");
+		System.out.println("[조건 : 전표 상태 '승인' / 계정과목 코드 '153'만 발주가능]");
 		
 		try {
 			BuyDTO buydto = new BuyDTO();
@@ -402,6 +425,8 @@ public class BuyUI {
 		System.out.println();
 
 	}
+	
+	
 	
 	
 
@@ -558,7 +583,7 @@ public class BuyUI {
 
 	protected void applyDelete() {
 		System.out.println("\n[매입요청 삭제] 처리 완료한 매입요청 삭제하기 ");
-		System.out.println("(꼭 처리 완료 후 삭제해주세요.) ");
+		System.out.println("[꼭 처리 완료 후 삭제해주세요.] ");
 		
 		try {
 			

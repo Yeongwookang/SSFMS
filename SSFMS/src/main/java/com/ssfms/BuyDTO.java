@@ -36,6 +36,37 @@ public class BuyDTO {
 	private int part_price;
 	private int part_stock;
 	
+	private String btb_No;
+	private String btb_con;
+	private int btb_total;
+	private int btb_misu;
+	private int btb_tax;
+	
+	
+	public String getBtb_No() {
+		return btb_No;
+	}
+	public void setBtb_No(String btb_No) {
+		this.btb_No = btb_No;
+	}
+	public String getBtb_con() {
+		return btb_con;
+	}
+	public void setBtb_con(String btb_con) {
+		this.btb_con = btb_con;
+	}
+	public int getBtb_total() {
+		return btb_total;
+	}
+	public void setBtb_total(int btb_total) {
+		this.btb_total = btb_total;
+	}
+	public int getBtb_misu() {
+		return btb_misu;
+	}
+	public void setBtb_misu(int btb_misu) {
+		this.btb_misu = btb_misu;
+	}
 	
 	public int getPartOfferNo() {
 		return partOfferNo;
@@ -198,6 +229,12 @@ public class BuyDTO {
 	}
 	public void setEmpNo(String empNo) {
 		this.empNo = empNo;
+	}
+	public int getBtb_tax() {
+		return btb_tax;
+	}
+	public void setBtb_tax(int btb_tax) {
+		this.btb_tax = btb_tax;
 	}
 	
 	

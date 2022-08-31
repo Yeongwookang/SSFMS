@@ -13,7 +13,7 @@ public class SalesDTO {
 	private String dealDate;
 	
 	//세금계산서
-	private int taxBillNum;
+	private String taxBillNum;
 	private String companyName;
 	private String name;
 	private String address;
@@ -22,9 +22,9 @@ public class SalesDTO {
 	private int taxAmount;
 	private String item;
     private int num;
-    private int currDate;
+    private String currDate;
 	private int unitPrice;
-    private int total;
+	private int total;
     private int outAmount;
     private String note;
 	
@@ -65,10 +65,10 @@ public class SalesDTO {
 	public void setSalesQty(int salesQty) {
 		this.salesQty = salesQty;
 	}
-	public int getTaxBillNum() {
+	public String getTaxBillNum() {
 		return taxBillNum;
 	}
-	public void setTaxBillNum(int taxBillNum) {
+	public void setTaxBillNum(String taxBillNum) {
 		this.taxBillNum = taxBillNum;
 	}
 	public String getCompanyName() {
@@ -126,10 +126,7 @@ public class SalesDTO {
 		this.unitPrice = unitPrice;
 	}
 	public int getTotal() {
-		return total;
-	}
-	public void setTotal(int total) {
-		this.total = total;
+		return num*unitPrice;
 	}
 	public int getOutAmount() {
 		return outAmount;
@@ -149,8 +146,14 @@ public class SalesDTO {
 	public void setDealDate(String dealDate) {
 		this.dealDate = dealDate;
 	}	
-    public int getCurrDate() {
+    public String getCurrDate() {
 		return currDate;
+	}
+	public void setCurrDate(String currDate) {
+		this.currDate = currDate;
+	}
+	public void setTotal(int total) {
+		this.total = total;
 	}
 	
 }

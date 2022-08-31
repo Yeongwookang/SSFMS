@@ -9,7 +9,7 @@ import java.util.List;
 public interface SalesDAO {
 	public int estimateInsertSales(SalesDTO dto) throws SQLException;
 	public int taxBillInsert(SalesDTO dto) throws SQLException;
-	public int salesInsert(SalesDTO dto) throws SQLException;
+	public int salesInsert(SalesDTO dto, ProductDTO pdto) throws SQLException;
 	public int salesAccountInsert(EmpDTO empdto, AccDTO accdto) throws SQLException;
 	
 	

@@ -27,7 +27,7 @@ public class SalesDAOImpl implements SalesDAO {
 	}
 
 	@Override
-	public int salesInsert(SalesDTO dto) throws SQLException {
+	public int salesInsert(SalesDTO dto, ProductDTO pdto) throws SQLException {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		String sql;
@@ -38,10 +38,10 @@ public class SalesDAOImpl implements SalesDAO {
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, dto.getStateNo());
-			pstmt.setString(2, dto.getProductNo());
+			pstmt.setString(2, pdto.getProductNo());
 			pstmt.setString(3, dto.getCustomer());
-			pstmt.setInt(4, dto.getSales());
-			pstmt.setInt(5, dto.getSalesQty());
+			pstmt.setInt(4, pdto.getPrice());
+			pstmt.setInt(5, pdto.getStock());
 			pstmt.setString(6, dto.getDealDate());
 
 			result = pstmt.executeUpdate();
@@ -259,7 +259,7 @@ public class SalesDAOImpl implements SalesDAO {
 		try {
 			sql = "INSERT INTO taxBill(taxBillNum, salesNo, companyName, name, address, busStatue, currDate, valueSupply, taxAmount,"
 					+ "item, num, unitPrice, total, outAmount, note)"
-					+ " VALUES(sales_no_seq.NEXTVAL, ?, ?, ?, ?, ?, SYSDATE, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ " VALUES(taxBill_no_seq.NEXTVAL, ?, ?, ?, ?, ?, SYSDATE, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -276,6 +276,8 @@ public class SalesDAOImpl implements SalesDAO {
 			pstmt.setInt(11, dto.getTotal());
 			pstmt.setInt(12, dto.getOutAmount());
 			pstmt.setString(13, dto.getNote());
+			
+			result = pstmt.executeUpdate();
 
 		} catch (SQLIntegrityConstraintViolationException e) {
 
@@ -318,8 +320,45 @@ public class SalesDAOImpl implements SalesDAO {
 
 	@Override
 	public List<SalesDTO> listTaxBill() {
-		// TODO Auto-generated method stub
-		return null;
+		List<SalesDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT taxBillNum, salesNo, companyName, name, address, busStatue, currDate, valueSupply, taxAmount,"
+					+ "item, num, unitPrice, total, outAmount, note FROM taxBill";
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				SalesDTO dto = new SalesDTO();
+
+				dto.setTaxBillNum(rs.getString("taxBillNum"));
+				dto.setSalesNo(rs.getString("salesNo"));
+				dto.setCompanyName(rs.getString("companyName"));
+				dto.setName(rs.getString("name"));
+				dto.setAddress(rs.getString("address"));
+				dto.setBusStatue(rs.getString("busStatue"));
+				dto.setCurrDate(rs.getString("currDate"));
+				dto.setValueSupply(rs.getInt("valueSupply"));
+				dto.setTaxAmount(rs.getInt("taxAmount"));
+				dto.setItem(rs.getString("item"));			
+				dto.setNum(rs.getInt("num"));
+				dto.setUnitPrice(rs.getInt("unitPrice"));
+				dto.setTotal(rs.getInt("total"));
+				dto.setOutAmount(rs.getInt("outAmount"));
+				dto.setNote(rs.getString("note"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+
+		}
+
+		return list;
 	}
 
 	@Override

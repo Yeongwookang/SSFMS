@@ -10,8 +10,8 @@ public class ProdUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private ProdDAO dao = new ProdDAOImpl();
 	private AccDAO adao = new AccDAOImpl();
-	List <ProdDTO> ulist =new ArrayList<>();
-	List <ProdDTO> plist =new ArrayList<>();
+	List<ProdDTO> ulist = new ArrayList<>();
+	List<ProdDTO> plist = new ArrayList<>();
 
 	public void menu() {
 
@@ -19,8 +19,8 @@ public class ProdUI {
 
 		while (true) {
 			try {
-				System.out.println("[생산 메인]");
-				System.out.println("1. 제품관리 2. 부품재고관리 3. 전표관리 4. 생산관리 5. 돌아가기");
+				System.out.println("⚜ [생산 메인] ⚜");
+				System.out.print("⚜ 1. 제품관리 2. 부품재고관리 3. 전표관리 4. 생산관리 5. 돌아가기 = ");
 				ch = Integer.parseInt(br.readLine());
 				switch (ch) {
 				case 1:
@@ -51,7 +51,7 @@ public class ProdUI {
 
 		while (true) {
 			try {
-				System.out.println("1. 제품등록 2. 등록제품삭제 3.제품목록 4. 돌아가기 ");
+				System.out.print("⚜ 1. 제품등록 2. 등록제품삭제 3.제품목록 4. 돌아가기 = ");
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 4) {
 					return;
@@ -72,20 +72,20 @@ public class ProdUI {
 	}
 
 	protected void reg_product() {
-		System.out.println("\n제품 등록");
+		System.out.println("\n⚜ 제품 등록 ⚜");
 		ProductDTO pdto = new ProductDTO();
 		try {
-			System.out.println("제품의 등록번호를 입력해주세요.");
+			System.out.print("⚜ 제품의 등록번호를 입력해주세요.  ");
 			pdto.setProductNo(br.readLine());
-			System.out.println("제품의 이름을 입력해주세요.");
+			System.out.print("⚜ 제품의 이름을 입력해주세요.  ");
 			pdto.setProduct_name(br.readLine());
-			System.out.println("제품의 생산 가격을 입력해주세요.");
+			System.out.print("⚜ 제품의 생산 가격을 입력해주세요.  ");
 			pdto.setCost(Integer.parseInt(br.readLine()));
-			System.out.println("제품의 판매 가격을 입력해주세요.");
+			System.out.print("⚜ 제품의 판매 가격을 입력해주세요.  ");
 			pdto.setPrice(Integer.parseInt(br.readLine()));
 			pdto.setStock(0);
 			dao.reg_product(pdto);
-			System.out.println("\n제품 등록이 완료되었습니다.");
+			System.out.println("\n⚜ 제품 등록이 완료되었습니다.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,12 +93,12 @@ public class ProdUI {
 	}
 
 	protected void del_product() {
-		System.out.println("\n등록제품 삭제");
+		System.out.println("\n⚜ 등록제품 삭제 ⚜");
 		try {
-			System.out.println("삭제할 제품의 등록번호를 입력해주세요.");
+			System.out.print("⚜ 삭제할 제품의 등록번호를 입력해주세요.  ");
 			String productNo = br.readLine();
 			dao.del_product(productNo);
-			System.out.println("\n등록된 제품이 삭제되었습니다.");
+			System.out.println("\n⚜ 등록된 제품이 삭제되었습니다.  ");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -106,13 +106,13 @@ public class ProdUI {
 	}
 
 	protected void list_product() {
-		System.out.println("\n등록제품 목록");
+		System.out.println("\n⚜ 등록제품 목록 ⚜");
 		try {
 			List<ProdDTO> list = new ArrayList<>();
 			list = dao.list_product();
-			System.out.println("제품번호\t제품이름\t\t\t단가\t제품가격\t재고량");
+			System.out.println("⚜ 제품번호\t제품이름\t\t\t단가\t제품가격\t재고량");
 			for (ProdDTO pdto : list) {
-				System.out.print(pdto.getProductNo() + "\t");
+				System.out.print("⚜ " + pdto.getProductNo() + "\t");
 				System.out.printf("%.20s\t", pdto.getProduct_name());
 				System.out.print(pdto.getCost() + "\t");
 				System.out.print(pdto.getPrice() + "\t");
@@ -129,7 +129,7 @@ public class ProdUI {
 
 		while (true) {
 			try {
-				System.out.println("1.부품재고확인 2. 부품구매요청 3. 부품구매취소 4.부품구매요청목록 5. 돌아가기 ");
+				System.out.print("⚜ 1.부품재고확인 2. 부품구매요청 3. 부품구매취소 4.부품구매요청목록 5. 돌아가기 = ");
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 5) {
 					return;
@@ -155,13 +155,13 @@ public class ProdUI {
 	}
 
 	protected void stock() {
-		System.out.println("\n 부품재고 확인");
+		System.out.println("\n⚜ 부품재고 확인 ⚜");
 		List<BuyDTO> list = new ArrayList<>();
 		try {
 			list = dao.listPart();
-			System.out.println("부품번호\t부품이름\t\t\t부품가격\t재고량");
+			System.out.println("⚜ 부품번호\t부품이름\t\t\t부품가격\t재고량\t⚜");
 			for (BuyDTO bdto : list) {
-				System.out.print(bdto.getPartNo() + "\t");
+				System.out.print("⚜ " + bdto.getPartNo() + "\t");
 				System.out.printf("%.20s\t", bdto.getPart_name());
 				System.out.print(bdto.getPart_price() + "\t");
 				System.out.println(bdto.getPart_stock() + "\t");
@@ -174,30 +174,30 @@ public class ProdUI {
 	}
 
 	protected void buy_offer() {
-		System.out.println("\n 부품구매 요청");
+		System.out.println("\n⚜ 부품구매 요청");
 		ProdDTO pdto = new ProdDTO();
 		List<ProdDTO> list = new ArrayList<>();
 		try {
 			String partNo;
 
 			while (true) {
-				System.out.println("부품번호를 입력해주세요. [0을 누르면 입력종료]");
+				System.out.print("⚜ 부품번호를 입력해주세요. [0을 누르면 입력종료]  ");
 				partNo = br.readLine();
 				pdto = dao.readPart(partNo);
 				if (partNo.equals("0")) {
 					break;
 				}
 				if (pdto == null) {
-					System.out.println("없는 부품입니다.");
+					System.out.println("\n⚜ 없는 부품입니다.");
 					return;
 				}
-				System.out.println("필요 갯수를 입력해주세요.");
+				System.out.print("⚜ 필요 갯수를 입력해주세요.  ");
 				pdto.setQty(Integer.parseInt(br.readLine()));
 				list.add(pdto);
 			}
 
 			dao.buyList_write(list);
-			System.out.println("부품구매 요청이 완료되었습니다.");
+			System.out.println("⚜ 부품구매 요청이 완료되었습니다. ⚜");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -207,12 +207,12 @@ public class ProdUI {
 	}
 
 	protected void buy_offer_cancel() {
-		System.out.println("부품 구매요청 취소");
+		System.out.println("⚜ 부품 구매요청 취소 ⚜");
 		List<ProdDTO> list = new ArrayList<>();
 		try {
 			while (true) {
 				ProdDTO pdto = new ProdDTO();
-				System.out.println("취소할 요청번호를 입력해주세요. [ 입력종료 : 0 ]");
+				System.out.print("⚜ 취소할 요청번호를 입력해주세요. [ 입력종료 : 0 ]  ");
 				int partOfferNo = Integer.parseInt(br.readLine());
 				if (partOfferNo == 0) {
 					break;
@@ -222,20 +222,20 @@ public class ProdUI {
 
 			}
 			dao.buy_offer_cancel(list);
-			System.out.println("부품 구매요청이 취소되었습니다.");
+			System.out.println("⚜ 부품 구매요청이 취소되었습니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	protected void list_buy_offer() {
-		System.out.println("부품 구매요청 목록");
+		System.out.println("⚜ 부품 구매요청 목록 ⚜");
 		List<ProdDTO> list = new ArrayList<>();
 		try {
 			list = dao.list_Buy_offer();
-			System.out.println("요청번호\t재료코드\t부품이름\t\t\t갯수\t요청일자");
+			System.out.println("⚜ 요청번호\t재료코드\t부품이름\t\t\t갯수\t요청일자\t⚜");
 			for (ProdDTO pdto : list) {
-				System.out.print(pdto.getPartOfferNo() + "\t");
+				System.out.print("⚜ " + pdto.getPartOfferNo() + "\t");
 				System.out.print(pdto.getPartNo() + "\t");
 				System.out.printf("%.20s\t", pdto.getPart_name());
 				System.out.print(pdto.getQty() + "\t");
@@ -252,7 +252,7 @@ public class ProdUI {
 
 		while (true) {
 			try {
-				System.out.println("1. 생산전표등록 2. 전표취소신청 3. 생산부서 전표목록 4. 돌아가기 ");
+				System.out.println("⚜ 1. 생산전표등록 2. 전표취소신청 3. 생산부서 전표목록 4. 돌아가기 ⚜");
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 4) {
 					return;
@@ -275,28 +275,28 @@ public class ProdUI {
 	}
 
 	protected void insert_Prod_state() {
-		System.out.println("\n생산전표등록");
+		System.out.println("\n⚜ 생산전표등록");
 		try {
 			AccDTO adto = new AccDTO();
 
-			System.out.print("사번 : ");
+			System.out.print("⚜ 사번 : ");
 			adto.setEmpNo(br.readLine());
 
-			System.out.print("계좌코드 : [기본 계좌 60001]");
+			System.out.print("⚜ 계좌코드 : [기본 계좌 60001]");
 			adto.setAccountNo(br.readLine());
 
-			System.out.print("계정과목코드 : [ 기본 101 ]");
+			System.out.print("⚜ 계정과목코드 : [ 기본 101 ]");
 			adto.setAccountSubNo(br.readLine());
 
-			System.out.print("금액 : ");
+			System.out.print("⚜ 금액 : ");
 			adto.setAmount(Integer.parseInt(br.readLine()));
 
-			System.out.print("상세내용 : ");
+			System.out.print("⚜ 상세내용 : ");
 			adto.setDetail(br.readLine());
 
 			adao.insertAccount(adto);
 
-			System.out.println("전표가 등록 되었습니다.");
+			System.out.println("⚜ 전표가 등록 되었습니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -304,20 +304,25 @@ public class ProdUI {
 	}
 
 	protected void cancel_prod_state() {
-		System.out.println("\n생산전표취소");
+		System.out.println("\n⚜ 생산전표취소 ⚜");
 		try {
 			AccDTO adto = new AccDTO();
 
-			System.out.print("취소할 전표 번호 : ");
+			System.out.print("⚜ 취소할 전표 번호 : ");
 			int stateNo = Integer.parseInt(br.readLine());
 			adto = adao.readAccount(stateNo);
+			if (adto == null) {
+				System.out.println("⚜ 없는 전표입니다. ⚜");
+			}
 			if (adto.getStateCon().equals("승인") || adto.getStateCon().equals("처리")) {
-				System.out.println("[ 승인, 처리 ] 상태인 전표는 취소할수 없습니다.");
+				System.out.println("⚜ [ 승인, 처리 ] 상태인 전표는 취소할수 없습니다.  ⚜");
 				return;
 			}
 			int result = adao.deleteAccount(stateNo);
-			if(result==1) {System.out.println("전표취소가 완료되었습니다.");}
-			System.out.println("전표가 취소되지 않았습니다.");
+			if (result == 1) {
+				System.out.println("⚜ 전표취소가 완료되었습니다. ⚜");
+			}
+			System.out.println("⚜ 전표가 취소되지 않았습니다. ⚜");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -326,17 +331,17 @@ public class ProdUI {
 	}
 
 	protected void prod_state_list() {
-		System.out.println("\n생산부서 전표리스트");
+		System.out.println("\n⚜ 생산부서 전표리스트 ⚜");
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = dao.listAccount_prod();
-			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름");
+			System.out.println("⚜ 전표번호 차대\t계좌코드\t계정과목명\t금액\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름\t ⚜");
 			for (AccDTO adto : list) {
-				System.out.print(adto.getStateNo() + "\t");
+				System.out.print("⚜ " + adto.getStateNo() + "\t ");
 				System.out.print(adto.getT_account() + "\t");
 				System.out.print(adto.getAccountNo() + "\t");
 				System.out.print(adto.getAsub_name() + "\t");
-				System.out.print(adto.getAmount() + "\t\t");
+				System.out.print(adto.getAmount() + "\t");
 				System.out.print(adto.getCancellation() + "\t");
 				System.out.print(adto.getStateCon() + "\t");
 				System.out.print(adto.getStateDate() + "\t");
@@ -356,10 +361,11 @@ public class ProdUI {
 
 		while (true) {
 			try {
-				System.out.println("생산표와 재고사용표에는 프로그램 실행시 임시로 저장되며, 생산기록을 통해 기록해야 DB에 저장됩니다.");
-				System.out.println("1.생산제품입력 2.생산표보기 3.부품사용입력 4.부품사용표보기 5.생산기록 6.돌아가기 ");
+				System.out.println("\n ❗❗ 생산표와 재고사용표에는 프로그램 실행시 임시로 저장되며, (4. 생산기록)을 통해 기록해야 DB에 저장됩니다. ❗❗");
+				System.out.println("⚜ 1.생산제품입력 2.생산표보기\t  3. 생산표 초기화\t  4.생산기록");
+				System.out.print("⚜ 5.부품사용입력 6.부품사용표보기 7. 부품사용표 초기화 8.돌아가기 = ");
 				ch = Integer.parseInt(br.readLine());
-				if (ch == 6) {
+				if (ch == 8) {
 					return;
 				}
 				switch (ch) {
@@ -367,107 +373,130 @@ public class ProdUI {
 					producing();
 					break;
 				case 2:
-					list_producing(); break;
+					list_producing();
+					break;
 				case 3:
-					using_part();
+					plist_purge();
 					break;
 				case 4:
-					list_usingpart();break;
-				case 5: 
-					production(); break;
+					production();
+					break;
+				case 5:
+					using_part();
+					break;
+				case 6:
+					list_usingpart();
+					break;
+				case 7:
+					ulist_purge();
+					break;
 				}
 			} catch (Exception e) {
 			}
 		}
 	}
 
-	protected void using_part() {
-		ProdDTO pdto = new ProdDTO();
-		
-		System.out.println("\n부품사용입력(생산기록을 통해 기록해야 DB에 제출됩니다.)");
-		try {
-			String partNo;
-			System.out.println("생산코드를 입력해주세요.");
-			pdto.setProdNo(br.readLine());
-			while (true) {
-				System.out.println("사용한 재료의 코드를 입력해주세요. [입력 종료: 0]");
-				partNo = br.readLine();
-				if (partNo.equals("0")) {
-					break;
-				}
-				pdto.setPartNo(partNo);
-				System.out.println("사용한 재료의 갯수를 입력해주세요.");
-				pdto.setQty(Integer.parseInt(br.readLine()));
-				ulist.add(pdto);
-			}
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println();
-
-	}
-	protected void list_usingpart() {
-		System.out.println("\n생산표 보기 (임시저장)");
-		System.out.println("생산번호\t부품번호\t수량");
-		for(ProdDTO pdto : ulist) {
-			System.out.print(pdto.getProdNo()+"\t");
-			System.out.print(pdto.getPartNo()+"\t");
-			System.out.println(pdto.getQty()+"\t");	
-		}
-		System.out.println();
-	}
-
 	protected void producing() {
-		System.out.println("\n생산제품 입력 (생산기록을 통해 기록해야 DB에 제출됩니다.)");
-		
+		System.out.println("\n⚜ 생산제품 입력 (4.생산기록을 통해 기록해야 DB에 제출됩니다.) ⚜");
+
 		try {
 			String ProductNo;
 			ProdDTO pdto = new ProdDTO();
-			System.out.println("승인된 전표번호를 입력해주세요.");
+			System.out.print("⚜ 승인된 전표번호를 입력해주세요.  ");
 			AccDTO adto = adao.readAccount(Integer.parseInt(br.readLine()));
-			if(!adto.getStateCon().equals("승인")) {
-				System.out.println("승인되지 않은 전표입니다.");
+			if (!adto.getStateCon().equals("승인")) {
+				System.out.println("⚜ 승인되지 않은 전표입니다. ⚜");
 				return;
 			}
 			pdto.setStateNo(adto.getStateNo());
 
 			while (true) {
-				System.out.println("생산한 제품의 코드를 입력하세요. [입력 종료: 0]");
+				System.out.println("⚜ 생산한 제품의 코드를 입력하세요. [입력 종료: 0]  ");
 				ProductNo = br.readLine();
 				if (ProductNo.equals("0")) {
 					break;
 				}
 				pdto.setProductNo(ProductNo);
-				System.out.println("생산한 갯수를 입력하세요.");
+				System.out.println("⚜ 생산한 갯수를 입력하세요.  ");
 				pdto.setQty(Integer.parseInt(br.readLine()));
-				System.out.println("생산 단가를 입력해주세요.");
+				System.out.println("⚜ 생산 단가를 입력해주세요.  ");
 				pdto.setCost(Integer.parseInt(br.readLine()));
 				plist.add(pdto);
 			}
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		System.out.println();
 	}
+
 	protected void list_producing() {
-		System.out.println("\n생산표 보기 (임시저장)");
-		System.out.println("전표번호\t제품번호\t수량\t비용");
-		for(ProdDTO pdto : plist) {
-			System.out.print(pdto.getStateNo()+"\t");
-			System.out.print(pdto.getProductNo()+"\t");
-			System.out.print(pdto.getQty()+"\t");
-			System.out.println(pdto.getCost()+"\t");	
+		System.out.println("\n⚜ 생산표 보기 (임시저장) ⚜");
+		System.out.println("⚜ 전표번호 제품번호\t수량\t비용\t ⚜");
+		for (ProdDTO pdto : plist) {
+			System.out.print("⚜ " + pdto.getStateNo() + "\t ");
+			System.out.print(pdto.getProductNo() + "\t");
+			System.out.print(pdto.getQty() + "\t");
+			System.out.println(pdto.getCost() + "\t");
 		}
 		System.out.println();
 	}
 
-	protected void production() {
-		System.out.println("\n생산등록 (DB등록)");
+	protected void plist_purge() {
+		plist = new ArrayList<>();
+		System.out.println("초기화 되었습니다");
+	}
+
+	protected void using_part() {
+		ProdDTO pdto = new ProdDTO();
+
+		System.out.println("\n⚜ 부품사용입력(4.생산기록을 통해 기록해야 DB에 제출됩니다.) ⚜");
+		try {
+			String partNo;
+			System.out.print("⚜ 생산코드를 입력해주세요.  ");
+			pdto.setProdNo(br.readLine());
+			while (true) {
+				System.out.print("⚜ 사용한 재료의 코드를 입력해주세요. [입력 종료: 0]  ");
+				partNo = br.readLine();
+				if (partNo.equals("0")) {
+					break;
+				}
+				pdto.setPartNo(partNo);
+				System.out.print("⚜ 사용한 재료의 갯수를 입력해주세요.  ");
+				pdto.setQty(Integer.parseInt(br.readLine()));
+				ulist.add(pdto);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
 
 	}
-}
 
+	protected void list_usingpart() {
+		System.out.println("\n⚜ 생산표 보기 (임시저장) ⚜");
+		System.out.println("⚜ 생산번호\t부품번호\t수량\t⚜");
+		for (ProdDTO pdto : ulist) {
+			System.out.print("⚜ " + pdto.getProdNo() + "\t");
+			System.out.print(pdto.getPartNo() + "\t");
+			System.out.println(pdto.getQty() + "\t");
+		}
+		System.out.println();
+	}
+
+	protected void ulist_purge() {
+		ulist = new ArrayList<>();
+		System.out.println("초기화 되었습니다");
+	}
+
+	protected void production() {
+		System.out.println("\n⚜ 생산등록 (DB등록) ⚜");
+		try {
+			dao.producing(plist, ulist);
+			System.out.println("⚜ DB 저장 완료! ⚜");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

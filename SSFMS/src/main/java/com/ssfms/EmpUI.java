@@ -200,6 +200,8 @@ public class EmpUI {
 				System.out.println("등록된 사번이 아닙니다.\n");
 				return;
 			}
+			System.out.println("사번\t이름\t전화번호\t\t이메일\t\t\t주소\t\t학력사항\t급여통장\t\t고용형태");
+			System.out.println("------------------------------------------------------------------------------------------------------------------");
 			System.out.print(dto.getEmpNo() +"\t");
 			System.out.print(dto.getName() +"\t");
 			System.out.print(dto.getTel() +"\t");
@@ -246,11 +248,8 @@ public class EmpUI {
 		try {
 			EmpDTO dto = new EmpDTO();
 			
-			System.out.print("구분(퇴사/입사) ? ");
+			System.out.print("구분 ? ");
 			dto.setcDiv(br.readLine());
-
-			System.out.print("일시(퇴사/입사) ? ");
-			dto.setCar_date(br.readLine());
 
 			System.out.print("비고 ? ");
 			dto.setcNote(br.readLine());
@@ -288,9 +287,6 @@ public class EmpUI {
 			System.out.print("구분 ? ");
 			dto.setcDiv(br.readLine());
 
-			System.out.print("일시(퇴사/입사) ? ");
-			dto.setCar_date(br.readLine());
-
 			System.out.print("비고 ? ");
 			dto.setcNote(br.readLine());
 
@@ -318,16 +314,16 @@ public class EmpUI {
         System.out.println("\n경력사항 리스트 !!!");
 		
 		List<EmpDTO> list = dao.listCare();
-		System.out.println("경력번호\t구분\t일시\t\t\t부서코드\t직급코드\t사번");
+		System.out.println("경력번호\t사번\t구분\t일시\t\t\t부서\t직급");
 		System.out.println("--------------------------------------------------------------------------------");
 		for(EmpDTO dto : list) {
 
 			System.out.print(dto.getCarNo() +"\t");
+			System.out.print(dto.getEmpNo()+"\t");
 			System.out.print(dto.getcDiv() +"\t");
 			System.out.print(dto.getCar_date() +"\t");
-			System.out.print(dto.getDepNo() +"\t");
-			System.out.print(dto.getRankNo() +"\t");
-			System.out.println(dto.getEmpNo());
+			System.out.print(dto.getDep() +"\t");
+			System.out.println(dto.getRank());
 
 		}
 		System.out.println();
@@ -346,11 +342,12 @@ public class EmpUI {
 				System.out.println("등록된 사번이 아닙니다.\n");
 				return;
 			}
+			System.out.println("경력번호\t사번\t구분\t일시\t\t\t부서\t직급");
+			System.out.println("--------------------------------------------------------------------------------");
 			System.out.print(dto.getCarNo()+"\t");
 			System.out.print(dto.getEmpNo()+"\t");
 			System.out.print(dto.getcDiv()+"\t");
 			System.out.print(dto.getCar_date()+"\t");
-			System.out.print(dto.getcNote()+"\t");
 			System.out.print(dto.getDep()+"\t");
 			System.out.println(dto.getRank());
 			
@@ -513,12 +510,6 @@ public class EmpUI {
 			
 			int kSal = rSal + empdto.getBonus();
 			accdto.setAmount(kSal);
-			
-			// System.out.print("상세 내용: ");
-			// accdto.setDetail(br.readLine());
-			
-			// System.out.print("급여 신청 일자: ");
-			// accdto.setStateDate(br.readLine());
 			
 			dao.insertSett(accdto, empdto);
 			
@@ -802,12 +793,9 @@ public class EmpUI {
     
     protected void acListAll() {
         System.out.println("\n[등록전표조회] 등록된 매입전표 리스트");
-		
-		// String accountSubNo;
+
 		
 		try {
-			// System.out.print("급여전표 조회 [급여 코드는 503, 세금 코드는 517]: ");
-			// accountSubNo = br.readLine();
 			
 			List<AccDTO> list = dao.listAccSett();
 			

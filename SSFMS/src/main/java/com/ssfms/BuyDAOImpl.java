@@ -256,14 +256,17 @@ public class BuyDAOImpl implements BuyDAO {
 		String sql;
 		int result = 0;
 		
+		
+		String pname;
 		int price=0;
+		String sname, saddr, sboss;
 		
 
 		try {
 			
 			conn.setAutoCommit(false);
 				
-			sql = "SELECT part_price FROM part "
+			sql = "SELECT part_price, part_name FROM part "
 					+ " WHERE partNo = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -273,6 +276,7 @@ public class BuyDAOImpl implements BuyDAO {
 			
 			if(rs.next()) {
 				price = rs.getInt("part_price");
+				pname = rs.getString("part_name");
 			}else {
 				return 0;
 			}
@@ -282,7 +286,9 @@ public class BuyDAOImpl implements BuyDAO {
 			pstmt.close();
 			pstmt = null;
 			
-			// --------------------------------------------		
+
+			
+			// --------------------------------------------	 구매 테이블에 발주 등록
 			sql = "INSERT INTO buy (buy_No, stateNo, partNo, buy_Date, buy_qty, buy_price, shop_No) "
 					+ " VALUES ('B_'||TO_CHAR(buy_No_seq.NEXTVAL), ?, ?, ?, ?, ?, ?) ";
 			 
@@ -300,8 +306,34 @@ public class BuyDAOImpl implements BuyDAO {
 
 			pstmt2.close();
 			pstmt2 = null;
+
 			
-			// --------------------------------------------			
+			// --------------------------------------------	 해당 매입처에서 상호명, 주소 가져오기		
+			
+			sql = "SELECT shop_addr, shop_Name, shop_boss FROM shop "
+					+ " WHERE shop_No = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, buydto.getShop_No());
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				sname = rs.getString("shop_Name");
+				saddr = rs.getString("shop_addr");
+				sboss = rs.getString("shop_boss");
+			}else {
+				return 0;
+			}
+			
+			rs.close();
+			rs = null;
+			pstmt.close();
+			pstmt = null;
+			
+			
+			
+			// --------------------------------------------		재고 계산해서 매입한 원자재 재고 수정	
 			sql = "UPDATE part SET part_stock = part_stock + ? "
 					+ " WHERE partNo = ? ";
 			
@@ -311,6 +343,31 @@ public class BuyDAOImpl implements BuyDAO {
 			pstmt2.setString(2, buydto.getPartNo());
 			
 			pstmt2.executeUpdate();
+			pstmt2.close();
+			pstmt2 = null;
+			
+			
+			// --------------------------------------------		세금 계산서 발행
+			sql = "INSERT INTO BuyTaxBill (btb_No, buy_No, btb_sNo, btb_sBoss, btb_saddr, btb_Date, btb_pname, btb_price, btb_tax, "
+					+ " btb_qty, btb_pprice, btb_total, btb_misu, btb_con ) "
+					+ " VALUES ('TB'||TO_CHAR(btb_No_seq.NEXTVAL), 'B_'||TO_CHAR(buy_No_seq.CURRVAL), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ";
+						 
+						
+			pstmt2 = conn.prepareStatement(sql);
+			
+			pstmt2.setString(1, sname); //상호명
+			pstmt2.setString(2, sboss); //대표명
+			pstmt2.setString(3, saddr); // 주소
+			pstmt2.setString(4, buydto.getBuy_Date()); // 매입일자
+			pstmt2.setString(5, pname); //재료명
+			pstmt2.setInt(6, price * buydto.getBuy_qty()); //매입금
+			pstmt2.setInt(7, (int)((price * buydto.getBuy_qty()) * 0.1)); //세액
+			pstmt2.setInt(8, buydto.getBuy_qty()); //수량
+			pstmt2.setInt(9, price); //단가 - 재료 단가
+			pstmt2.setInt(10, (int)((price * buydto.getBuy_qty()) * 0.1)); //합계금액
+			pstmt2.setInt(11, 0);
+			pstmt2.setString(12, "정산완료");
+	
 			
 			result = 1;
 			
@@ -916,6 +973,18 @@ public class BuyDAOImpl implements BuyDAO {
 			pstmt.setString(2, pcode);
 			
 			pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			
+			// --------------------------------------------	 세금 계산서 테이블에 정보 변경
+			sql = "";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			
+			pstmt.executeUpdate();
+			
 			
 
 			result = 1;
@@ -1128,6 +1197,16 @@ public class BuyDAOImpl implements BuyDAO {
 			}
 		}
 		return result;
+	}
+
+
+	
+	
+	
+	@Override
+	public List<BuyDTO> listBuyTaxBill() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

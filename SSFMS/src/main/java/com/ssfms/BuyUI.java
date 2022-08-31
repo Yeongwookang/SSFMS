@@ -3,6 +3,7 @@ package com.ssfms;
 import java.io.BufferedReader;
 
 
+
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.util.DBConn;
 public class BuyUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private BuyDAO buydao = new BuyDAOImpl();
+	private AccDAO accdao = new AccDAOImpl();
 
 	
 	// 구매 관리 전체 메뉴
@@ -214,13 +216,13 @@ public class BuyUI {
 				
 				System.out.println();
 				System.out.println("-----------------------------------------------------------------");
-				System.out.println("[1] 원자재 발주 [2] 발주내역조회 [3] 원자재 재고조회 [4] 신규 원자재 등록 [5] 뒤로가기 ");
+				System.out.println("[1] 원자재 발주 [2] 발주내역조회 [3] 원자재 재고조회 [4] 신규 원자재 등록 [5] 세금계산서 출력 [6] 뒤로가기 ");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.print("=> ");
 				
 				ch = Integer.parseInt(br.readLine());
 				
-				if(ch==5) {
+				if(ch==6) {
 					new BuyUI().menu();
 				}
 				
@@ -229,6 +231,7 @@ public class BuyUI {
 				case 2: buyList(); break;
 				case 3: partList(); break;
 				case 4: insertPart(); break;
+				case 5: listTaxAll(); break;
 				
 				
 				}
@@ -243,15 +246,33 @@ public class BuyUI {
 
 
 
+	private void listTaxAll() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
 	protected void buyInsert() {
 		System.out.println("\n[원자재 발주] 원자재 발주하기");
 		System.out.println("[조건 : 전표 상태 '승인' / 계정과목 코드 '153'만 발주가능");
 		
 		try {
 			BuyDTO buydto = new BuyDTO();
+			AccDTO accdto = new AccDTO();
 
 			System.out.print("발주할 전표일련번호: ");
 			buydto.setStateNo(Integer.parseInt(br.readLine()));
+			
+			accdto = accdao.readAccount(buydto.getStateNo());
+			
+			if(accdto.getStateNo()==buydto.getStateNo()) {
+				System.out.println("이미 발주 완료한 전표 입니다.");
+				System.out.println("새로운 전표등록 후 승인받아 발주해주세요.");
+				return;
+			}
 			
 			System.out.print("발주할 원자재 코드: ");
 			buydto.setPartNo(br.readLine());

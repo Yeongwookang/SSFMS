@@ -33,6 +33,9 @@ public interface BuyDAO {
 	public int deleteApply (BuyDTO buydto) throws SQLException;
 	
 	
+	//세금계산서 출력하기
+	public List<BuyDTO> listBuyTaxBill();
+	
 	
 	
 	

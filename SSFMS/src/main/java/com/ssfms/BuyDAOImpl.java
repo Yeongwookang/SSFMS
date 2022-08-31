@@ -997,15 +997,14 @@ public class BuyDAOImpl implements BuyDAO {
 			
 			
 			// --------------------------------------------	 세금 계산서 테이블에 정보 변경
-			sql = "";
+			sql = "UPDATE BuyTaxBill SET btb_total = 0, btb_con = '반품완료'  WHERE buy_No = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
+			pstmt.setString(1, buydto.getBuy_No());
 			
 			pstmt.executeUpdate();
 			
-			
-
 			result = 1;
 			
 			conn.commit();
@@ -1224,13 +1223,21 @@ public class BuyDAOImpl implements BuyDAO {
 	
 	
 	
+	
 	@Override
 	public List<BuyDTO> listBuyTaxBill() {
-		// TODO Auto-generated method stub
+		List<BuyDTO> list = new ArrayList<>();
+		
+		
+		
+		
+		
 		return null;
 	}
 
 
+	
+	
 	
 	//동일 전표등록 방지용 전표일련번호 검색하기
 	@Override

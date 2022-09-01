@@ -18,7 +18,8 @@ public class AccDTO {
 	private String accountNum;
 	private int busAmount;
 	private String categNo;
-	
+	private int balance;
+
 	public String getCategNo() {
 		return categNo;
 	}
@@ -49,8 +50,6 @@ public class AccDTO {
 	public void setBalance(int balance) {
 		this.balance = balance;
 	}
-	private int balance;
-	
 	
 	public String getT_account() {
 		return t_account;

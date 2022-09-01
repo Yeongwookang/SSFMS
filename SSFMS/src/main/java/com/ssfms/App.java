@@ -26,8 +26,6 @@ public class App {
 				                + "      `--. \\ `--. \\ |  _|  | |\\/| | `--. \\\r\n"
 				                + "     /\\__/ //\\__/ / | |    | |  | |/\\__/ /\r\n"
 				                + "     \\____/ \\____/  \\_|    \\_|  |_/\\____/ ";
-
-				System.out.println(n);
 				        System.out.println("\t\t\t  대한민국 재무관리 No.1 System");
 				        System.out.println();
 				System.out.println("=================================================");

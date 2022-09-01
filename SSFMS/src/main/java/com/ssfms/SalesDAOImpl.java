@@ -61,6 +61,7 @@ public class SalesDAOImpl implements SalesDAO {
 					+ "productNo, productName, num, eCost, ePrice, note FROM estimate";
 
 			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -262,8 +263,8 @@ public class SalesDAOImpl implements SalesDAO {
 			
 			pstmt = conn.prepareStatement(sql);		
 			
-			pstmt.setString(1, dto.getProductName());
-			pstmt.setInt(2, pdto.getStock());
+			pstmt.setInt(1, dto.getNum());
+			pstmt.setString(2, pdto.getProductNo());
 			
 			pstmt.executeUpdate();
 			

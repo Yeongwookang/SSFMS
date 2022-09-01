@@ -5,12 +5,17 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 
-
-
-
 public class EmpUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private EmpDAO dao = new EmpDAOImpl();
+	private Login login = null;
+	
+	/*
+	public EmpUI(Login login) {
+		this.login = login;
+	}
+	*/
+	
 
 	public void menu() { 
 		

@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 
 import java.io.InputStreamReader;
 
-import com.util.DBConn;
+// import com.util.DBConn;
 
 public class App {
 	public static void main(String[] args) {
+		// MainUI ui = new MainUI();
+		// ui.startmenu();
+		
 		int ch=0;
 		BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
 		try {
@@ -47,6 +50,7 @@ public class App {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
+		
 		
 	}
 }

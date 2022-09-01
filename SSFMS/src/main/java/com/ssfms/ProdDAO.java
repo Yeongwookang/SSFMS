@@ -8,7 +8,8 @@ public interface ProdDAO {
 	public void del_product (String prodNo) throws SQLException; // 제품삭제
 	public List<ProdDTO> list_product() throws SQLException; // 제품 목록 보기
 	
-	public void producing (List<ProdDTO>plist, List<ProdDTO>ulist) throws SQLException; // 생산(재료사용 + 제품 생산)
+	public void producing (List<ProdDTO>plist) throws SQLException; // 제품 생산
+	public void UsePart(List<ProdDTO> ulist) throws SQLException;// 재료사용
 	
 	public ProdDTO readPart(String partNo) throws SQLException; //부품재고
 	public List<BuyDTO> listPart() throws SQLException;// 부품 리스트 불러오기
@@ -17,4 +18,5 @@ public interface ProdDAO {
 	public void buy_offer_cancel(List<ProdDTO> list) throws SQLException; // 부품구매 요청리스트 삭제
 	public List<ProdDTO> list_Buy_offer() throws SQLException; //구매요청 리스트 불러오기
 	public List<AccDTO> listAccount_prod() throws SQLException; // 생산부서 전표리스트
+	public String readProdNo()throws SQLException;
 }

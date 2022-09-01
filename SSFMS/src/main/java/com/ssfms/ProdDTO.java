@@ -3,7 +3,7 @@ package com.ssfms;
 import java.sql.Date;
 
 public class ProdDTO {
-private String prodNo;
+private int prodNo;
 private int stateNo;
 private String productNo;
 private String product_name;
@@ -134,13 +134,15 @@ public void setPartNo(String partNo) {
 	this.partNo = partNo;
 }
 
-public String getProdNo() {
+public int getProdNo() {
 	return prodNo;
 }
 
-public void setProdNo(String prodNo) {
+public void setProdNo(int prodNo) {
 	this.prodNo = prodNo;
 }
+
+
 	
 	
 }

@@ -323,9 +323,15 @@ public class ProdDAOImpl implements ProdDAO {
 	}
 
 	@Override
-	public void producing(List<ProdDTO> plist, List<ProdDTO> ulist) throws SQLException {
+	public void producing(List<ProdDTO> plist) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
+
+		if (plist.isEmpty()) {
+			System.out.println("⚜ 생산목록이 null입니다. ⚜");
+			return;
+		}
+
 		conn.setAutoCommit(false);
 		try {
 			sql = "INSERT INTO PRODUCTION (prodNo, stateNo, productNo, qty, cost, prod_Date) "
@@ -346,37 +352,13 @@ public class ProdDAOImpl implements ProdDAO {
 				pstmt.executeUpdate();
 			}
 			pstmt.close();
-
-			sql = "INSERT INTO STOCK(StockNo, prodNo, partNo, pStock, qty, nStock, usedate)"
-					+ "VALUES(STOCK_seq.nextval, ?, ?, ?, ?, ?, SYSDATE )";
-			pstmt = conn.prepareStatement(sql);
-			for (ProdDTO pdto : ulist) {
-				pstmt.setString(1, readprodNo()); // 생산번호
-				pstmt.setString(2, pdto.getPartNo()); // 부품코드
-
-				int stock = readPart(pdto.getPartNo()).getPart_stock();
-
-				pstmt.setInt(3, stock); // 기존 재고량
-				pstmt.setInt(4, pdto.getQty()); // 사용량
-				pstmt.setInt(5, stock - pdto.getQty()); // 현재 재고량
-				if (stock - pdto.getQty() < 0) {
-					System.out.println("현재 재고량보다 많이 사용할수 없습니다.");
-					return;
-				}
-				pstmt.executeUpdate();
-
-				pstmt.close();
-
-				sql = "UPDATE part SET part_stock = part_stock - ? WHERE partNo = ?";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, pdto.getQty());
-				pstmt.setString(2, pdto.getPartNo());
-				pstmt.executeUpdate();
-			}
-
 			conn.commit();
-
+			System.out.println("⚜ DB 저장 완료! ⚜");
+		} catch (SQLException e) {
+			conn.rollback();
+			throw e;
 		} catch (Exception e) {
+			conn.rollback();
 			throw e;
 		} finally {
 			if (pstmt != null) {
@@ -393,30 +375,81 @@ public class ProdDAOImpl implements ProdDAO {
 		}
 	}
 
-	public String readprodNo() {
+	@Override
+	public void UsePart(List<ProdDTO> ulist) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
-		sql = "SELECT PRODUCTION_seq.currval prodNo FROM dual";
-		ResultSet rs = null;
-		String prodNo = null;
+
+		if (ulist.isEmpty()) {
+			System.out.println("⚜ 부품목록이 null입니다. ⚜");
+			return;
+		}
+
 		try {
-			pstmt = conn.prepareStatement(sql);
+			conn.setAutoCommit(false);
+			for (ProdDTO pdto : ulist) {
+				sql = "INSERT INTO STOCK (StockNo, prodNo, partNo, pstock,qty,nStock,usedate)"
+						+ " VALUES(STOCK_seq.nextval, ?, ?, " + "(SELECT part_stock FROM part  where partNo =?) "
+						+ " , ?, (SELECT part_stock FROM part  where partNo =?) - ?, " + " SYSDATE )";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, pdto.getProdNo()); // 생산번호
+				pstmt.setString(2, pdto.getPartNo()); // 부품코드
+				pstmt.setString(3, pdto.getPartNo()); // 부품코드
+				pstmt.setInt(4, pdto.getQty()); // 사용량
+				pstmt.setString(5, pdto.getPartNo()); // 부품코드
+				pstmt.setInt(6, pdto.getQty()); // 사용량
 
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				prodNo = rs.getString("prodNo");
+				pstmt.executeQuery();
+
+				pstmt.close();
+
+				sql = "UPDATE part SET part_stock = part_stock-? WHERE partNo =?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, pdto.getQty());
+				pstmt.setString(2, pdto.getPartNo());
+				pstmt.executeUpdate();
+
+				conn.commit();
 			}
-			pstmt.close();
+			System.out.println("⚜ DB 저장 완료! ⚜");
+		} catch (
 
+		SQLException e) {
+			conn.rollback();
+			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
+			conn.rollback();
+			throw e;
 		} finally {
 			if (pstmt != null) {
 				try {
 					pstmt.close();
-				} catch (Exception e2) {
+				} catch (Exception e) {
 				}
 			}
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+				throw e2;
+			}
+		}
+	}
+
+	@Override
+	public String readProdNo() throws SQLException {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		String prodNo = null;
+		try {
+			sql = "SELECT prodNo From PRODUCTION WHERE prodNo=(SELECT Max(prodNo)FROM PRODUCTION)";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				prodNo = rs.getString("prodNo");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return prodNo;
 	}

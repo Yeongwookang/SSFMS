@@ -151,11 +151,9 @@ public class SalesUI {
 				}
 			}
 			
-			
-			
 			dao.estimateInsertSales(list);		
 			
-			System.out.println("견적서가 입력되었습니다.");
+			System.out.println("⚜[견적서가 입력되었습니다]");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -165,24 +163,24 @@ public class SalesUI {
 
 	private void estimateCheck() {
 		System.out.println("⚜[견적서 조회]⚜");
-		System.out.println("---------------------------------------------------------------------------"
-				+ "----------------------------");
-		System.out.println("견적서일련번호\t회사명\t사업자등록번호\t회사연락처\t주문처\t주문처담당자\t주문처연락처\t등록일\t제품코드"
-				+ "\t제품명\t수량\t단가\t판매가\t비고");
-		System.out.println("----------------------------------------------------------------------------"
-				+ "----------------------------");
+		System.out.println("-------------------------------------------------------------------------------------------------------------------"
+				+ "---------------------------------------------------------------------------------------------------------");
+		System.out.println("견적서일련번호\t회사명\t\t사업자등록번호\t회사연락처\t\t주문처\t주문처담당자\t주문처연락처\t등록일\t\t\t제품코드"
+				+ "\t\t제품명\t\t\t\t\t\t수량\t단가\t판매가\t비고");
+		System.out.println("-------------------------------------------------------------------------------------------------------------------"
+				+ "---------------------------------------------------------------------------------------------------------");
 
 		List<SalesDTO> list = dao.estimateRead();
 		for (SalesDTO dto : list) {
-			System.out.print(dto.getEstimateNo() + "\t");
-			System.out.print(dto.getCompanyName() + "\t");
+			System.out.print(dto.getEstimateNo() + "\t\t");
+			System.out.print(dto.getCompanyName() + "\t\t");
 			System.out.print(dto.getComRegiNo()+ "\t");
 			System.out.print(dto.getTel() + "\t");
 			System.out.print(dto.getOrderCom() + "\t");
-			System.out.print(dto.getName() + "\t");
+			System.out.print(dto.getName() + "\t\t");
 			System.out.print(dto.getOrderComTel() + "\t");
 			System.out.print(dto.geteDate() + "\t");
-			System.out.print(dto.getProductNo() + "\t");
+			System.out.print(dto.getProductNo() + "\t\t");
 			System.out.print(dto.getProductName() + "\t");
 			System.out.print(dto.getNum() + "\t");
 			System.out.print(dto.geteCos() + "\t");
@@ -196,23 +194,23 @@ public class SalesUI {
 
 	private void orderCheck() {
 		System.out.println("⚜[주문서 조회]⚜");
-		System.out.println("-----------------------------------------------------------------------"
-				+ "--------------------------------------------------------");
-		System.out.println("주문서일련번호\t입력날짜\t주문처\t주문처담당자\t주문처전화번호\t납품예정일\t회사명\t회사사업자번호"
+		System.out.println("------------------------------------------------------------------------------------------------------"
+				+ "----------------------------------------------------------------------------------------------------");
+		System.out.println("주문서일련번호\t입력날짜\t\t\t주문처\t주문처담당자\t주문처전화번호\t납품예정일\t\t\t회사명\t회사사업자번호"
 				+ "\t회사주소\t회사전화번호\t제품코드\t제품명\t수량\t단가\t판매가\t합계\t비고");
-		System.out.println("------------------------------------------------------------------------"
-				+ "--------------------------------------------------------");
+		System.out.println("------------------------------------------------------------------------------------------------------"
+				+ "----------------------------------------------------------------------------------------------------");
 
 		List<SalesDTO> list = dao.orderRead();
 		for (SalesDTO dto : list) {		
 			
-			System.out.print(dto.getOrderNo() + "\t");
+			System.out.print(dto.getOrderNo() + "\t\t");
 			System.out.print(dto.getoDate() + "\t");
 			System.out.print(dto.getOrderCom()+ "\t");
-			System.out.print(dto.getoName() + "\t");
+			System.out.print(dto.getoName() + "\t\t");
 			System.out.print(dto.getoTel() + "\t");
 			System.out.print(dto.getExpDeliDate() + "\t");
-			System.out.print(dto.getCompanyName() + "\t");
+			System.out.print(dto.getCompanyName() + "\t\t");
 			System.out.print(dto.getComRegiNo() + "\t");
 			System.out.print(dto.getComAddress() + "\t");
 			System.out.print(dto.getComTel() + "\t");
@@ -260,7 +258,7 @@ public class SalesUI {
 		try {
 			System.out.println("⚜[출고]⚜");
 			System.out.println("-----------------------------------------");
-			System.out.println("[1] 출고등록 [2] 출고조회 [3] 영업부메뉴로 돌아가기");
+			System.out.println("⚜[1] 출고등록 [2] 출고조회 [3] 영업부메뉴로 돌아가기");
 			System.out.println("-----------------------------------------");
 			System.out.println("⚜ => ");
 			ch = Integer.parseInt(br.readLine());
@@ -308,15 +306,15 @@ public class SalesUI {
 
 	private void releaseCheck() {
 		System.out.println("⚜[출고조회]⚜");
-		System.out.println("------------------------------");
-		System.out.println("출고번호\t주문서일련번호\t출고여부\t날짜");
-		System.out.println("------------------------------");
+		System.out.println("----------------------------------------------------------------------");
+		System.out.println("출고번호\t주문서일련번호\t출고여부\t\t날짜");
+		System.out.println("----------------------------------------------------------------------");
 
 		List<SalesDTO> list = dao.listRelease();
 		for (SalesDTO dto : list) {		
 			
 			System.out.print(dto.getReleaseNo() + "\t");
-			System.out.print(dto.getOrderNo() + "\t");
+			System.out.print(dto.getOrderNo() + "\t\t");
 			System.out.print(dto.getReleaseAval()+ "\t");
 			System.out.println(dto.getRelDate() + "\t");
 		}
@@ -331,7 +329,7 @@ public class SalesUI {
 		try {
 			System.out.println("⚜[환불]⚜");
 			System.out.println("-----------------------------------------");
-			System.out.println("[1] 환불등록 [2] 환불조회 [3] 영업부 메뉴로 돌아가기");
+			System.out.println("⚜[1] 환불등록 [2] 환불조회 [3] 영업부 메뉴로 돌아가기");
 			System.out.println("-----------------------------------------");
 			System.out.println("⚜ => ");
 			ch = Integer.parseInt(br.readLine());
@@ -380,7 +378,7 @@ public class SalesUI {
 
 	private void refundChenk() {
 		System.out.println("⚜[환불조회]⚜");
-		System.out.println("----------------------------------------------------------------------------");
+		System.out.println("-------------------------------------------------------------------------------");
 		System.out.println("환불일련번호\t주문서일련번호\t환불날짜\t비고");
 		System.out.println("--------------------------------------------------------------------------------");
 
@@ -400,7 +398,10 @@ public class SalesUI {
 		int ch;
 		while (true) {
 			try {
-				System.out.println("\n[배송관리] 1.배송입력 2.배송조회 3.영업부 메뉴로 돌아가기 =>");
+				System.out.println("⚜[배송관리]⚜");
+				System.out.println("------------------------------------------");
+				System.out.println("[1] 배송입력 [2] 배송조회 [3] 영업부 메뉴로 돌아가기");
+				System.out.println("------------------------------------------");
 				ch = Integer.parseInt(br.readLine());
 
 				if (ch == 3) {
@@ -424,19 +425,19 @@ public class SalesUI {
 
 	private void shipInsert() {
 
-		System.out.println("[배송등록]");
+		System.out.println("⚜[배송등록]⚜");
 
 		try {
 			SalesDTO dto = new SalesDTO();
-			System.out.println("출고 일련번호 입력 >> ");
+			System.out.println("출고 일련번호 입력 ▶ ");
 			dto.setReleaseNo(br.readLine());
 			
-			System.out.println("배송상태 [배송전/배송중/배송완료] >> ");
+			System.out.println("배송상태 [배송전/배송중/배송완료] ▶ ");
 			dto.setShippingState(br.readLine());
 			
 			dao.insertShipping(dto);
 			
-			System.out.println("제품출고등록을 완료하였습니다.");
+			System.out.println("[제품출고등록을 완료하였습니다]");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -446,8 +447,8 @@ public class SalesUI {
 	}
 
 	private void shipChenk() {
-		System.out.println("[배송조회]");
-		
+		System.out.println("⚜[배송조회]⚜");
+		System.out.println("--------------------------------------------------------------------------------");
 		System.out.println("출고번호\t주문서일련번호\t출고여부\t날짜");
 		System.out.println("--------------------------------------------------------------------------------");
 
@@ -469,7 +470,11 @@ public class SalesUI {
 
 		while (true) {
 			try {
-				System.out.println("[영업이익조회] 1.매출입력 2.매출조회 3.매출전표입력(차변/대변) 4.매출전표조회 5.영업이익조회 6.영업부 메뉴로 돌아가기 => ");
+				System.out.println("⚜[영업이익조회]⚜");
+				System.out.println("-------------------------------------------------------------------------------------------");
+				System.out.println("⚜[1] 매출입력 [2] 매출조회 [3] 매출전표입력(차변/대변) [4] 매출전표조회 [5] 영업이익조회 [6] 영업부 메뉴로 돌아가기");
+				System.out.println("-------------------------------------------------------------------------------------------");
+				System.out.println("⚜ => ");
 
 				ch = Integer.parseInt(br.readLine());
 
@@ -499,28 +504,28 @@ public class SalesUI {
 	}
 
 	private void salesInsert() {
-		System.out.println("[매출입력(※전표번호가 있어야 입력이 가능합니다※)]");
+		System.out.println("⚜[매출입력(※전표번호가 있어야 입력이 가능합니다※)]⚜");
 
 		try {
 			SalesDTO dto = new SalesDTO();
 			ProductDTO pdto = new ProductDTO();
 
-			System.out.println("[전표일련번호]");
+			System.out.println("전표일련번호 ▶");
 			dto.setStateNo(Integer.parseInt(br.readLine()));
 
-			System.out.println("[제품코드]");
+			System.out.println("제품코드");
 			pdto.setProductNo(br.readLine());
 
-			System.out.println("[거래처]");
+			System.out.println("거래처");
 			dto.setCustomer(br.readLine());
 
-			System.out.println("[매출액]");
+			System.out.println("매출액");
 			pdto.setPrice(Integer.parseInt(br.readLine()));
 
-			System.out.println("[수량]");
+			System.out.println("수량");
 			pdto.setStock(Integer.parseInt(br.readLine()));
 
-			System.out.println("[거래일시]");
+			System.out.println("거래일시");
 			dto.setDealDate(br.readLine());
 
 			dao.salesInsert(dto, pdto);
@@ -528,17 +533,17 @@ public class SalesUI {
 			System.out.println("[매출이 입력되었습니다.]");
 
 		} catch (NumberFormatException e) {
-			System.out.println("금액은 숫자만 입력 가능합니다.");
+			System.out.println("[금액은 숫자만 입력 가능합니다]");
 		} catch (Exception e) {
-			System.out.println("등록에 실패했습니다. 다시 입력해주세요.");
+			System.out.println("[등록에 실패했습니다. 다시 입력해주세요]");
 		}
 		System.out.println();
 
 	}
 
 	private void salesCheck() {
-		System.out.println("[매출입력조회]");
-
+		System.out.println("⚜[매출입력조회]⚜");
+		System.out.println("--------------------------------------------------------------------------------");
 		System.out.println("매출번호\t전표일련번호\t제품코드\t거래처\t매출액\t수량\t거래일시");
 		System.out.println("--------------------------------------------------------------------------------");
 
@@ -558,7 +563,7 @@ public class SalesUI {
 	}
 
 	private void salesAccountInsert() {
-		System.out.println("[매출전표입력(차변/대변)]");
+		System.out.println("⚜[매출전표입력(차변/대변)]⚜");
 
 		try {
 			EmpDTO empdto = new EmpDTO();
@@ -581,25 +586,25 @@ public class SalesUI {
 
 			dao.salesAccountInsert(empdto, accdto);
 
-			System.out.println("매입전표 등록이 완료되었습니다.");
+			System.out.println("[매입전표 등록이 완료되었습니다]");
 
 		} catch (NumberFormatException e) {
-			System.out.println("금액은 숫자만 입력 가능합니다.");
+			System.out.println("[금액은 숫자만 입력 가능합니다]");
 		} catch (Exception e) {
-			System.out.println("데이터 등록이 실패했습니다. ");
+			System.out.println("[데이터 등록이 실패했습니다]");
 		}
 		System.out.println();
 
 	}
 
 	private void salesAccountCheck() {
-		System.out.println("[매출전표조회]");
+		System.out.println("⚜[매출전표조회]⚜");
 
 		try {
 			List<AccDTO> list = dao.listSalesAccountInsert();
 
 			if (list.size() == 0) {
-				System.out.println("등록된 전표 내역이 없습니다. ");
+				System.out.println("[등록된 전표 내역이 없습니다]");
 				return;
 			}
 
@@ -620,43 +625,45 @@ public class SalesUI {
 
 			}
 		} catch (Exception e) {
-			System.out.println("등록전표 조회에 실패했습니다. ");
+			System.out.println("[등록전표 조회에 실패했습니다]");
 		}
 		System.out.println();
 
 	}
 
-	private void operatingProfitCheck() {
-		System.out.println("[영업이익조회]");
+	private void operatingProfitCheck() {		
+		System.out.println("⚜[영업이익조회]⚜");
 		// 영업이익조회 = 매출-매출원가-판매비와 관리비
 		
 		try {
-			List<AccDTO> list = dao.listSalesAccountInsert();
-
-			System.out.println("매출총합\t매출원가총합\t판매비와 관리비 총합\t영업이익 총합");
-			System.out.println(
-					"------------------------------------------------------------------------------------------------------------------");
-
-			for (AccDTO accdto : list) {
-				System.out.print(accdto.getAmount() + "\t");
-				System.out.print(accdto.getAmount() + "\t");
-				System.out.print(accdto.getAmount() + "\t");
-				System.out.println(accdto.getAmount());
-
-			}
+			System.out.println("-----------------------------------------------------------------------------------------------------------------");
+			System.out.println("매출총합\t매출원가총합\t판매비와관리비총합\t영업이익총합");
+			System.out.println("------------------------------------------------------------------------------------------------------------------");	
+			
+			SalesDTO dto = new SalesDTO();
+			
+				System.out.print(dto.getSalesTotal() + "\t");
+				System.out.print(dto.getSalesOriginTotal() + "\t");
+				System.out.print(dto.getOthersTotal() + "\t");
+				System.out.println(dto.getOperatingProfit());
+			
 		} catch (Exception e) {
-			System.out.println("등록전표 조회에 실패했습니다. ");
+			System.out.println("[조회에 실패했습니다]");
 		}
 		System.out.println();
-
 	}
 
+	
 	protected void taxBill() {
 		int ch;
 
 		while (true) {
 			try {
-				System.out.println("\n[세금계산서] 1.세금계산서 입력 2.세금계산서 조회 3.영업부 메뉴로 돌아가기 =>");
+				System.out.println("⚜[세금계산서]⚜");
+				System.out.println("-------------------------------------------------------");
+				System.out.println("⚜[1] 세금계산서 입력 [2] 세금계산서 조회 [3] 영업부 메뉴로 돌아가기 ");
+				System.out.println("-------------------------------------------------------");
+				System.out.println("⚜ => ");
 				ch = Integer.parseInt(br.readLine());
 
 				if (ch == 3) {
@@ -678,62 +685,62 @@ public class SalesUI {
 	}
 
 	private void taxBillInsert() {
-		System.out.println("[세금계산서 입력]");
+		System.out.println("⚜[세금계산서 입력]⚜");
 
 		try {
 			SalesDTO dto = new SalesDTO();
 
-			System.out.println("[매출번호]");
+			System.out.println("매출번호");
 			dto.setStateNo(Integer.parseInt(br.readLine()));
 
-			System.out.println("[상호]");
+			System.out.println("상호");
 			dto.setCompanyName(br.readLine());
 
-			System.out.println("[대표자성명]");
+			System.out.println("대표자성명");
 			dto.setName(br.readLine());
 
-			System.out.println("[주소]");
+			System.out.println("주소");
 			dto.setAddress(br.readLine());
 
-			System.out.println("[업태]");
+			System.out.println("업태");
 			dto.setBusStatue(br.readLine());
 
-			System.out.println("[공급가액]");
+			System.out.println("공급가액");
 			dto.setValueSupply(Integer.parseInt(br.readLine()));
 
-			System.out.println("[세액]");
+			System.out.println("세액");
 			dto.setTaxAmount(Integer.parseInt(br.readLine()));
 
-			System.out.println("[품목]");
+			System.out.println("품목");
 			dto.setItem(br.readLine());
 
-			System.out.println("[수량]");
+			System.out.println("수량");
 			dto.setNum(Integer.parseInt(br.readLine()));
 
-			System.out.println("[단가]");
+			System.out.println("단가");
 			dto.setUnitPrice(Integer.parseInt(br.readLine()));
 
-			System.out.println("[미수금]");
+			System.out.println("미수금");
 			dto.setOutAmount(Integer.parseInt(br.readLine()));
 
-			System.out.println("[구분]");
+			System.out.println("구분");
 			dto.setNote(br.readLine());
 
 			dao.taxBillInsert(dto);
 
-			System.out.println("[세금계산서 입력이 완료되었습니다.]");
+			System.out.println("[세금계산서 입력이 완료되었습니다]");
 
 		} catch (NumberFormatException e) {
-			System.out.println("금액은 숫자만 입력 가능합니다.");
+			System.out.println("[금액은 숫자만 입력 가능합니다]");
 		} catch (Exception e) {
-			System.out.println("등록에 실패하였습니다. 다시 시도해주세요.");
+			System.out.println("[등록에 실패하였습니다. 다시 시도해주세요]");
 		}
 		System.out.println();
 
 	}
 
 	private void taxBillCheck() {
-		System.out.println("[세금계산서 조회]");
+		System.out.println("⚜[세금계산서 조회]⚜");
 
 		System.out.println("등록번호\t매출번호\t상호\t성명\t주소\t업태\t작성일\t공급가액\t세액\t품목\t수량\t단가\t합계금액\t미수금\t구분");
 		System.out.println(
@@ -766,7 +773,11 @@ public class SalesUI {
 		int ch;
 		while (true) {
 			try {
-				System.out.println("\n[수금/채권조회] 1.수금/채권 조회 2.영업부 메뉴로 나가기 => ");
+				System.out.println("⚜[수금/채권조회]⚜");
+				System.out.println("-------------------------------------");
+				System.out.println("⚜[1] 수금/채권 조회 [2] 영업부 메뉴로 나가기 ");
+				System.out.println("-------------------------------------");
+				System.out.println("⚜ => ");
 				ch = Integer.parseInt(br.readLine());
 
 				if (ch == 2) {
@@ -789,13 +800,13 @@ public class SalesUI {
 	}
 
 	private void money() {
-		System.out.println("[수금/채권 조회]");
+		System.out.println("⚜[수금/채권 조회]⚜");
 		
 		try {
 			List<AccDTO> list = dao.listMoney();
 
 			if (list.size() == 0) {
-				System.out.println("등록된 전표 내역이 없습니다. ");
+				System.out.println("[등록된 전표 내역이 없습니다]");
 				return;
 			}
 
@@ -816,7 +827,7 @@ public class SalesUI {
 
 			}
 		} catch (Exception e) {
-			System.out.println("등록전표 조회에 실패했습니다. ");
+			System.out.println("[등록전표 조회에 실패했습니다]");
 		}
 		System.out.println();
 

@@ -61,6 +61,9 @@ public class SalesDTO {
 	private String dealDate;
 	
 	//영업이익총합
+	private int salesTotal;
+	private int salesOriginTotal;
+	private int othersTotal;
 	private int operatingProfit;
 
 	//세금계산서
@@ -382,8 +385,26 @@ public class SalesDTO {
 	public void setRefundDate(String refundDate) {
 		this.refundDate = refundDate;
 	}	
+	public int getSalesTotal() {
+		return salesTotal;
+	}
+	public void setSalesTotal(int salesTotal) {
+		this.salesTotal = salesTotal;
+	}
+	public int getSalesOriginTotal() {
+		return salesOriginTotal;
+	}
+	public void setSalesOriginTotal(int salesOriginTotal) {
+		this.salesOriginTotal = salesOriginTotal;
+	}
+	public int getOthersTotal() {
+		return othersTotal;
+	}
+	public void setOthersTotal(int othersTotal) {
+		this.othersTotal = othersTotal;
+	}
 	public int getOperatingProfit() {
-		return operatingProfit;
+		return salesTotal-salesOriginTotal-othersTotal;
 	}
 	public void setOperatingProfit(int operatingProfit) {
 		this.operatingProfit = operatingProfit;

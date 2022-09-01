@@ -27,7 +27,7 @@ public class MainUI {
 			System.out.println("\n[관리자] 님");
 
 			do {
-				System.out.print("1.상품등록 2.상품검색 3.상품리스트 4.회원검색 5.회원리스트 6.로그아웃 => ");
+				System.out.print("[1] 회계 [2] 구매 [3] 인사 [4] 생산 [5] 영업 [6] 로그아웃 \n");
 				ch = Integer.parseInt(br.readLine());
 			} while (ch < 1 || ch > 6);
 
@@ -53,7 +53,7 @@ public class MainUI {
 			System.out.println("\n[" + login.loginEmp().getName() + "] 님");
 
 			do {
-				System.out.print("1.상품검색 2.상품구매 3.정보수정 4.로그아웃 5.회원탈퇴 => ");
+				System.out.print("1.상품검색 2.상품구매 3.정보수정 4.로그아웃  => ");
 				ch = Integer.parseInt(br.readLine());
 			} while (ch < 1 || ch > 4);
 
@@ -69,7 +69,6 @@ public class MainUI {
 				login.logout();
 				System.out.println();
 				break;
-			// case 5: memberUI.delete(); break;
 			}
 		} catch (Exception e) {
 		}

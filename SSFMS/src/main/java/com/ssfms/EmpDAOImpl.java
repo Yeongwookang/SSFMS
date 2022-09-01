@@ -1311,7 +1311,7 @@ public class EmpDAOImpl implements EmpDAO {
 		String sql;
 
 		try {
-			sql = "SELECT empNo, name, tel, email, addr, edu, account, hire_class FROM emp WHERE empNo = ? ";
+			sql = "SELECT empNo, pwd, name, tel, email, addr, edu, account, hire_class FROM emp WHERE empNo = ? ";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, empNo);
@@ -1321,6 +1321,7 @@ public class EmpDAOImpl implements EmpDAO {
 				dto = new EmpDTO();
 
 				dto.setEmpNo(rs.getString("empNo"));
+				dto.setPwd(rs.getString("pwd"));
 				dto.setName(rs.getString("name"));
 				dto.setTel(rs.getString("tel"));
 				dto.setEmail(rs.getString("email"));

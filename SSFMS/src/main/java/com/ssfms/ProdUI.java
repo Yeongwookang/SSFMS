@@ -20,7 +20,10 @@ public class ProdUI {
 		while (true) {
 			try {
 				System.out.println("⚜ [생산 메인] ⚜");
-				System.out.print("⚜ 1. 제품관리 2. 부품재고관리 3. 전표관리 4. 생산관리 5. 돌아가기 = ");
+				System.out.println("----------------------------------------------------------");
+				System.out.println("⚜ [1] 제품관리 [2] 부품재고관리 [3] 전표관리 [4] 생산관리 [5] 돌아가기  ");
+				System.out.println("----------------------------------------------------------");
+				System.out.print("⚜ => ");
 				ch = Integer.parseInt(br.readLine());
 				switch (ch) {
 				case 1:
@@ -51,7 +54,10 @@ public class ProdUI {
 
 		while (true) {
 			try {
-				System.out.print("⚜ 1. 제품등록 2. 등록제품삭제 3.제품목록 4. 돌아가기 = ");
+				System.out.println("---------------------------------------------");
+				System.out.println("⚜ [1] 제품등록 [2] 등록제품삭제 [3]제품목록 [4] 돌아가기 ");
+				System.out.println("---------------------------------------------");
+				System.out.print("⚜ => ");
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 4) {
 					return;
@@ -124,6 +130,7 @@ public class ProdUI {
 		try {
 			List<ProdDTO> list = new ArrayList<>();
 			list = dao.list_product();
+			
 			System.out.println("⚜ 제품번호\t제품이름\t\t\t단가\t제품가격\t재고량");
 			for (ProdDTO pdto : list) {
 				System.out.print("⚜ " + pdto.getProductNo() + "\t");
@@ -150,7 +157,11 @@ public class ProdUI {
 
 		while (true) {
 			try {
-				System.out.print("⚜ 1.부품재고확인 2. 부품구매요청 3. 부품구매취소 4.부품구매요청목록 5. 돌아가기 = ");
+				System.out.println("-------------------------------------------------------------------");
+				System.out.println("⚜ [1]부품재고확인 [2] 부품구매요청 [3] 부품구매취소 [4] 부품구매요청목록 [5] 돌아가기 ");
+				System.out.println("-------------------------------------------------------------------");
+				System.out.print("⚜ => ");
+				
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 5) {
 					return;
@@ -297,7 +308,10 @@ public class ProdUI {
 
 		while (true) {
 			try {
-				System.out.println("⚜ 1. 생산전표등록 2. 전표취소신청 3. 생산부서 전표목록 4. 돌아가기 ⚜");
+				System.out.println("----------------------------------------------------");
+				System.out.println("⚜ 1. 생산전표등록 2. 전표취소신청 3. 생산부서 전표목록 4. 돌아가기 ");
+				System.out.println("----------------------------------------------------");
+				System.out.print("⚜ =>  ");
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 4) {
 					return;
@@ -339,7 +353,7 @@ public class ProdUI {
 			adao.insertAccount(adto);
 
 			System.out.println("\n⚜ 생산전표등록(대변) [부품사용]");
-			adto.setAccountSubNo("153");
+			adto.setAccountSubNo("1000");
 
 			System.out.print("⚜ 상세내용 : ");
 			adto.setDetail(br.readLine());
@@ -376,8 +390,9 @@ public class ProdUI {
 			int result = adao.deleteAccount(stateNo);
 			if (result == 1) {
 				System.out.println("⚜ 전표취소가 완료되었습니다. ⚜");
+			} else {
+				System.out.println("⚜ 전표가 취소되지 않았습니다. ⚜");
 			}
-			System.out.println("⚜ 전표가 취소되지 않았습니다. ⚜");
 
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
@@ -398,13 +413,13 @@ public class ProdUI {
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = dao.listAccount_prod();
-			System.out.println("⚜ 전표번호 차대\t계좌코드\t계정과목명\t금액\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름\t ⚜");
+			System.out.println("⚜ 전표번호 차대\t계좌코드\t계정과목명\t\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름\t ⚜");
 			for (AccDTO adto : list) {
 				System.out.print("⚜ " + adto.getStateNo() + "\t ");
 				System.out.print(adto.getT_account() + "\t");
 				System.out.print(adto.getAccountNo() + "\t");
 				System.out.print(adto.getAsub_name() + "\t");
-				System.out.print(adto.getAmount() + "\t");
+				System.out.printf("%(15d ￦\t",adto.getAmount());
 				System.out.print(adto.getCancellation() + "\t");
 				System.out.print(adto.getStateCon() + "\t");
 				System.out.print(adto.getStateDate() + "\t");
@@ -413,6 +428,7 @@ public class ProdUI {
 				System.out.print(adto.getRank() + "\t");
 				System.out.println(adto.getName());
 			}
+			System.out.println();
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
@@ -429,8 +445,12 @@ public class ProdUI {
 		while (true) {
 			try {
 				System.out.println("\n ❗❗ 생산표와 재고사용표에는 프로그램 실행시 임시로 저장되며, (4. 생산기록)을 통해 기록해야 DB에 저장됩니다. ❗❗");
+				System.out.println("--------------------------------------------------");
 				System.out.println("⚜ 1.생산제품입력 2.생산표보기\t  3. 생산표 초기화\t  4.생산기록");
-				System.out.print("⚜ 5.부품사용입력 6.부품사용표보기 7. 부품사용표 초기화 8.돌아가기 = ");
+				System.out.println("⚜ 5.부품사용입력 6.부품사용표보기 7. 부품사용표 초기화 8.돌아가기 ");
+				System.out.println("--------------------------------------------------");
+				System.out.print("⚜ => ");
+				
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 8) {
 					return;
@@ -473,6 +493,7 @@ public class ProdUI {
 			AccDTO adto = adao.readAccount(Integer.parseInt(br.readLine()));
 			if (adto == null) {
 				System.out.println("⚜ 없는 전표입니다. ⚜");
+				return;
 			}
 			if (!adto.getStateCon().equals("승인")) {
 				System.out.println("⚜ 승인되지 않은 전표입니다. ⚜");
@@ -502,9 +523,9 @@ public class ProdUI {
 
 	protected void list_producing() {
 		System.out.println("\n⚜ 생산표 보기 (임시저장) ⚜");
-		System.out.println("⚜ 전표번호\t제품번호\t수량\t비용\t ⚜");
+		System.out.println("⚜ 전표번호 제품번호\t수량\t비용\t ⚜");
 		for (ProdDTO pdto : plist) {
-			System.out.print("⚜ " + pdto.getStateNo() + "\t");
+			System.out.printf("⚜ %5d\t", pdto.getStateNo());
 			System.out.print(pdto.getProductNo() + "\t");
 			System.out.print(pdto.getQty() + "\t");
 			System.out.println(pdto.getCost() + "\t");
@@ -525,8 +546,6 @@ public class ProdUI {
 			String partNo;
 			System.out.print("⚜ 전표번호를 입력해주세요.  ");
 			pdto.setStateNo(Integer.parseInt(br.readLine()));
-			System.out.print("⚜ 생산번호를 입력해주세요.  ");
-			pdto.setProdNo(br.readLine());
 			while (true) {
 				System.out.print("⚜ 사용한 재료의 코드를 입력해주세요. [입력 종료: 0]  ");
 				partNo = br.readLine();
@@ -576,7 +595,7 @@ public class ProdUI {
 			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
-
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

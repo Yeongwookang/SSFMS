@@ -3,6 +3,7 @@ package com.ssfms;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
@@ -22,10 +23,6 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = "INSERT INTO accounting (StateNo, empNo, accountNo, accountsubNo, amount, "
-					+ " detail, cancellation, statecon, statedate)"
-					+ " VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)";
-
 			sql = "INSERT INTO accounting (StateNo, empNo, accountNo, accountsubNo, amount, "
 					+ " detail, cancellation, statecon, statedate)"
 					+ " VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)";
@@ -79,9 +76,8 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = "INSERT INTO accounting (StateNo, empNo, accountNo, accountsubNo, amount, "
-					+ " detail, cancellation, statecon, statedate)"
-					+ " VALUES(ACCOUNTING_seq.nextval, ?,?,?,?,?,?,?, SYSDATE)";
+			sql = "UPDATE accounting SET empNo=?, accountNo=?, accountsubNo=?, amount=?, "
+					+ " detail=?, cancellation=?, statecon=? " + " WHERE StateNo=? ";
 
 			pstmt = conn.prepareCall(sql);
 
@@ -92,13 +88,24 @@ public class AccDAOImpl implements AccDAO {
 			pstmt.setString(5, dto.getDetail());
 			pstmt.setString(6, dto.getCancellation());
 			pstmt.setString(7, dto.getStateCon());
+			pstmt.setInt(8, dto.getStateNo());
 
 			pstmt.executeUpdate();
 
 			result = 1;
 
-		} catch (Exception e) {
+		} catch (SQLIntegrityConstraintViolationException e) {
+			if (e.getErrorCode() == 1400) {
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			} else {
+				System.out.println(e.toString());
+			}
+			throw e;
+
+		} catch (SQLException e) {
 			e.printStackTrace();
+			throw e;
+
 		} finally {
 			if (pstmt != null) {
 				try {
@@ -129,20 +136,28 @@ public class AccDAOImpl implements AccDAO {
 			pstmt.close();
 			pstmt = null;
 			conn.commit();
-			conn.setAutoCommit(true);
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 			try {
 				conn.rollback();
-				e.printStackTrace();
+				
 			} catch (Exception e2) {
 				e.printStackTrace();
 			}
 
+		} finally {
+			try {
+				conn.setAutoCommit(true);
+				
+			} catch (Exception e2) {
+				
+			}
 		}
 
 		return result;
 	}
+
 //==================================================================================
 	// 전표조회
 	@Override
@@ -382,6 +397,7 @@ public class AccDAOImpl implements AccDAO {
 
 		return list;
 	}
+
 //==================================================================================	
 	// 승인관련
 	@Override
@@ -505,6 +521,7 @@ public class AccDAOImpl implements AccDAO {
 
 		return list;
 	}
+
 // 한번에 승인
 	public void producing(List<AccDTO> listNapproval) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -542,6 +559,7 @@ public class AccDAOImpl implements AccDAO {
 			}
 		}
 	}
+
 //==================================================================================
 	// 계좌등록
 	@Override
@@ -551,8 +569,8 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = "INSERT INTO account (accountNo, bankName, accountNum, name,busAmount,balance  "
-					+ " VALUES(?,?,?,?,?,?)";
+			sql = "INSERT INTO account (accountNo, bankName, accountNum, name,busAmount,balance)  "
+					+ " VALUES(?,?,?,?,?,?) ";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, adto.getAccountNo());
@@ -573,6 +591,8 @@ public class AccDAOImpl implements AccDAO {
 			} else {
 				System.out.println(e.toString());
 			}
+			e.printStackTrace();
+
 			throw e;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -603,19 +623,19 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = "UPDATE INTO account (accountNo, bankName, accountNum, name,busAmount,balance  "
-					+ " VALUES(?,?,?,?,?,?)";
+			sql = " UPDATE account SET bankName=?, accountNum=?, name =? ,busAmount=?,balance=? "
+					+ " WHERE accountNo =? ";
 
 			pstmt = conn.prepareCall(sql);
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, adto.getAccountNo());
-			pstmt.setString(2, adto.getBankName());
-			pstmt.setString(3, adto.getAccountNum());
-			pstmt.setString(4, adto.getName());
-			pstmt.setInt(5, adto.getAmount());
-			pstmt.setInt(6, adto.getBalance());
 
+			pstmt.setString(1, adto.getBankName());
+			pstmt.setString(2, adto.getAccountNum());
+			pstmt.setString(3, adto.getName());
+			pstmt.setInt(4, adto.getAmount());
+			pstmt.setInt(5, adto.getBalance());
+			pstmt.setString(6, adto.getAccountNo());
 			pstmt.executeUpdate();
 			result = 1;
 
@@ -675,8 +695,8 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = " SELECT account accountNo, bankName, accountNum, name,busAmount,balance "
-					+ "FROM account" + " WHERE setAccountNo = ? ";
+			sql = " SELECT account accountNo, bankName, accountNum, name,busAmount,balance " + "FROM account"
+					+ " WHERE setAccountNo = ? ";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, setAccountNo);
@@ -718,7 +738,6 @@ public class AccDAOImpl implements AccDAO {
 
 		return adto;
 	}
-	
 
 	@Override
 	public List<AccDTO> listAccountNo() throws SQLException {
@@ -728,7 +747,7 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = "SELECT accountNo, bankName, accountNum, name,busAmount,balance FROM State_view";
+			sql = "SELECT accountNo, bankName, accountNum, name,busAmount,balance FROM account";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -739,12 +758,12 @@ public class AccDAOImpl implements AccDAO {
 			while (rs.next()) {
 				AccDTO adto = new AccDTO();
 
-				pstmt.setString(1, adto.getAccountNo());
-				pstmt.setString(2, adto.getBankName());
-				pstmt.setString(3, adto.getAccountNum());
-				pstmt.setString(4, adto.getName());
-				pstmt.setInt(5, adto.getAmount());
-				pstmt.setInt(6, adto.getBalance());
+				adto.setAccountNo(rs.getString("accountNo"));
+				adto.setBankName(rs.getString("bankName"));
+				adto.setAccountNum(rs.getString("accountNum"));
+				adto.setName(rs.getString("name"));
+				adto.setBusAmount(rs.getInt("busAmount"));
+				adto.setBalance(rs.getInt("balance"));
 
 				list.add(adto);
 			}
@@ -770,6 +789,7 @@ public class AccDAOImpl implements AccDAO {
 
 		return list;
 	}
+
 //==================================================================================
 	// 계정과목 관련
 	@Override
@@ -779,12 +799,11 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = "INSERT INTO accountSub (accountSubNo, name, categNo "
-					+ " VALUES(?,?,?)";
+			sql = "INSERT INTO accountSub (accountSubNo, Asub_name , categNo) " + " VALUES(?,?,?)";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, sdto.getAccountSubNo());
-			pstmt.setString(2, sdto.getName());
+			pstmt.setString(2, sdto.getAsub_name());
 			pstmt.setString(3, sdto.getCategNo());
 
 			pstmt.executeUpdate();
@@ -828,14 +847,13 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = "UPDATE INTO accountSub (accountSubNo, name, categNo "
-					+ " VALUES(?,?,?)";
+			sql = "UPDATE accountSub SET Asub_name=?, categNo=?  " + "WHERE AccountSubNo=? ";
 
 			pstmt = conn.prepareCall(sql);
 
-			pstmt.setString(1, sdto.getAccountSubNo());
-			pstmt.setString(2, sdto.getName());
-			pstmt.setString(3, sdto.getCategNo());
+			pstmt.setString(1, sdto.getAsub_name());
+			pstmt.setString(2, sdto.getCategNo());
+			pstmt.setString(3, sdto.getAccountSubNo());
 
 			pstmt.executeUpdate();
 
@@ -854,8 +872,6 @@ public class AccDAOImpl implements AccDAO {
 
 		return result;
 	}
-
-	
 
 	@Override
 	public int deleteAccSub(int accountSubNo) throws SQLException {
@@ -890,8 +906,6 @@ public class AccDAOImpl implements AccDAO {
 		return result;
 	}
 
-	
-
 	@Override
 	public AccDTO readAccSub(int accountSubNo) throws SQLException {
 		AccDTO sdto = null;
@@ -900,8 +914,7 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = " SELECT accountSubNo, name, categNo "
-					+ "FROM accountSub" + " WHERE accountSubNo = ? ";
+			sql = " SELECT accountSubNo, asub_name, categNo " + "FROM accountSub" + " WHERE accountSubNo = ? ";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, accountSubNo);
@@ -912,9 +925,9 @@ public class AccDAOImpl implements AccDAO {
 				sdto = new AccDTO();
 
 				pstmt.setString(1, sdto.getAccountSubNo());
-				pstmt.setString(2, sdto.getName());
+				pstmt.setString(2, sdto.getAsub_name());
 				pstmt.setString(3, sdto.getCategNo());
-				
+
 			}
 
 		} catch (Exception e) {
@@ -949,7 +962,7 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = "SELECT accountSubNo, name, categNo FROM State_view ";
+			sql = "SELECT accountSubNo, asub_name, categNo FROM accountSub ";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -960,10 +973,10 @@ public class AccDAOImpl implements AccDAO {
 			while (rs.next()) {
 				AccDTO sdto = new AccDTO();
 
-				pstmt.setString(1, sdto.getAccountSubNo());
-				pstmt.setString(2, sdto.getName());
-				pstmt.setString(3, sdto.getCategNo());
-				
+				sdto.setAccountSubNo(rs.getString("accountSubNo"));
+				sdto.setAsub_name(rs.getString("asub_name"));
+				sdto.setCategNo(rs.getString("categNo"));
+
 				list.add(sdto);
 			}
 

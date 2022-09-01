@@ -24,14 +24,14 @@ public class AccUI {
 				do {
 					System.out.println("=================================================");
 					System.out.print("(1) 전표관리      (2) 승인관리      (3) 전표조회\n");
-					System.out.print("(4) 월 매입/매출 조회 및 거래처 관리\n"); 
+					System.out.print("(4) 월 매입/매출 조회 및 거래처 관리\n");
 					System.out.println("(5) 계좌관리      (6) 계정과목관리   (7)[이전화면]");
 					System.out.println("=================================================");
 					System.out.print("[메뉴 버튼] : ");
 					ch = Integer.parseInt(br.readLine());
-					
+
 					System.out.println();
-					
+
 				} while (ch < 1 || ch > 7);
 
 				switch (ch) {
@@ -132,6 +132,11 @@ public class AccUI {
 		try {
 			AccDTO dto = new AccDTO();
 
+			System.out.println("수정할 전표 번호 ? ");
+			System.out.println(" => ");
+			
+			dto.setStateNo(Integer.parseInt(br.readLine()));
+
 			System.out.print("수정할 사원코드 : ");
 			dto.setEmpNo(br.readLine());
 
@@ -167,7 +172,9 @@ public class AccUI {
 		int stateNo;
 
 		try {
+			
 			System.out.print("삭제할 전표 번호 ? ");
+			System.out.println(" => ");
 			stateNo = Integer.parseInt(br.readLine());
 
 			dao.deleteAccount(stateNo);
@@ -191,7 +198,7 @@ public class AccUI {
 					System.out.print("1. 미승인전표 출력      2. 승인처리      3. [이전화면] \n");
 					System.out.println("-------------------------------------------------");
 					System.out.print("[메뉴 버튼] : ");
-					
+
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 3);
 				System.out.println();
@@ -232,7 +239,7 @@ public class AccUI {
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
-				System.out.printf("%10d\t",dto.getAmount() + "\t\t");
+				System.out.printf("%10d\t", dto.getAmount());
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -285,7 +292,8 @@ public class AccUI {
 	protected void update_approval_N() {
 
 		try {
-			System.out.println("\n승인할 전표번호?  ");
+			System.out.println("\n승인할 전표 번호?  ");
+			System.out.println(" => ");
 			AccDTO dto = dao.readAccount(Integer.parseInt(br.readLine()));
 
 			dto.setStateCon("승인");
@@ -298,13 +306,11 @@ public class AccUI {
 			System.out.println("승인 실패");
 		}
 	}
+
 // 한번에 승인
 	protected void update_approval_All() {
-	
-	
+
 	}
-	
-	
 
 	protected void listapproval() {
 		System.out.println("\n승인 전표 목록 ");
@@ -325,7 +331,7 @@ public class AccUI {
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
-				System.out.printf("%10d\t",dto.getAmount() + "\t\t");
+				System.out.printf("%10d\t", dto.getAmount());
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -342,7 +348,6 @@ public class AccUI {
 		}
 		System.out.println();
 	}
-	
 
 	// 전표조회
 	public void menu3() {
@@ -355,7 +360,7 @@ public class AccUI {
 					System.out.print("1. 전체 전표  2. 사원별 조회  3. 계정과목별 조회  4.[이전화면]\n");
 					System.out.println("-------------------------------------------------");
 					System.out.print("[메뉴 버튼] : ");
-					
+
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 4);
 				System.out.println();
@@ -392,7 +397,7 @@ public class AccUI {
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
-				System.out.printf("%10d\t",dto.getAmount() + "\t\t");
+				System.out.printf("%10d\t", dto.getAmount());
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -412,7 +417,8 @@ public class AccUI {
 		String empNo;
 
 		try {
-			System.out.print("검색할 사원 ? ");
+			System.out.print("검색할 사원 코드 ? ");
+			System.out.println(" => ");
 			empNo = br.readLine();
 
 			List<AccDTO> findByempNo = dao.listAccount_emp(empNo);
@@ -428,7 +434,7 @@ public class AccUI {
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
-				System.out.printf("%10d\t",dto.getAmount() + "\t\t");
+				System.out.printf("%10d\t", dto.getAmount());
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -467,7 +473,7 @@ public class AccUI {
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
-				System.out.printf("%10d\t",dto.getAmount() + "\t\t");
+				System.out.printf("%10d\t", dto.getAmount());
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -494,7 +500,7 @@ public class AccUI {
 					System.out.print("1. 월별 매입매출 조회    2. 거래처 관리     3.[이전화면] \n");
 					System.out.println("-------------------------------------------------");
 					System.out.print("[메뉴 버튼] : ");
-					
+
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 3);
 				System.out.println();
@@ -611,7 +617,7 @@ public class AccUI {
 
 	protected void insertAccountNo() {
 		System.out.println("\n계좌 등록 ");
-		
+
 		try {
 			AccDTO adto = new AccDTO();
 
@@ -624,7 +630,7 @@ public class AccUI {
 			System.out.print("계좌번호 : ");
 			adto.setAccountNum(br.readLine());
 
-			System.out.print("예금주성함 : ");
+			System.out.print("예금주 : ");
 			adto.setName(br.readLine());
 
 			System.out.print("거래액 : ");
@@ -633,7 +639,7 @@ public class AccUI {
 			System.out.print("잔액 : ");
 			adto.setBalance(Integer.parseInt(br.readLine()));
 
-			dao.insertAccount(adto);
+			dao.insertAccountNo(adto);
 
 			System.out.println("계좌정보가 등록 되었습니다.");
 		} catch (Exception e) {
@@ -648,8 +654,9 @@ public class AccUI {
 		try {
 			AccDTO adto = new AccDTO();
 
-			System.out.print("계좌코드 : ");
-			adto.setAccountNo(br.readLine());
+			System.out.println("수정할 계좌코드 ? ");
+			System.out.println(" => ");
+			adto.setAccountNo((br.readLine()));
 
 			System.out.print("은행명 : ");
 			adto.setBankName(br.readLine());
@@ -657,7 +664,7 @@ public class AccUI {
 			System.out.print("계좌번호 : ");
 			adto.setAccountNum(br.readLine());
 
-			System.out.print("예금주성함");
+			System.out.print("예금주 : ");
 			adto.setName(br.readLine());
 
 			System.out.print("거래액 : ");
@@ -666,7 +673,7 @@ public class AccUI {
 			System.out.print("잔액 : ");
 			adto.setBalance(Integer.parseInt(br.readLine()));
 
-			dao.updateAccount(adto);
+			dao.updateAccountNo(adto);
 
 			System.out.println("계좌정보가 수정 되었습니다.");
 
@@ -681,9 +688,10 @@ public class AccUI {
 
 		try {
 			System.out.print("삭제할 계좌코드 ? ");
+			System.out.println(" => ");
 			accountNo = Integer.parseInt(br.readLine());
 
-			sdao.deleteAccount(accountNo);
+			sdao.deleteAccountNo(accountNo);
 
 			System.out.println("계좌정보가 삭제 되었습니다.");
 		} catch (Exception e) {
@@ -698,7 +706,7 @@ public class AccUI {
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = sdao.listAccountNo();
-			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름");
+			System.out.println("계좌코드\t은행명\t계좌번호\t예금주\t거래액\t잔액");
 			for (AccDTO adto : list) {
 				System.out.print(adto.getAccountNo() + "\t");
 				System.out.print(adto.getBankName() + "\t");
@@ -767,7 +775,7 @@ public class AccUI {
 			sdto.setAccountSubNo(br.readLine());
 
 			System.out.print("계정과목명 : ");
-			sdto.setName(br.readLine());
+			sdto.setAsub_name(br.readLine());
 
 			System.out.print("분류코드 : ");
 			sdto.setCategNo(br.readLine());
@@ -787,11 +795,12 @@ public class AccUI {
 		try {
 			AccDTO sdto = new AccDTO();
 
-			System.out.print("계정과목코드 : ");
+			System.out.print("수정할 계정 코드 ? ");
+			System.out.println(" => ");
 			sdto.setAccountSubNo(br.readLine());
 
 			System.out.print("계정과목명 : ");
-			sdto.setName(br.readLine());
+			sdto.setAsub_name(br.readLine());
 
 			System.out.print("분류코드 : ");
 			sdto.setCategNo(br.readLine());
@@ -811,9 +820,10 @@ public class AccUI {
 
 		try {
 			System.out.print("삭제할 계정과목 코드 ? ");
+			System.out.println(" => ");
 			accountNo = Integer.parseInt(br.readLine());
 
-			sdao.deleteAccount(accountNo);
+			sdao.deleteAccSub(accountNo);
 
 			System.out.println("계정과목이 삭제 되었습니다.");
 		} catch (Exception e) {
@@ -824,15 +834,15 @@ public class AccUI {
 	}
 
 	protected void listAccSub() {
-		System.out.println("\n 전체 계정과목 조회 ");
+		System.out.println("\n <전체 계정과목 조회> ");
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = sdao.listAccSub();
-			System.out.println("계정과목코드\t계정과목명\t분류코드");
+			System.out.println("계정코드\t계정과목명\t 분류코드");
 			for (AccDTO sdto : list) {
-				System.out.print(sdto.getAccountNo() + "\t");
-				System.out.print(sdto.getBankName() + "\t");
-				System.out.print(sdto.getAccountNum() + "\t");
+				System.out.print(sdto.getAccountSubNo() + "\t");
+				System.out.print(sdto.getAsub_name() + "\t");
+				System.out.println(sdto.getCategNo() + " \t");
 
 			}
 		} catch (Exception e) {

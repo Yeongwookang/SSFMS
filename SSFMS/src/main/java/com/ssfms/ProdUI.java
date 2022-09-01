@@ -82,7 +82,7 @@ public class ProdUI {
 		System.out.println("\n⚜ 제품 등록 ⚜");
 		ProductDTO pdto = new ProductDTO();
 		try {
-			
+
 			System.out.print("⚜ 제품의 등록번호를 입력해주세요.  ");
 			pdto.setProductNo(br.readLine());
 			System.out.print("⚜ 제품의 이름을 입력해주세요.  ");
@@ -100,6 +100,8 @@ public class ProdUI {
 			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -121,6 +123,8 @@ public class ProdUI {
 			if (e.getErrorCode() == 2292) {
 				System.out.println("⚜ 하위테이블에 값이 있습니다. ⚜");
 			}
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -132,7 +136,7 @@ public class ProdUI {
 		try {
 			List<ProdDTO> list = new ArrayList<>();
 			list = dao.list_product();
-			
+
 			System.out.println("⚜ 제품번호\t제품이름\t\t\t단가\t제품가격\t재고량");
 			for (ProdDTO pdto : list) {
 				System.out.print("⚜ " + pdto.getProductNo() + "\t");
@@ -148,6 +152,8 @@ public class ProdUI {
 			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -164,7 +170,7 @@ public class ProdUI {
 				System.out.println("⚜ [1]부품재고확인 [2] 부품구매요청 [3] 부품구매취소 [4] 부품구매요청목록 [5] 돌아가기 ");
 				System.out.println("-------------------------------------------------------------------");
 				System.out.print("⚜ => ");
-				
+
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 5) {
 					return;
@@ -206,6 +212,8 @@ public class ProdUI {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
 			}
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -244,6 +252,8 @@ public class ProdUI {
 			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -275,6 +285,8 @@ public class ProdUI {
 			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -300,6 +312,8 @@ public class ProdUI {
 			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -370,6 +384,8 @@ public class ProdUI {
 			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -406,6 +422,8 @@ public class ProdUI {
 			} else if (e.getErrorCode() == 1400) {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -423,7 +441,7 @@ public class ProdUI {
 				System.out.print(adto.getT_account() + "\t");
 				System.out.print(adto.getAccountNo() + "\t");
 				System.out.print(adto.getAsub_name() + "\t");
-				System.out.printf("%(15d ￦\t",adto.getAmount());
+				System.out.printf("%(15d ￦\t", adto.getAmount());
 				System.out.print(adto.getCancellation() + "\t");
 				System.out.print(adto.getStateCon() + "\t");
 				System.out.print(adto.getStateDate() + "\t");
@@ -437,6 +455,8 @@ public class ProdUI {
 			if (e.getErrorCode() == 1) {
 				System.out.println("⚜ 중복된 제품번호입니다. ⚜");
 			}
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -456,7 +476,7 @@ public class ProdUI {
 				System.out.println("⚜ [7] 생산기록\t[8] 부품사용기록\t[9] 돌아가기");
 				System.out.println("-----------------------------------------------");
 				System.out.print("⚜ => ");
-				
+
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 9) {
 					return;
@@ -524,6 +544,8 @@ public class ProdUI {
 				plist.add(pdto);
 			}
 
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -552,7 +574,7 @@ public class ProdUI {
 
 		System.out.println("\n⚜ 부품사용입력([8]부품사용기록을 통해 기록해야 DB에 제출됩니다.) ⚜");
 		try {
-			System.out.println("⚜ 가장 최근 생산번호 "+ dao.readProdNo() +" ⚜");
+			System.out.println("⚜ 가장 최근 생산번호 " + dao.readProdNo() + " ⚜");
 			String partNo;
 			System.out.print("⚜ 전표번호를 입력해주세요.  ");
 			pdto.setStateNo(Integer.parseInt(br.readLine()));
@@ -570,6 +592,8 @@ public class ProdUI {
 				ulist.add(pdto);
 			}
 
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -607,11 +631,14 @@ public class ProdUI {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
 			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
+
 	protected void stock_insert() {
 		System.out.println("\n⚜ 생산등록 (DB등록) ⚜");
 		try {
@@ -625,6 +652,8 @@ public class ProdUI {
 				System.out.println("⚜ 필수 입력사항을 입력하지 않았습니다. ⚜");
 			}
 			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			System.out.println("⚜ 해당 필드에는 숫자만 입력 가능합니다. ⚜");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

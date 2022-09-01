@@ -16,90 +16,37 @@ public class SalesDAOImpl implements SalesDAO {
 	
 
 	@Override
-	public int estimateInsertSales(SalesDTO dto) throws SQLException {
+	public void estimateInsertSales(List<SalesDTO> list) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
-		int result = 0;
 
 		try {
 			conn.setAutoCommit(false);
+			
+			for (SalesDTO dto : list) {
 			sql = "INSERT INTO estimate (estimateNo, companyName, comRegiNo, tel, orderCom, name, orderComTel, eDate, "
 					+ "productNo, productName, num, eCost, ePrice, note)"
-					+ " VALUES (estimate_no_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, SYSDATE, ?, ?, ?, ?, ?, ?) ";
+					+ " VALUES (estimate_no_seq.NEXTVAL, '쌍용IT제조', '021-4567-893', '02-345-6789', "
+					+ "?, ?, ?, SYSDATE, ?, ?, ?, ?, ?, ?) ";
 
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setString(1, dto.getCompanyName());
-			pstmt.setString(2, dto.getComRegiNo());
-			pstmt.setString(3, dto.getTel());
-			pstmt.setString(4, dto.getOrderCom());
-			pstmt.setString(5, dto.getName());
-			pstmt.setString(6, dto.getOrderComTel());
-			pstmt.setString(7, dto.getProductNo());
-			pstmt.setString(8, dto.getProductName());
-			pstmt.setInt(9, dto.getNum());
-			pstmt.setInt(10, dto.geteCos());
-			pstmt.setInt(11, dto.getePrice());
-			pstmt.setString(12, dto.getNote());
-			
-
-			result = pstmt.executeUpdate();
-
+			pstmt.setString(1, dto.getOrderCom());
+			pstmt.setString(2, dto.getName());
+			pstmt.setString(3, dto.getOrderComTel());
+			pstmt.setString(4, dto.getProductNo());
+			pstmt.setString(5, dto.getProductName());
+			pstmt.setInt(6, dto.getNum());
+			pstmt.setInt(7, dto.geteCos());
+			pstmt.setInt(8, dto.getePrice());
+			pstmt.setString(9, dto.getNote());
+			pstmt.executeUpdate();
+			}
 			conn.commit();
-
-		} catch (
-
-		SQLIntegrityConstraintViolationException e) {
-			try {
-				conn.rollback();
-			} catch (Exception e2) {
-			}
-
-			if (e.getErrorCode() == 1) {
-				System.out.println("중복 데이터로 등록이 불가능합니다.");
-			} else if (e.getErrorCode() == 1400) {
-				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
-			} else {
-				System.out.println(e.toString());
-			}
-			throw e;
-
-		} catch (SQLDataException e) {
-
-			try {
-				conn.rollback();
-			} catch (Exception e2) {
-			}
-
-			if (e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
-				System.out.println("날짜 입력 형식 오류입니다.");
-			} else {
-				System.out.println(e.toString());
-			}
-			throw e;
-
-		} catch (SQLException e) {
-			conn.rollback();
-			throw e;
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (Exception e2) {
-				}
-			}
-
-			try {
-				conn.setAutoCommit(true);
-			} catch (Exception e2) {
-			}
 		}
-
-		return result;
 	}
 
 	@Override
@@ -247,8 +194,8 @@ public class SalesDAOImpl implements SalesDAO {
 			
 			pstmt = conn.prepareStatement(sql);		
 			
-			pstmt.setString(1, dto.getProductName());
-			pstmt.setInt(2, pdto.getStock());
+			pstmt.setInt(1, dto.getNum());
+			pstmt.setString(2, pdto.getProductNo());
 			
 			pstmt.executeUpdate();
 			
@@ -529,7 +476,8 @@ public class SalesDAOImpl implements SalesDAO {
 			pstmt.close();
 			pstmt = null;
 			
-			// -----------------------
+			
+			
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
 					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL , ?, ?, '108', ?, ?, '', '미승인', ?) ";
 			
@@ -653,6 +601,11 @@ public class SalesDAOImpl implements SalesDAO {
 		}
 
 		return list;
+	}
+	
+	@Override
+	public List<SalesDTO> listOperatingProfit() {
+		return null;
 	}
 
 	@Override

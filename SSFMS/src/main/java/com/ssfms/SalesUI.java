@@ -15,7 +15,7 @@ public class SalesUI {
 
 		while (true) {
 			try {
-				System.out.print("[영업부] 1.견적/주문처리 2.출고 3.반품 4.배송관리 5.영업이익조회 6.세금계산서 7.수금/채권관리 8.메인으로 돌아가기 =>");
+				System.out.print("[영업부] 1.견적/주문처리 2.출고 3.환불 4.배송관리 5.영업이익조회 6.세금계산서 7.수금/채권관리 8.메인으로 돌아가기 =>");
 				ch = Integer.parseInt(br.readLine());
 
 				switch (ch) {
@@ -245,13 +245,14 @@ public class SalesUI {
 
 		try {
 			SalesDTO dto = new SalesDTO();
+			ProductDTO pdto = new ProductDTO();
 			System.out.println("주문서 일련번호 입력 >> ");
 			dto.setOrderNo(br.readLine());
 			
 			System.out.println("출고날짜 >> ");
 			dto.setRelDate(br.readLine());
 			
-			dao.insertRelease(dto);
+			dao.insertRelease(dto, pdto);
 			
 			System.out.println("제품출고등록을 완료하였습니다.");
 
@@ -267,6 +268,20 @@ public class SalesUI {
 		System.out.println("[출고조회]");
 
 		System.out.println("주문서 일련번호 입력 > ");
+		
+		System.out.println("출고번호\t주문서일련번호\t출고여부\t날짜");
+		System.out.println("--------------------------------------------------------------------------------");
+
+		List<SalesDTO> list = dao.listRelease();
+		for (SalesDTO dto : list) {		
+			
+			System.out.print(dto.getReleaseNo() + "\t");
+			System.out.print(dto.getOrderNo() + "\t");
+			System.out.print(dto.getReleaseAval()+ "\t");
+			System.out.println(dto.getRelDate() + "\t");
+		}
+
+		System.out.println();
 
 	}
 
@@ -274,7 +289,7 @@ public class SalesUI {
 		int ch;
 
 		try {
-			System.out.println("\n[반품] 1.반품등록 2.반품조회 3.영업부 메뉴로 돌아가기 => ");
+			System.out.println("\n[환불] 1.환불등록 2.환불조회 3.영업부 메뉴로 돌아가기 => ");
 			ch = Integer.parseInt(br.readLine());
 
 			if (ch == 3) {
@@ -283,10 +298,10 @@ public class SalesUI {
 
 			switch (ch) {
 			case 1:
-				banpumInsert();
+				refundInsert();
 				break;
 			case 2:
-				banpumChenk();
+				refundChenk();
 				break;
 			}
 
@@ -295,13 +310,48 @@ public class SalesUI {
 		}
 	}
 
-	private void banpumInsert() {
-		System.out.println("[반품등록]");
+	private void refundInsert() {
+		System.out.println("[환불등록]");
+
+		try {
+			SalesDTO dto = new SalesDTO();
+			ProductDTO pdto = new ProductDTO();
+			
+			System.out.println("주문서 일련번호 입력 >> ");
+			dto.setOrderNo(br.readLine());
+			
+			System.out.println("입력 [환불] >> ");
+			dto.setNote(br.readLine());
+			
+			dao.insertRefund(dto, pdto);
+			
+			System.out.println("환불등록을 완료하였습니다.");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
 
 	}
 
-	private void banpumChenk() {
-		System.out.println("[반품조회]");
+	private void refundChenk() {
+		System.out.println("[환불조회]");
+
+		System.out.println("주문서 일련번호 입력 > ");
+		
+		System.out.println("환불일련번호\t주문서일련번호\t환불날짜\t비고");
+		System.out.println("--------------------------------------------------------------------------------");
+
+		List<SalesDTO> list = dao.listRefund();
+		for (SalesDTO dto : list) {		
+			
+			System.out.print(dto.getRefundNo() + "\t");
+			System.out.print(dto.getOrderNo() + "\t");
+			System.out.print(dto.getRefundDate() + "\t");
+			System.out.println(dto.getNote() + "\t");
+		}
+
+		System.out.println();
 	}
 
 	protected void shippingManagement() {
@@ -331,12 +381,46 @@ public class SalesUI {
 	}
 
 	private void shipInsert() {
-		// TODO Auto-generated method stub
+
+		System.out.println("[배송등록]");
+
+		try {
+			SalesDTO dto = new SalesDTO();
+			System.out.println("출고 일련번호 입력 >> ");
+			dto.setReleaseNo(br.readLine());
+			
+			System.out.println("배송상태 [배송전/배송중/배송완료] >> ");
+			dto.setShippingState(br.readLine());
+			
+			dao.insertShipping(dto);
+			
+			System.out.println("제품출고등록을 완료하였습니다.");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println();
 
 	}
 
 	private void shipChenk() {
-		// TODO Auto-generated method stub
+		System.out.println("[배송조회]");
+
+		System.out.println("배송 일련번호 입력 > ");
+		
+		System.out.println("출고번호\t주문서일련번호\t출고여부\t날짜");
+		System.out.println("--------------------------------------------------------------------------------");
+
+		List<SalesDTO> list = dao.listShipping();
+		for (SalesDTO dto : list) {		
+			
+			System.out.print(dto.getShippingNo() + "\t");
+			System.out.print(dto.getReleaseNo() + "\t");
+			System.out.print(dto.getShippingState()+ "\t");
+			System.out.println(dto.getShDate() + "\t");
+		}
+
+		System.out.println();
 
 	}
 

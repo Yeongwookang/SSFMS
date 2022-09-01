@@ -38,8 +38,18 @@ public class SalesDTO {
 	
 	
 	//출고
+	private String releaseNo;
 	private String releaseAval;
 	private String relDate;
+	
+	//배송
+	private String shippingNo;
+	private String shippingState;
+	private String shDate;
+	
+	//환불
+	private String refundNo;
+	private String refundDate;	
 	
 	//매출
 	private String salesNo;
@@ -332,6 +342,42 @@ public class SalesDTO {
 	}
 	public void setRelDate(String relDate) {
 		this.relDate = relDate;
+	}
+	public String getReleaseNo() {
+		return releaseNo;
+	}
+	public void setReleaseNo(String releaseNo) {
+		this.releaseNo = releaseNo;
+	}
+	public String getShippingNo() {
+		return shippingNo;
+	}
+	public void setShippingNo(String shippingNo) {
+		this.shippingNo = shippingNo;
+	}
+	public String getShippingState() {
+		return shippingState;
+	}
+	public void setShippingState(String shippingState) {
+		this.shippingState = shippingState;
+	}
+	public String getShDate() {
+		return shDate;
+	}
+	public void setShDate(String shDate) {
+		this.shDate = shDate;
+	}
+	public String getRefundNo() {
+		return refundNo;
+	}
+	public void setRefundNo(String refundNo) {
+		this.refundNo = refundNo;
+	}
+	public String getRefundDate() {
+		return refundDate;
+	}
+	public void setRefundDate(String refundDate) {
+		this.refundDate = refundDate;
 	}
 	
 }

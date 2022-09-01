@@ -221,8 +221,77 @@ public class SalesDAOImpl implements SalesDAO {
 		return result;
 	}
 	
+
 	@Override
-	public int insertRelease(SalesDTO dto) throws SQLException {
+	public int insertRefund(SalesDTO dto, ProductDTO pdto) throws SQLException {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql;
+		
+		try {
+			sql = "INSERT INTO refund (refundNo, orderNo, refundDate, note) "
+					+ " VALUES ((refund_no_seq.NEXTVAL), ?, SYSDATE, ?)";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getOrderNo());
+			pstmt.setString(2, dto.getNote());
+			
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			
+			sql = "UPDATE product SET stock = stock + ? "
+					+ " WHERE productNo = ? ";
+			
+			pstmt = conn.prepareStatement(sql);		
+			
+			pstmt.setString(1, dto.getProductName());
+			pstmt.setInt(2, pdto.getStock());
+			
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<SalesDTO> listRefund() {
+		List<SalesDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT refundNo, orderNo, refundDate, note FROM refund";
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				SalesDTO dto = new SalesDTO();
+
+				dto.setRefundNo(rs.getString("refundNo"));
+				dto.setOrderNo(rs.getString("orderNo"));
+				dto.setRefundDate(rs.getString("refundDate"));
+				dto.setNote(rs.getString("note"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+
+		}
+
+		return list;
+	}
+	
+	@Override
+	public int insertRelease(SalesDTO dto, ProductDTO pdto) throws SQLException {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		String sql;
@@ -237,13 +306,111 @@ public class SalesDAOImpl implements SalesDAO {
 			pstmt.setString(2, dto.getReleaseAval());
 			
 			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			
+			sql = "UPDATE product SET stock = stock - ? "
+					+ " WHERE productNo = ? ";
+			
+			pstmt = conn.prepareStatement(sql);		
+			
+			pstmt.setString(1, dto.getProductName());
+			pstmt.setInt(2, pdto.getStock());
+			
+			pstmt.executeUpdate();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return result;
 	}
-	
+
+	@Override
+	public List<SalesDTO> listRelease() {
+		List<SalesDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT releaseNo, orderNo, releaseAval, releaseDate FROM release";
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				SalesDTO dto = new SalesDTO();
+
+				dto.setReleaseNo(rs.getString("releaseNo"));
+				dto.setOrderNo(rs.getString("orderNo"));
+				dto.setReleaseAval(rs.getString("releaseAval"));
+				dto.setRelDate(rs.getString("releaseDate"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+
+		}
+
+		return list;
+	}
+
+	@Override
+	public int insertShipping(SalesDTO dto) throws SQLException {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql;
+		
+		try {
+			sql = "INSERT INTO shipping (shippingNo, releaseNo, shippingState, shDate) "
+					+ " VALUES ((shipping_no_seq.NEXTVAL), ?, ?, SYSDATE)";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getReleaseNo());
+			pstmt.setString(2, dto.getShippingState());
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<SalesDTO> listShipping() {
+		List<SalesDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT shippingNo, releaseNo, shippingState, shDate FROM shipping";
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				SalesDTO dto = new SalesDTO();
+
+				dto.setShippingNo(rs.getString("shippingNo"));
+				dto.setReleaseNo(rs.getString("releaseNo"));
+				dto.setShippingState(rs.getString("shippingState"));
+				dto.setShDate(rs.getString("shDate"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+
+		}
+
+		return list;
+	}
 
 	@Override
 	public int salesInsert(SalesDTO dto, ProductDTO pdto) throws SQLException {
@@ -342,76 +509,95 @@ public class SalesDAOImpl implements SalesDAO {
 		PreparedStatement pstmt = null;
 		String sql;
 		int result = 0;
-
+		
 		try {
+			
+			
 			conn.setAutoCommit(false);
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
 					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '412', ?, ?, '', '미승인', ?) ";
-
 			pstmt = conn.prepareStatement(sql);
-
+			
 			pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(2, accdto.getAccountNo());
 			pstmt.setInt(3, accdto.getAmount());
 			pstmt.setString(4, accdto.getDetail());
 			pstmt.setString(5, accdto.getStateDate());
-
+			
+			
 			result = pstmt.executeUpdate();
-
+			pstmt.close();
+			pstmt = null;
+			
+			// -----------------------
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL , ?, ?, '108', ?, ?, '', '미승인', ?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, accdto.getAmount());
+			pstmt.setString(4, accdto.getDetail());
+			pstmt.setString(5, accdto.getStateDate());
+			
+			result = pstmt.executeUpdate();
+			
 			conn.commit();
-
-		} catch (
-
-		SQLIntegrityConstraintViolationException e) {
+			
+	
+			
+		} catch (SQLIntegrityConstraintViolationException e) {
 			try {
 				conn.rollback();
 			} catch (Exception e2) {
 			}
-
-			if (e.getErrorCode() == 1) {
-				System.out.println("중복 데이터로 등록이 불가능합니다.");
-			} else if (e.getErrorCode() == 1400) {
+			
+			if(e.getErrorCode() == 1) {
+				System.out.println("중복 데이터로 등록이 불가능합니다.");	
+			}else if (e.getErrorCode() == 1400) {
 				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
-			} else {
+			}else {
 				System.out.println(e.toString());
 			}
 			throw e;
-
+			
 		} catch (SQLDataException e) {
-
+			
 			try {
 				conn.rollback();
 			} catch (Exception e2) {
 			}
-
-			if (e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
+			
+			if(e.getErrorCode() == 1840 || e.getErrorCode()==1861) {
 				System.out.println("날짜 입력 형식 오류입니다.");
-			} else {
+			}else {
 				System.out.println(e.toString());
 			}
 			throw e;
-
+			
 		} catch (SQLException e) {
 			conn.rollback();
 			throw e;
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (pstmt != null) {
+			if(pstmt != null) {
 				try {
 					pstmt.close();
 				} catch (Exception e2) {
 				}
 			}
-
+			
 			try {
 				conn.setAutoCommit(true);
 			} catch (Exception e2) {
 			}
 		}
-
+		
+		
 		return result;
 	}
 
@@ -426,7 +612,7 @@ public class SalesDAOImpl implements SalesDAO {
 			sql = "SELECT stateNo, c.t_account , accountNo, b.asub_name, amount, cancellation, stateCon, stateDate, empNo "
 					+ " FROM accounting a " + " JOIN accountsub b ON a.accountSubNo = b.accountSubNo "
 					+ " JOIN CATEGORY c ON c.categNo = b.categNo "
-					+ " WHERE A.accountSubNo = '412' OR A.accountSubNo = '251' ";
+					+ " WHERE A.accountSubNo = '412' OR A.accountSubNo = '108' ";
 
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -590,7 +776,8 @@ public class SalesDAOImpl implements SalesDAO {
 		try {
 			sql = "SELECT stateNo, c.t_account , accountNo, b.asub_name, amount, cancellation, stateCon, stateDate, empNo "
 					+ " FROM accounting a " + " JOIN accountsub b ON a.accountSubNo = b.accountSubNo "
-					+ " JOIN CATEGORY c ON c.categNo = b.categNo " + " WHERE A.accountSubNo = '120";
+					+ " JOIN CATEGORY c ON c.categNo = b.categNo "
+					+ " WHERE A.accountSubNo = '120'";
 
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -628,8 +815,8 @@ public class SalesDAOImpl implements SalesDAO {
 				} catch (Exception e2) {
 				}
 			}
-
 		}
+
 		return list;
 	}
 

@@ -8,23 +8,19 @@ import java.util.List;
 public class EmpUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private EmpDAO dao = new EmpDAOImpl();
-	private Login login = null;
-	
-	/*
-	public EmpUI(Login login) {
-		this.login = login;
-	}
-	*/
-	
+	private Login login = new Login();
 
 	public void menu() { 
 		
 		int ch;
-		
+		love:
 		while(true) {
 			try {
 				do {
-				System.out.print("1.사원관리 2.경력관리 3.연봉관리 4.급여관리 5.근태관리 6.급여전표관리 7.돌아가기 => ");
+			    System.out.println("-----------------------------------------------------------------");
+				System.out.println("1.사원관리 2.경력관리 3.연봉관리 4.급여관리 5.근태관리 6.급여전표관리 7.돌아가기 => ");
+				System.out.println("-----------------------------------------------------------------");
+				System.out.print(" => ");
 				ch = Integer.parseInt(br.readLine());
 				System.out.println();
 				}while(ch<1||ch>7);
@@ -37,7 +33,7 @@ public class EmpUI {
 				case 5: new EmpUI().menu5();
 				case 6: new EmpUI().menu6();
 				// 메인 메뉴로 돌아가기 
-				case 7: App.main(null); break;
+				case 7: break love;
 				}
 				
 			} catch (Exception e) {
@@ -52,7 +48,10 @@ public class EmpUI {
     	while(true) {
     		try {
     			do {
+    		    System.out.println("-----------------------------------------------------------------");
     			System.out.print("1.사원등록 2.사원수정 3.사원리스트 4.사번검색 5.돌아가기 => ");
+    			System.out.println("-----------------------------------------------------------------");
+				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
     			}while(ch<1||ch>5);
     			System.out.println();
@@ -227,7 +226,10 @@ public class EmpUI {
     	while(true) {
     		try {
     			do {
-    			System.out.print("1.경력사항 입력 2.경력사항 수정 3.경력사항 리스트 4.직급&경력검색 5.돌아가기 => ");
+    			System.out.println("-----------------------------------------------------------------");
+    			System.out.println("1.경력사항 입력 2.경력사항 수정 3.경력사항 리스트 4.직급&경력검색 5.돌아가기 => ");
+    			System.out.println("-----------------------------------------------------------------");
+				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
     			}while(ch<1||ch>5);
     			System.out.println();
@@ -369,7 +371,10 @@ public class EmpUI {
     	while(true) {
     		try {
     			do {
-    			System.out.print("1.연봉 입력 2.연봉 수정 3.연봉 리스트 4.돌아가기 => ");
+    		    System.out.println("-----------------------------------------------------------------");
+    			System.out.println("1.연봉 입력 2.연봉 수정 3.연봉 리스트 4.돌아가기 => ");
+    			System.out.println("-----------------------------------------------------------------");
+				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
     			}while(ch<1||ch>4);
     			System.out.println();
@@ -461,7 +466,10 @@ public class EmpUI {
     	while(true) {
     		try {
     			do {
+    			System.out.println("-----------------------------------------------------------------");
     			System.out.print("1.급여 등록 2.급여 등록 취소 3.급여 리스트 4.돌아가기 => ");
+    			System.out.println("-----------------------------------------------------------------");
+				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
     			}while(ch<1||ch>4);
     			System.out.println();
@@ -592,7 +600,10 @@ public class EmpUI {
     	while(true) {
     		try {
     			do {
+    			System.out.println("-----------------------------------------------------------------");
     			System.out.print("1.출근 2.퇴근 3.근태 리스트 4.돌아가기 => ");
+    			System.out.println("-----------------------------------------------------------------");
+				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
     			}while(ch<1||ch>4);
     			System.out.println();
@@ -684,7 +695,10 @@ public class EmpUI {
     	while(true) {
     		try {
     			do {
-    			System.out.print("1.전표등록 2.전표수정 3.전표리스트 4.돌아가기 => ");
+    			System.out.println("-----------------------------------------------------------------");
+    			System.out.println("1.전표등록 2.전표수정 3.전표리스트 4.돌아가기 => ");
+    			System.out.println("-----------------------------------------------------------------");
+				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
     			}while(ch<1||ch>4);
     			System.out.println();

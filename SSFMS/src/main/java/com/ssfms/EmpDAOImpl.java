@@ -603,12 +603,13 @@ public class EmpDAOImpl implements EmpDAO {
 
 			// 급여 : 차변
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '503', ?, '급여', '', '미승인', SYSDATE)";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '503', ?, ?||'급여', '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 
 			// pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(1, accdto.getAccountNo());
 			pstmt.setInt(2, empdto.getSal());
+			pstmt.setString(3, accdto.getDetail());
 
 			result += pstmt.executeUpdate();
 			pstmt.close();
@@ -617,12 +618,13 @@ public class EmpDAOImpl implements EmpDAO {
 			// 상여금 : 차변
 			if (empdto.getBonus() != 0) {
 				sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-						+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '803', ?, '상여금', '', '미승인', SYSDATE)";
+						+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '803', ?, ?||'상여금', '', '미승인', SYSDATE)";
 				pstmt = conn.prepareStatement(sql);
 
 				// pstmt.setString(1, empdto.getEmpNo());
 				pstmt.setString(1, accdto.getAccountNo());
 				pstmt.setInt(2, empdto.getBonus());
+				pstmt.setString(3, accdto.getDetail());
 
 				result += pstmt.executeUpdate();
 				pstmt.close();
@@ -631,12 +633,13 @@ public class EmpDAOImpl implements EmpDAO {
 
 			// 보통예금 : 대변
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '1031', ?, '보통예금', '', '미승인', SYSDATE)";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '1031', ?, ?||'보통예금', '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 
 			// pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(1, accdto.getAccountNo());
 			pstmt.setInt(2, accdto.getAmount());
+			pstmt.setString(3, accdto.getDetail());
 
 			result += pstmt.executeUpdate();
 			pstmt.close();
@@ -644,12 +647,13 @@ public class EmpDAOImpl implements EmpDAO {
 
 			// 세금 : 대변
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '517', ?, '세금', '', '미승인', SYSDATE)";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '517', ?, ?||'세금', '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 
 			// pstmt.setString(1, empdto.getEmpNo());
 			pstmt.setString(1, accdto.getAccountNo());
 			pstmt.setInt(2, empdto.getTax());
+			pstmt.setString(3, accdto.getDetail());
 
 			result += pstmt.executeUpdate();
 			pstmt.close();
@@ -661,6 +665,14 @@ public class EmpDAOImpl implements EmpDAO {
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				empdto.setSettleNo(rs.getString(1));
+			}
+
+			// 지금 입력한 전표코드 출력하기
+			sql = "SELECT ACCOUNTING_SEQ.currval FROM dual ";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				empdto.setAccount(rs.getString(1));
 			}
 
 			conn.commit();
@@ -719,159 +731,97 @@ public class EmpDAOImpl implements EmpDAO {
 		return result;
 	}
 
-	// 급여 수정
+	// 급여 등록 취소
 	@Override
-	public int updateSett(AccDTO accdto, EmpDTO empdto) throws SQLException {
+	public int deleteSett(AccDTO accdto, EmpDTO empdto) throws SQLException {
 		int result = 0;
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		String sql;
 
 		try {
 			conn.setAutoCommit(false);
-
-			/*
-			sql = "UPDATE SETTLEMENT SET empNo=?, sal=?, tax=?, bonus=?, pay=?, pay_date = SYSDATE WHERE settleNo = ?";
+			// 상여금 불러오기
+			sql = "SELECT bonus FROM SETTLEMENT WHERE settleNo = ? ";
 
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, empdto.getSettleNo());
+			rs = pstmt.executeQuery();
 
-			pstmt.setString(1, empdto.getEmpNo());
-			pstmt.setInt(2, empdto.getSal());
-			pstmt.setInt(3, empdto.getTax());
-			pstmt.setInt(4, empdto.getBonus());
-			pstmt.setInt(5, empdto.getPay());
-			pstmt.setString(6, empdto.getSettleNo());
-
-			result = pstmt.executeUpdate();
-
+			if (rs.next()) {
+				empdto.setBonus(rs.getInt("bonus"));
+			}
+			rs.close();
+			rs = null;
 			pstmt.close();
 			pstmt = null;
-			*/
 
-			if (empdto.getBonus() != 0) {
-				// 급여 : 차변
-				sql = "UPDATE accounting SET cancellation = 'O' WHERE StateNo = ? AND stateCon = '미승인'";
+			// 승인여부 불러오기
+			sql = "SELECT stateCon FROM accounting WHERE StateNo = ? ";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, accdto.getStateNo());
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				accdto.setStateCon(rs.getString("stateCon"));
+			}
+			rs.close();
+			rs = null;
+			pstmt.close();
+			pstmt = null;
+
+			// 미승인인 경우
+			if (accdto.getStateCon().equals("미승인")) {
+				sql = "DELETE FROM SETTLEMENT WHERE settleNo = ?";
+
 				pstmt = conn.prepareStatement(sql);
-
-				pstmt.setInt(1, accdto.getStateNo());
-
+				pstmt.setString(1, empdto.getSettleNo());
 				result = pstmt.executeUpdate();
+
 				pstmt.close();
 				pstmt = null;
 
-				// 상여금 : 차변
-				sql = "UPDATE accounting SET cancellation = 'O' WHERE StateNo = ? AND stateCon = '미승인'";
+				sql = "DELETE FROM accounting WHERE StateNo = ? AND stateCon = '미승인'";
+
 				pstmt = conn.prepareStatement(sql);
-
-				pstmt.setInt(1, accdto.getStateNo() + 1);
-
-				result += pstmt.executeUpdate();
-				pstmt.close();
-				pstmt = null;
-
-				// 보통예금 : 대변
-				sql = "UPDATE accounting SET cancellation = 'O' WHERE StateNo = ? AND stateCon = '미승인'";
-				pstmt = conn.prepareStatement(sql);
-
-				pstmt.setInt(1, accdto.getStateNo() + 2);
-
-				result += pstmt.executeUpdate();
-				pstmt.close();
-				pstmt = null;
-
-				// 세금 : 대변
-				sql = "UPDATE accounting SET cancellation = 'O' WHERE StateNo = ? AND stateCon = '미승인'";
-				pstmt = conn.prepareStatement(sql);
-
-				pstmt.setInt(1, accdto.getStateNo() + 3);
-
-				result += pstmt.executeUpdate();
-			} else {
-				// 급여 : 차변
-				sql = "UPDATE accounting SET cancellation = 'O' WHERE StateNo = ? AND stateCon = '미승인'";
-				pstmt = conn.prepareStatement(sql);
-
 				pstmt.setInt(1, accdto.getStateNo());
+				result += pstmt.executeUpdate();
 
-				result = pstmt.executeUpdate();
 				pstmt.close();
 				pstmt = null;
 
-				// 보통예금 : 대변
-				sql = "UPDATE accounting SET cancellation = 'O' WHERE StateNo = ? AND stateCon = '미승인'";
-				pstmt = conn.prepareStatement(sql);
+				sql = "DELETE FROM accounting WHERE StateNo = ? AND stateCon = '미승인'";
 
+				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, accdto.getStateNo() + 1);
-
 				result += pstmt.executeUpdate();
+
 				pstmt.close();
 				pstmt = null;
 
-				// 세금 : 대변
-				sql = "UPDATE accounting SET cancellation = 'O' WHERE StateNo = ? AND stateCon = '미승인'";
+				sql = "DELETE FROM accounting WHERE StateNo = ? AND stateCon = '미승인'";
+
 				pstmt = conn.prepareStatement(sql);
-
 				pstmt.setInt(1, accdto.getStateNo() + 2);
-
 				result += pstmt.executeUpdate();
-				pstmt.close();
-				pstmt = null;
+
+				// 상여금이 있는 경우
+				if (empdto.getBonus() != 0) {
+					pstmt.close();
+					pstmt = null;
+
+					sql = "DELETE FROM accounting WHERE StateNo = ? AND stateCon = '미승인'";
+
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setInt(1, accdto.getStateNo() + 3);
+					result += pstmt.executeUpdate();
+
+				}
+				conn.commit();
 			}
 
-			// 급여 : 차변
-			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '503', ?, '급여', '', '미승인', SYSDATE)";
-			pstmt = conn.prepareStatement(sql);
-
-			// pstmt.setString(1, empdto.getEmpNo());
-			pstmt.setString(1, accdto.getAccountNo());
-			pstmt.setInt(2, empdto.getSal());
-
-			result += pstmt.executeUpdate();
-			pstmt.close();
-			pstmt = null;
-
-			// 상여금 : 차변
-			if (empdto.getBonus() != 0) {
-				sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-						+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '803', ?, '상여금', '', '미승인', SYSDATE)";
-				pstmt = conn.prepareStatement(sql);
-
-				// pstmt.setString(1, empdto.getEmpNo());
-				pstmt.setString(1, accdto.getAccountNo());
-				pstmt.setInt(2, empdto.getBonus());
-
-				result += pstmt.executeUpdate();
-				pstmt.close();
-				pstmt = null;
-			}
-
-			// 보통예금 : 대변
-			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '1031', ?, '보통예금', '', '미승인', SYSDATE)";
-			pstmt = conn.prepareStatement(sql);
-
-			// pstmt.setString(1, empdto.getEmpNo());
-			pstmt.setString(1, accdto.getAccountNo());
-			pstmt.setInt(2, accdto.getAmount());
-
-			result += pstmt.executeUpdate();
-			pstmt.close();
-			pstmt = null;
-
-			// 세금 : 대변
-			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '517', ?, '세금', '', '미승인', SYSDATE)";
-			pstmt = conn.prepareStatement(sql);
-
-			// pstmt.setString(1, empdto.getEmpNo());
-			pstmt.setString(1, accdto.getAccountNo());
-			pstmt.setInt(2, empdto.getTax());
-
-			result += pstmt.executeUpdate();
-
-		} catch (
-
-		SQLIntegrityConstraintViolationException e) {
+		} catch (SQLIntegrityConstraintViolationException e) {
 			// 기본키 제약 위반, NOT NULL 등의 제약 위반 - 무결성 제약 위반시 발생
 			if (e.getErrorCode() == 1) { // 기본키 중복
 				System.out.println("사번 중복으로 등록이 불가능합니다.");

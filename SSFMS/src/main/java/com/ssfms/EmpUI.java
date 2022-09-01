@@ -456,7 +456,7 @@ public class EmpUI {
     	while(true) {
     		try {
     			do {
-    			System.out.print("1.급여 등록 2.급여 수정 3.급여 리스트 4.돌아가기 => ");
+    			System.out.print("1.급여 등록 2.급여 등록 취소 3.급여 리스트 4.돌아가기 => ");
     			ch = Integer.parseInt(br.readLine());
     			}while(ch<1||ch>4);
     			System.out.println();
@@ -467,7 +467,7 @@ public class EmpUI {
     			
     			switch (ch) {
     			case 1: sinsert(); break;
-				case 2: supdate(); break;
+				case 2: sdelete(); break;
 				case 3: slistAll(); break;
 				}
 			} catch (Exception e) {
@@ -488,13 +488,14 @@ public class EmpUI {
 			System.out.print("월급 ? ");
 			empdto.setSal(Integer.parseInt(br.readLine()));
 			
+			
 			int tax = 0;
 			if(empdto.getSal()>=3000000) {
 				tax = (int) (empdto.getSal()*0.03);
 			}else if (empdto.getSal()>=2000000) {
 				tax = (int) (empdto.getSal()*0.02);
 			}else {
-				tax=0;
+				tax=(int) (empdto.getSal()*0.01);
 			}
 
 			empdto.setTax(tax);
@@ -507,6 +508,9 @@ public class EmpUI {
 			
 			System.out.print("급여 신청 계좌코드: ");
 			accdto.setAccountNo(br.readLine());
+			
+			System.out.print("비고 : ");
+			empdto.setDetail(br.readLine());
 			
 			int kSal = rSal + empdto.getBonus();
 			accdto.setAmount(kSal);
@@ -520,6 +524,7 @@ public class EmpUI {
 			
 			System.out.println("급여등록에 성공 했습니다.");
 			System.out.println("등록된 급여코드 : "+empdto.getSettleNo());
+			System.out.println("등록된 급여전표코드 : "+empdto.getAccountNo());
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("급여등록에 실패 했습니다.");
@@ -528,8 +533,8 @@ public class EmpUI {
 		System.out.println();
 	}
 	
-    protected void supdate() {
-        System.out.println("\n급여 수정 !!!");
+    protected void sdelete() {
+        System.out.println("\n급여 등록 취소 !!!");
 		
 		try {
 			AccDTO accdto = new AccDTO();
@@ -538,50 +543,19 @@ public class EmpUI {
 			System.out.print("수정할 정산코드 ? ");
 			empdto.setSettleNo(br.readLine());
 			// 전표일련번호
-			System.out.print("수정할 전표일련번호 ? ");
+			System.out.print("수정할 급여전표일련번호 ? ");
 			accdto.setStateNo(Integer.parseInt(br.readLine()));
-			// 사번
-			System.out.print("사번 ? ");
-			empdto.setEmpNo(br.readLine());
-			// 월급(세금전)
-			System.out.print("월급 ? ");
-			empdto.setSal(Integer.parseInt(br.readLine()));
-
-			int tax = 0;
-			if(empdto.getSal()>=3000000) {
-				tax = (int) (empdto.getSal()*0.03);
-			}else if (empdto.getSal()>=2000000) {
-				tax = (int) (empdto.getSal()*0.02);
-			}else {
-				tax=0;
-			}
-			// 세금
-			empdto.setTax(tax);
-			// 보너스
-			System.out.print("보너스 ? ");
-			empdto.setBonus(Integer.parseInt(br.readLine()));
-			// 실급여
-			int rSal = empdto.getSal()- empdto.getTax();
-			empdto.setPay(rSal);
-			// 계좌코드
-			System.out.print("급여 신청 계좌코드: ");
-			accdto.setAccountNo(br.readLine());
-			// 실급여
-			int kSal = rSal + empdto.getBonus();
-			accdto.setAmount(kSal);
 			
-			int result = dao.updateSett(accdto, empdto);
-			
+            int result = dao.deleteSett(accdto, empdto);
 
 			if(result == 0) {
 				System.out.println("등록된 자료가 아닙니다.");
 			} else {
-				System.out.println("회원정보가 수정 되었습니다.");
+				System.out.println("급여 등록이 수정 되었습니다.");
 			}
-			
-			System.out.println("급여 수정에 성공 했습니다.");
+
 		} catch (Exception e) {
-			System.out.println("급여 수정에 실패 했습니다.");
+			System.out.println("급여 등록 취소에 실패 했습니다.");
 		}
 		
 		System.out.println();

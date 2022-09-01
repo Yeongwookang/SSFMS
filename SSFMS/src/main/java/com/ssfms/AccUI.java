@@ -232,7 +232,7 @@ public class AccUI {
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
-				System.out.print(dto.getAmount() + "\t\t");
+				System.out.printf("%10d\t",dto.getAmount() + "\t\t");
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -257,10 +257,10 @@ public class AccUI {
 				do {
 					System.out.println("1. 승인할 전표 2. 전체 승인 3. 승인된 전표 목록 4. [이전화면] \n =>");
 					ch = Integer.parseInt(br.readLine());
-				} while (ch < 1 || ch > 3);
+				} while (ch < 1 || ch > 4);
 				System.out.println();
 
-				if (ch == 3) {
+				if (ch == 4) {
 					new AccUI().menu2();
 				}
 
@@ -298,17 +298,20 @@ public class AccUI {
 			System.out.println("승인 실패");
 		}
 	}
-
+// 한번에 승인
 	protected void update_approval_All() {
-
+	
+	
 	}
+	
+	
 
 	protected void listapproval() {
 		System.out.println("\n승인 전표 목록 ");
 
 		try {
 
-			List<AccDTO> listapproval = dao.listAccount();
+			List<AccDTO> listapproval = dao.listapproval();
 
 			if (listapproval.size() == 0) {
 				System.out.println("승인된 전표가 없습니다.\n");
@@ -316,12 +319,13 @@ public class AccUI {
 			}
 
 			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름");
+			System.out.println("=============================================================================");
 			for (AccDTO dto : listapproval) {
 				System.out.print(dto.getStateNo() + "\t");
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
-				System.out.print(dto.getAmount() + "\t\t");
+				System.out.printf("%10d\t",dto.getAmount() + "\t\t");
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -338,6 +342,7 @@ public class AccUI {
 		}
 		System.out.println();
 	}
+	
 
 	// 전표조회
 	public void menu3() {
@@ -387,7 +392,7 @@ public class AccUI {
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
-				System.out.print(dto.getAmount() + "\t\t");
+				System.out.printf("%10d\t",dto.getAmount() + "\t\t");
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -423,7 +428,7 @@ public class AccUI {
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
-				System.out.print(dto.getAmount() + "\t\t");
+				System.out.printf("%10d\t",dto.getAmount() + "\t\t");
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -462,7 +467,7 @@ public class AccUI {
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
-				System.out.print(dto.getAmount() + "\t\t");
+				System.out.printf("%10d\t",dto.getAmount() + "\t\t");
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -619,7 +624,7 @@ public class AccUI {
 			System.out.print("계좌번호 : ");
 			adto.setAccountNum(br.readLine());
 
-			System.out.print("예금주성함");
+			System.out.print("예금주성함 : ");
 			adto.setName(br.readLine());
 
 			System.out.print("거래액 : ");

@@ -445,6 +445,7 @@ public class AccDAOImpl implements AccDAO {
 		return list;
 	}
 
+	// 승인전표리스트
 	public List<AccDTO> listapproval() throws SQLException {
 		List<AccDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
@@ -642,7 +643,7 @@ public class AccDAOImpl implements AccDAO {
 		try {
 			conn.setAutoCommit(false);
 
-			sql = "DELETE FROM account WHERE accountNo = ?";
+			sql = "DELETE FROM account WHERE accountNo = ? ";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, accountNo);
@@ -674,7 +675,7 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = " SELECT account (accountNo, bankName, accountNum, name,busAmount,balance "
+			sql = " SELECT account accountNo, bankName, accountNum, name,busAmount,balance "
 					+ "FROM account" + " WHERE setAccountNo = ? ";
 
 			pstmt = conn.prepareStatement(sql);
@@ -727,7 +728,7 @@ public class AccDAOImpl implements AccDAO {
 		String sql;
 
 		try {
-			sql = "SELECT account (accountNo, bankName, accountNum, name,busAmount,balance FROM State_view";
+			sql = "SELECT accountNo, bankName, accountNum, name,busAmount,balance FROM State_view";
 
 			pstmt = conn.prepareStatement(sql);
 

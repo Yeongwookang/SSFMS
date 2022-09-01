@@ -20,14 +20,13 @@ public class AccUI {
 
 		while (true) {
 			try {
-				System.out.print("\t\t   [회계] \n");
+				System.out.println("⚜ [회계 메인] ⚜");
 				do {
-					System.out.println("=================================================");
-					System.out.print("(1) 전표관리      (2) 승인관리      (3) 전표조회\n");
-					System.out.print("(4) 월 매입/매출 조회 및 거래처 관리\n");
-					System.out.println("(5) 계좌관리      (6) 계정과목관리   (7)[이전화면]");
-					System.out.println("=================================================");
-					System.out.print("[메뉴 버튼] : ");
+					System.out.println("----------------------------------------------------------");
+					System.out.println("⚜ [1] 전표관리 [2] 승인관리 [3] 전표조회 [4] 월 매입/매출 조회   ");
+					System.out.println("⚜ [5] 계좌관리 [6] 계정과목관리 [7] 돌아가기 ");
+					System.out.println("----------------------------------------------------------");
+					System.out.print("⚜ => ");
 					ch = Integer.parseInt(br.readLine());
 
 					System.out.println();
@@ -64,11 +63,12 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.println(" < 전표관리 > ");
-					System.out.println("-------------------------------------------------");
-					System.out.print("(1) 전표등록   (2) 전표수정   (3) 전표삭제   (4)[이전화면] \n");
-					System.out.println("-------------------------------------------------");
-					System.out.print("[메뉴 버튼] : ");
+					System.out.println("\n⚜ 전표관리 ⚜");
+					System.out.println("---------------------------------------------");
+					System.out.println("⚜ [1] 전표등록 [2] 전표수정 [3] 전표삭제 [4] 돌아가기 ");
+					System.out.println("---------------------------------------------");
+					System.out.print("⚜ => ");
+					
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 4);
 				System.out.println();
@@ -95,7 +95,8 @@ public class AccUI {
 	}
 
 	protected void insert() {
-		System.out.println("\n전표 등록 ");
+		System.out.println("\n⚜ 전표 등록 ⚜");
+		
 		try {
 			AccDTO dto = new AccDTO();
 

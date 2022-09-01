@@ -17,8 +17,9 @@ public class EmpUI {
 		while(true) {
 			try {
 				do {
+				System.out.println("⚜ [인사 메인] ⚜");
 			    System.out.println("-----------------------------------------------------------------");
-				System.out.println("1.사원관리 2.경력관리 3.연봉관리 4.급여관리 5.근태관리 6.급여전표관리 7.돌아가기 => ");
+				System.out.println("[1]사원관리 [2]경력관리 [3]연봉관리 [4]급여관리 [5]근태관리 [6]급여전표관리 [7]돌아가기 ");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.print(" => ");
 				ch = Integer.parseInt(br.readLine());
@@ -49,7 +50,7 @@ public class EmpUI {
     		try {
     			do {
     		    System.out.println("-----------------------------------------------------------------");
-    			System.out.print("1.사원등록 2.사원수정 3.사원리스트 4.사번검색 5.돌아가기 => ");
+    			System.out.println("[1]사원등록 [2]사원수정 [3]사원리스트 [4]사번검색 [5]돌아가기 ");
     			System.out.println("-----------------------------------------------------------------");
 				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
@@ -227,7 +228,7 @@ public class EmpUI {
     		try {
     			do {
     			System.out.println("-----------------------------------------------------------------");
-    			System.out.println("1.경력사항 입력 2.경력사항 수정 3.경력사항 리스트 4.직급&경력검색 5.돌아가기 => ");
+    			System.out.println("[1]경력사항 입력 [2]경력사항 수정 [3]경력사항 리스트 [4]직급&경력검색 [5]돌아가기 ");
     			System.out.println("-----------------------------------------------------------------");
 				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
@@ -372,7 +373,7 @@ public class EmpUI {
     		try {
     			do {
     		    System.out.println("-----------------------------------------------------------------");
-    			System.out.println("1.연봉 입력 2.연봉 수정 3.연봉 리스트 4.돌아가기 => ");
+    			System.out.println("[1]연봉 입력 [2]연봉 수정 [3]연봉 리스트 [4]돌아가기 ");
     			System.out.println("-----------------------------------------------------------------");
 				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
@@ -467,7 +468,7 @@ public class EmpUI {
     		try {
     			do {
     			System.out.println("-----------------------------------------------------------------");
-    			System.out.print("1.급여 등록 2.급여 등록 취소 3.급여 리스트 4.돌아가기 => ");
+    			System.out.print("[1]급여 등록 [2]급여 등록 취소 [3]급여 리스트 [4]돌아가기 ");
     			System.out.println("-----------------------------------------------------------------");
 				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
@@ -601,7 +602,7 @@ public class EmpUI {
     		try {
     			do {
     			System.out.println("-----------------------------------------------------------------");
-    			System.out.print("1.출근 2.퇴근 3.근태 리스트 4.돌아가기 => ");
+    			System.out.print("[1]출근 [2]퇴근 [3]근태 리스트 [4]돌아가기 => ");
     			System.out.println("-----------------------------------------------------------------");
 				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
@@ -696,7 +697,7 @@ public class EmpUI {
     		try {
     			do {
     			System.out.println("-----------------------------------------------------------------");
-    			System.out.println("1.전표등록 2.전표수정 3.전표리스트 4.돌아가기 => ");
+    			System.out.println("[1]전표등록 [2]전표수정 [3]전표리스트 [4]돌아가기  ");
     			System.out.println("-----------------------------------------------------------------");
 				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());

@@ -60,6 +60,9 @@ public class SalesDTO {
 	private int salesQty;
 	private String dealDate;
 	
+	//영업이익총합
+	private int operatingProfit;
+
 	//세금계산서
 	private String taxBillNum;
 	private String companyName;
@@ -378,6 +381,11 @@ public class SalesDTO {
 	}
 	public void setRefundDate(String refundDate) {
 		this.refundDate = refundDate;
+	}	
+	public int getOperatingProfit() {
+		return operatingProfit;
 	}
-	
+	public void setOperatingProfit(int operatingProfit) {
+		this.operatingProfit = operatingProfit;
+	}
 }

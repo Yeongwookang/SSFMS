@@ -146,7 +146,7 @@ public class SalesDAOImpl implements SalesDAO {
 		
 		try {
 			
-			sql = "DELETE FROM shop WHERE shop_No = ?";
+			sql = "DELETE FROM orderBill WHERE orderNo = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getOrderNo());

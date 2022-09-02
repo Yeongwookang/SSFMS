@@ -34,7 +34,12 @@ public class EmpUI {
 				case 5: new EmpUI().menu5();
 				case 6: new EmpUI().menu6();
 				// 메인 메뉴로 돌아가기 
-				case 7: break love;
+				case 7: 
+					if(App.loginEmp().getRank().equals("관리자")) {
+					new Administrator().menu();
+					break;
+				}
+					App.main(null); break;
 				}
 				
 			} catch (Exception e) {

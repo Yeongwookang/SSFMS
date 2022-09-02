@@ -37,7 +37,11 @@ public class BuyUI {
 				case 3: new BuyUI().menu3(); break;
 				case 4: new BuyUI().menu4(); break;
 				case 5: new BuyUI().menu5(); break;
-				case 6: App.main(null); break; //뒤로가기
+				case 6: 
+					if(App.loginEmp().getRank().equals("관리자")) {
+						new Administrator().menu();
+						break;
+					}App.main(null); break; //뒤로가기
 				
 
 				}

@@ -26,5 +26,5 @@ public interface SalesDAO {
 	public List<SalesDTO> listRelease();
 	public List<SalesDTO> listShipping();
 	public List<SalesDTO> listRefund();
-	public List<SalesDTO> listOperatingProfit();
+	public SalesDTO listOperatingProfit() throws SQLException;
 	}

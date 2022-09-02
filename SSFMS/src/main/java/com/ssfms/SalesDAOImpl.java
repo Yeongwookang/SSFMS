@@ -605,40 +605,63 @@ public class SalesDAOImpl implements SalesDAO {
 	}
 	
 	@Override
-	public List<SalesDTO> listOperatingProfit() {
-		List<SalesDTO> list = new ArrayList<>();
+	public SalesDTO listOperatingProfit() {
+		SalesDTO dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
-		try {
-			sql = "SELECT NVL(sum(amount), 0) AS 매출총합 FROM accounting WHERE accountSubNo = '412'";
-			
-			sql = "SELECT NVL(sum(amount), 0) AS 매출원가총합 FROM accounting WHERE accountSubNo = '451' OR accountSubNo = '455'";
-			
-			sql = "SELECT NVL(sum(amount), 0) AS 판매비및관리비총합 FROM accounting WHERE accountSubNo = '503' OR accountSubNo = '504'"
-					+ "    OR accountSubNo = '505' OR accountSubNo = '510' OR accountSubNo = '511' OR accountSubNo = '512'"
-					+ "    OR accountSubNo = '513'";		
-			
-			sql = "SELECT NVL(sum(amount), 0) AS 영업이익 FROM accounting";			
+		try {					
+			sql = "SELECT NVL(sum(amount), 0) AS salesTotal FROM accounting WHERE accountSubNo = '412' ";
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.executeUpdate();
 			rs = pstmt.executeQuery();
 			
-			while (rs.next()) {
-				SalesDTO dto = new SalesDTO();
-
+			dto = new SalesDTO();
+			if (rs.next()) {
+				dto.setSalesTotal(rs.getInt("salesTotal"));
+			}
+			rs.close();
+			pstmt.close();
+			
+			sql = "SELECT NVL(sum(amount), 0) AS salesOriginTotal FROM accounting WHERE accountSubNo = '451' OR accountSubNo = '455'";
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				dto.setSalesOriginTotal(rs.getInt("salesOriginTotal"));
+			}
+			rs.close();
+			pstmt.close();
+			
+			sql = "SELECT NVL(sum(amount), 0) AS othersTotal FROM accounting WHERE accountSubNo = '503' OR accountSubNo = '504'"
+					+ "    OR accountSubNo = '505' OR accountSubNo = '510' OR accountSubNo = '511' OR accountSubNo = '512'"
+					+ "    OR accountSubNo = '513'";	
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				dto.setOthersTotal(rs.getInt("othersTotal"));
+			}
+			
+			sql = "SELECT NVL(sum(amount), 0) AS operatingProfit FROM accounting";	
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
 				dto.setOperatingProfit(rs.getInt("operatingProfit"));
-
-				list.add(dto);
-			}			
+			}
+			rs.close();
+			pstmt.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} 
 		
-		return list;
+		return dto;
 	}
 
 	@Override

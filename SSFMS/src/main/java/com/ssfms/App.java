@@ -18,7 +18,7 @@ public class App {
 			do {
 
 				System.out.println();
-
+				System.out.println("\t   ･ﾟ✧ 로그인이 필요한 서비스입니다! ･ﾟ✧\t     ");
 				System.out.println("=================================================");
 				String n = "      _____  _____  ______ ___  ___ _____ \r\n"
 
@@ -53,10 +53,10 @@ public class App {
 					
 					if (edto.getPwd().equals(pwd)) {
 						System.out.println("\t     ･ﾟ✧ " + edto.getName() + "님, 환영합니다! ･ﾟ✧\t     ");
-						System.out.println("⚜ 로그인 되었습니다. ⚜");
+						System.out.println("\t      ⚜ 로그인 되었습니다. ⚜");
 						edto = edao.readMember(id);
 					} else {
-						System.out.println("⚜ 로그인에 실패 했습니다. ⚜");
+						System.out.println("\t     ⚜ 로그인에 실패 했습니다. ⚜");
 						return;
 					}
 				} catch (Exception e) {
@@ -96,7 +96,9 @@ class Administrator {
 			System.out.println("\t     ･ﾟ✧ [관리자]님, 환영합니다! ･ﾟ✧\t     ");
 
 			do {
+				System.out.println("=================================================");
 				System.out.print("[1] 회계 [2] 구매 [3] 인사 [4] 생산 [5] 영업 [6] 로그아웃 \n");
+				System.out.println("=================================================");
 				ch = Integer.parseInt(br.readLine());
 			} while (ch < 1 || ch > 6);
 

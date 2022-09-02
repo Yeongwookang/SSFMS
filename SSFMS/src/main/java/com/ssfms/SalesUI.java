@@ -1,6 +1,7 @@
 package com.ssfms;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -180,7 +181,7 @@ public class SalesUI {
 		List<SalesDTO> list = dao.estimateRead();
 		for (SalesDTO dto : list) {
 			System.out.print(dto.getEstimateNo() + "\t\t");
-			System.out.print(dto.getCompanyName() + "\t\t");
+			System.out.print(dto.getCompanyName() + "\t");
 			System.out.print(dto.getComRegiNo() + "\t");
 			System.out.print(dto.getTel() + "\t");
 			System.out.print(dto.getOrderCom() + "\t");
@@ -206,7 +207,7 @@ public class SalesUI {
 						+ "---------------------------------------------------------------------------------------"
 						+ "------------------------------------------------------------");
 		System.out.println("주문서일련번호\t입력날짜\t\t\t주문처\t주문처담당자\t주문처전화번호\t납품예정일\t\t\t회사명\t\t회사사업자번호"
-				+ "\t회사주소\t\t\t회사전화번호\t제품코드\t제품명\t\t\t\t\t\t수량\t단가\t판매가\t합계\t비고");
+				+ "\t회사주소\t\t\t\t회사전화번호\t제품코드\t제품명\t\t\t\t\t\t수량\t단가\t판매가\t합계\t비고");
 		System.out.println(
 				"--------------------------------------------------------------------------------------------------------------------------"
 						+ "----------------------------------------------------------------------------------------"
@@ -221,12 +222,13 @@ public class SalesUI {
 			System.out.print(dto.getoName() + "\t\t");
 			System.out.print(dto.getoTel() + "\t");
 			System.out.print(dto.getExpDeliDate() + "\t");
-			System.out.print(dto.getCompanyName() + "\t\t");
+			System.out.print(dto.getCompanyName() + "\t");
 			System.out.print(dto.getComRegiNo() + "\t");
 			System.out.print(dto.getComAddress() + "\t");
 			System.out.print(dto.getComTel() + "\t");
 			System.out.print(dto.getProductNo() + "\t");
 			System.out.print(dto.getProductName() + "\t");
+			System.out.print(dto.getOrderNum() + "\t");
 			System.out.print(dto.getOrderNum() + "\t");
 			System.out.print(dto.getoCost() + "\t");
 			System.out.print(dto.getoPrice() + "\t");
@@ -502,7 +504,7 @@ public class SalesUI {
 					salesCheck();
 					break;
 				case 3:
-					salesAccountInsert();
+					salesAccount();
 					break;
 				case 4:
 					salesAccountCheck();
@@ -515,9 +517,9 @@ public class SalesUI {
 		}
 	}
 
-	private void salesInsert() {
+	private void salesInsert() throws IOException {
 		System.out.println("⚜[매출입력(※전표번호가 있어야 입력이 가능합니다※)]⚜");
-
+				
 		try {
 			SalesDTO dto = new SalesDTO();
 			ProductDTO pdto = new ProductDTO();
@@ -573,9 +575,42 @@ public class SalesUI {
 		System.out.println();
 
 	}
+	
+	protected void salesAccount() {
+		int ch;
 
-	private void salesAccountInsert() {
-		System.out.println("⚜[매출전표입력(차변/대변)]⚜");
+		while (true) {
+			try {
+				System.out.println("⚜[매출전표입력(차변/대변)]⚜");
+				System.out.println(
+						"-------------------------------------------------------------------------------------------");
+				System.out.println("⚜[1] 수금매출입력 [2] 미수금매출입력 [3] 영업부 메뉴로 돌아가기");
+				System.out.println(
+						"-------------------------------------------------------------------------------------------");
+				System.out.println("⚜ => ");
+
+				ch = Integer.parseInt(br.readLine());
+
+				if (ch == 3) {
+					SalesUI.this.menu();
+				}
+
+				switch (ch) {
+				case 1:
+					salesAccountInsert1();
+					break;
+				case 2:
+					salesAccountInsert2();
+					break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void salesAccountInsert1() {
+		System.out.println("⚜[수금매출전표입력(차변/대변)]⚜");
 
 		try {
 			EmpDTO empdto = new EmpDTO();
@@ -597,6 +632,41 @@ public class SalesUI {
 			accdto.setStateDate(br.readLine());
 
 			dao.salesAccountInsert(empdto, accdto);
+
+			System.out.println("[매입전표 등록이 완료되었습니다]");
+
+		} catch (NumberFormatException e) {
+			System.out.println("[금액은 숫자만 입력 가능합니다]");
+		} catch (Exception e) {
+			System.out.println("[데이터 등록이 실패했습니다]");
+		}
+		System.out.println();
+
+	}
+	
+	private void salesAccountInsert2() {
+		System.out.println("⚜[미수금매출전표입력(차변/대변)]⚜");
+
+		try {
+			EmpDTO empdto = new EmpDTO();
+			AccDTO accdto = new AccDTO();
+
+			System.out.print("매입 신청자 사번 ▶ ");
+			empdto.setEmpNo(br.readLine());
+
+			System.out.print("매입 신청 계좌코드 ▶ ");
+			accdto.setAccountNo(br.readLine());
+
+			System.out.print("매입 신청 금액 ▶ ");
+			accdto.setAmount(Integer.parseInt(br.readLine()));
+
+			System.out.print("상세 내용 ▶ ");
+			accdto.setDetail(br.readLine());
+
+			System.out.print("매입 신청 일자 ▶ ");
+			accdto.setStateDate(br.readLine());
+
+			dao.salesAccountInsert2(empdto, accdto);
 
 			System.out.println("[매입전표 등록이 완료되었습니다]");
 

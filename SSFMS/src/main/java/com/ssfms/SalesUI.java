@@ -249,14 +249,10 @@ public class SalesUI {
 
 			System.out.print("⚜[취소할 주문서의 일련번호를 입력해주세요] ▶ ");
 			dto.setOrderNo(br.readLine());
-
-			int result = dao.deleteOrder(dto);
-			if (result == 0) {
-				System.out.println("⚜[취소할 주문서가 없습니다]");
-			} else {
-				System.out.println("⚜[주문서가 삭제되었습니다]");
-			}
-
+			
+			dao.deleteOrder(dto);
+			
+			System.out.println("⚜[주문서가 삭제되었습니다]");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("⚜[주문서 삭제 실패. 다시 시도해주세요]");

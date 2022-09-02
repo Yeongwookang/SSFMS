@@ -53,6 +53,9 @@ public class App2 {
 					if (edto.getPwd().equals(pwd)) {
 						System.out.println("⚜ 로그인 되었습니다. ⚜");
 						edto = edao.readMember(id);
+					} else {
+						System.out.println("⚜ 로그인에 실패 했습니다. ⚜");
+						return;
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -68,7 +71,9 @@ public class App2 {
 				new SalesUI().menu();
 			} else if (edto.getDep().equals("인사부")) {
 				new EmpUI().menu();
-			} 
+			} else {
+				System.out.println("⚜ EMP 설정 오류입니다. 경력사항을 확인해 주십시오. ⚜");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

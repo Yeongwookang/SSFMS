@@ -13,23 +13,14 @@ public class App {
 	public void logout() {
 		LOGIN_EMP = null;
 	}
-<<<<<<< HEAD
-=======
-	
-	public static void main(String[] args) {
->>>>>>> branch 'main' of https://github.com/Yeongwookang/SSFMS.git
 
-<<<<<<< HEAD
 	public static void main(String[] args) {
-		// MainUI ui = new MainUI();
-		// ui.startmenu();
 
-=======
->>>>>>> branch 'main' of https://github.com/Yeongwookang/SSFMS.git
 		int ch = 0;
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		EmpDAO edao = new EmpDAOImpl();
-		try {			do {
+		try {
+			do {
 
 				System.out.println();
 				System.out.println("\t   ･ﾟ✧ 로그인이 필요한 서비스입니다! ･ﾟ✧\t     ");
@@ -132,18 +123,9 @@ class Administrator {
 				App.main(null);
 				break;
 			}
-<<<<<<< HEAD
+
 		} catch (Exception e) {
 
-=======
-		} catch (Exception e) {
->>>>>>> branch 'main' of https://github.com/Yeongwookang/SSFMS.git
-			e.printStackTrace();
 		}
-<<<<<<< HEAD
-=======
-
->>>>>>> branch 'main' of https://github.com/Yeongwookang/SSFMS.git
-
 	}
 }

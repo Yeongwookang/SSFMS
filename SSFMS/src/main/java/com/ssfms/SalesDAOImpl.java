@@ -178,7 +178,7 @@ public class SalesDAOImpl implements SalesDAO {
 		
 		try {
 			sql = "INSERT INTO refund (refundNo, orderNo, refundDate, note) "
-					+ " VALUES ((refund_no_seq.NEXTVAL), ?, SYSDATE, ?)";
+					+ " VALUES (refund_no_seq.NEXTVAL, ?, SYSDATE, ?)";
 			
 			pstmt = conn.prepareStatement(sql);
 			

@@ -934,6 +934,8 @@ public class EmpDAOImpl implements EmpDAO {
 		String sql;
 
 		try {
+			sql = "SELECT*FROM (SELECT sTime FROM attendance WHERE empno = ? ORDER BY attno DESC) WHERE rownum =1";
+
 			sql = "INSERT INTO attendance(attNo, empNo, sTime, eTime, note) "
 					+ " VALUES (att_seq.NEXTVAL, ?, SYSDATE, '', ?)";
 			pstmt = conn.prepareStatement(sql);
@@ -994,19 +996,36 @@ public class EmpDAOImpl implements EmpDAO {
 	@Override
 	public int updateAtt(EmpDTO dto) throws SQLException {
 		int result = 0;
+		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		String sql;
 
 		try {
-			sql = "UPDATE attendance SET empNo = ?, eTime = SYSDATE, note=? WHERE attNo = ?";
+			sql = "SELECT eTime FROM attendance WHERE attno = ?";
 
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getAttNo());
+			rs = pstmt.executeQuery();
 
-			pstmt.setString(1, dto.getEmpNo());
-			pstmt.setString(2, dto.getaNote());
-			pstmt.setString(3, dto.getAttNo());
+			if (rs.next()) {
+				dto.seteTime(rs.getString("eTime"));
+			}
+			rs.close();
+			rs = null;
+			pstmt.close();
+			pstmt = null;
 
-			result = pstmt.executeUpdate();
+			if (dto.geteTime().equals(null)) {
+				sql = "UPDATE attendance SET empNo = ?, eTime = SYSDATE, note=? WHERE attNo = ?";
+
+				pstmt = conn.prepareStatement(sql);
+
+				pstmt.setString(1, dto.getEmpNo());
+				pstmt.setString(2, dto.getaNote());
+				pstmt.setString(3, dto.getAttNo());
+
+				result = pstmt.executeUpdate();
+			} 
 
 		} catch (SQLIntegrityConstraintViolationException e) {
 			if (e.getErrorCode() == 1400) {

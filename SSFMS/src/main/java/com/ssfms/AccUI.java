@@ -47,6 +47,10 @@ public class AccUI {
 				case 6:
 					new AccUI().menu6();
 				case 7:
+					if(App.loginEmp().getRank().equals("관리자")) {
+						new Administrator().menu();
+						break;
+					}
 					App.main(null);
 					break;
 				}

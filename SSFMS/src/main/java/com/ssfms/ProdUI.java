@@ -39,7 +39,10 @@ public class ProdUI {
 					productionMenu();
 					break;
 				case 5:
-					App.main(null);
+					if(App.loginEmp().getRank().equals("관리자")) {
+						new Administrator().menu();
+						break;
+					}App.main(null);
 					break;
 
 				}

@@ -34,7 +34,12 @@ public class EmpUI {
 				case 5: new EmpUI().menu5();
 				case 6: new EmpUI().menu6();
 				// 메인 메뉴로 돌아가기 
-				case 7: break love;
+				case 7: 
+					if(App.loginEmp().getRank().equals("관리자")) {
+					new Administrator().menu();
+					break;
+				}
+					App.main(null); break;
 				}
 				
 			} catch (Exception e) {
@@ -468,7 +473,7 @@ public class EmpUI {
     		try {
     			do {
     			System.out.println("-----------------------------------------------------------------");
-    			System.out.print("[1]급여 등록 [2]급여 등록 취소 [3]급여 리스트 [4]돌아가기 ");
+    			System.out.println("[1]급여 등록 [2]급여 등록 취소 [3]급여 리스트 [4]돌아가기 ");
     			System.out.println("-----------------------------------------------------------------");
 				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());
@@ -602,7 +607,7 @@ public class EmpUI {
     		try {
     			do {
     			System.out.println("-----------------------------------------------------------------");
-    			System.out.print("[1]출근 [2]퇴근 [3]근태 리스트 [4]돌아가기 => ");
+    			System.out.println("[1]출근 [2]퇴근 [3]근태 리스트 [4]돌아가기 ");
     			System.out.println("-----------------------------------------------------------------");
 				System.out.print(" => ");
     			ch = Integer.parseInt(br.readLine());

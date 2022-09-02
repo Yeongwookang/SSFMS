@@ -39,7 +39,10 @@ public class ProdUI {
 					productionMenu();
 					break;
 				case 5:
-					App.main(null);
+					if(App.loginEmp().getRank().equals("관리자")) {
+						new Administrator().menu();
+						break;
+					}App.main(null);
 					break;
 
 				}
@@ -55,9 +58,9 @@ public class ProdUI {
 		while (true) {
 			try {
 				System.out.println("\n⚜ [제품 등록/삭제] ⚜");
-				System.out.println("---------------------------------------------");
-				System.out.println("⚜ [1] 제품등록 [2] 등록제품삭제 [3]제품목록 [4] 돌아가기 ");
-				System.out.println("---------------------------------------------");
+				System.out.println("----------------------------------------------");
+				System.out.println("⚜ [1] 제품등록 [2] 등록제품삭제 [3] 제품목록 [4] 돌아가기 ");
+				System.out.println("----------------------------------------------");
 				System.out.print("⚜ => ");
 				ch = Integer.parseInt(br.readLine());
 				if (ch == 4) {

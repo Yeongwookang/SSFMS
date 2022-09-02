@@ -1,10 +1,7 @@
 package com.ssfms;
 
 import java.io.BufferedReader;
-
 import java.io.InputStreamReader;
-
- import com.util.DBConn;
 
 public class App {
 	private static EmpDTO LOGIN_EMP;

@@ -438,7 +438,7 @@ public class EmpDAOImpl implements EmpDAO {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				adto.setAsalNo(rs.getNString(1));
+				adto.setAsalNo(rs.getString(1));
 			}
 
 		} catch (SQLIntegrityConstraintViolationException e) {
@@ -486,14 +486,13 @@ public class EmpDAOImpl implements EmpDAO {
 		String sql;
 
 		try {
-			sql = "UPDATE annual_salary SET sal_date=?, asal=?, empNo=? WHERE asalNo = ?";
+			sql = "UPDATE annual_salary SET sal_date=SYSDATE, asal=?, empNo=? WHERE asalNo = ?";
 
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setString(1, adto.getSal_date());
-			pstmt.setInt(2, adto.getAsal());
-			pstmt.setString(3, adto.getEmpNo());
-			pstmt.setString(4, adto.getAsalNo());
+			pstmt.setInt(1, adto.getAsal());
+			pstmt.setString(2, adto.getEmpNo());
+			pstmt.setString(3, adto.getAsalNo());
 
 			result = pstmt.executeUpdate();
 
@@ -603,7 +602,7 @@ public class EmpDAOImpl implements EmpDAO {
 
 			// 급여 : 차변
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '503', ?, ?||'급여', '', '미승인', SYSDATE)";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1001', ?, '503', ?, ?||'급여', '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 
 			// pstmt.setString(1, empdto.getEmpNo());
@@ -618,7 +617,7 @@ public class EmpDAOImpl implements EmpDAO {
 			// 상여금 : 차변
 			if (empdto.getBonus() != 0) {
 				sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-						+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '803', ?, ?||'상여금', '', '미승인', SYSDATE)";
+						+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1001', ?, '803', ?, ?||'상여금', '', '미승인', SYSDATE)";
 				pstmt = conn.prepareStatement(sql);
 
 				// pstmt.setString(1, empdto.getEmpNo());
@@ -633,7 +632,7 @@ public class EmpDAOImpl implements EmpDAO {
 
 			// 보통예금 : 대변
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '1031', ?, ?||'보통예금', '', '미승인', SYSDATE)";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1001', ?, '1031', ?, ?||'보통예금', '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 
 			// pstmt.setString(1, empdto.getEmpNo());
@@ -647,7 +646,7 @@ public class EmpDAOImpl implements EmpDAO {
 
 			// 세금 : 대변
 			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
-					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1003', ?, '517', ?, ?||'세금', '', '미승인', SYSDATE)";
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, '1001', ?, '517', ?, ?||'세금', '', '미승인', SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 
 			// pstmt.setString(1, empdto.getEmpNo());
@@ -672,7 +671,7 @@ public class EmpDAOImpl implements EmpDAO {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				empdto.setAccount(rs.getString(1));
+				accdto.setStateNo(rs.getInt(1));
 			}
 
 			conn.commit();
@@ -934,7 +933,7 @@ public class EmpDAOImpl implements EmpDAO {
 		String sql;
 
 		try {
-			sql = "SELECT*FROM (SELECT sTime FROM attendance WHERE empno = ? ORDER BY attno DESC) WHERE rownum =1";
+			// sql = "SELECT*FROM (SELECT sTime FROM attendance WHERE empno = ? ORDER BY attno DESC) WHERE rownum =1";
 
 			sql = "INSERT INTO attendance(attNo, empNo, sTime, eTime, note) "
 					+ " VALUES (att_seq.NEXTVAL, ?, SYSDATE, '', ?)";
@@ -1001,6 +1000,7 @@ public class EmpDAOImpl implements EmpDAO {
 		String sql;
 
 		try {
+			/*
 			sql = "SELECT eTime FROM attendance WHERE attno = ?";
 
 			pstmt = conn.prepareStatement(sql);
@@ -1014,8 +1014,9 @@ public class EmpDAOImpl implements EmpDAO {
 			rs = null;
 			pstmt.close();
 			pstmt = null;
+			*/
 
-			if (dto.geteTime().equals(null)) {
+			//if (dto.geteTime().equals(null)) {
 				sql = "UPDATE attendance SET empNo = ?, eTime = SYSDATE, note=? WHERE attNo = ?";
 
 				pstmt = conn.prepareStatement(sql);
@@ -1025,7 +1026,7 @@ public class EmpDAOImpl implements EmpDAO {
 				pstmt.setString(3, dto.getAttNo());
 
 				result = pstmt.executeUpdate();
-			} 
+			//} 
 
 		} catch (SQLIntegrityConstraintViolationException e) {
 			if (e.getErrorCode() == 1400) {

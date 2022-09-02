@@ -23,6 +23,7 @@ public class BuyUI {
 		while(true) {
 			try {
 				System.out.println();
+				System.out.println("⚜ [구매 메인] ⚜");
 				System.out.println("-----------------------------------------------------------------");
 				System.out.println("[1] 매입전표관리 [2] 매입관리 [3] 반품관리 [4] 매입요청관리 [5] 매입처관리 [6] 뒤로가기");
 				System.out.println("-----------------------------------------------------------------");

@@ -128,7 +128,7 @@ public class AccUI {
 	}
 
 	protected void update() {
-		System.out.println("\n전표 수정 ");
+		System.out.println("\n⚜ 전표 수정 ⚜");
 
 		try {
 			AccDTO dto = new AccDTO();
@@ -194,12 +194,13 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.println(" < 승인관리 > ");
-					System.out.println("-------------------------------------------------");
-					System.out.print("1. 미승인전표 출력      2. 승인처리      3. [이전화면] \n");
-					System.out.println("-------------------------------------------------");
-					System.out.print("[메뉴 버튼] : ");
-
+					System.out.println("\n⚜ 승인관리 ⚜");
+					System.out.println("---------------------------------------------");
+					System.out.println("⚜ [1] 미승인전표 출력 [2] 승인처리 [3] 돌아가기 ");
+					System.out.println("---------------------------------------------");
+					System.out.print("⚜ => ");
+					
+				
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 3);
 				System.out.println();
@@ -223,7 +224,7 @@ public class AccUI {
 	}
 
 	protected void listNapproval() {
-		System.out.println("\n미승인 전표 조회 ");
+		System.out.println("\n⚜ 미승인 전표 조회 ⚜");
 
 		try {
 
@@ -263,7 +264,12 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.println("1. 승인할 전표 2. 전체 승인 3. 승인된 전표 목록 4. [이전화면] \n =>");
+					System.out.println("\n⚜ 승인관리 ⚜");
+					System.out.println("------------------------------------------------------");
+					System.out.println("⚜ [1] 승인할 전표 [2] 전체승인 [3] 승인된 전표 목록 [4] 돌아가기");
+					System.out.println("------------------------------------------------------");
+					System.out.print("⚜ => ");
+					
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 4);
 				System.out.println();
@@ -293,8 +299,8 @@ public class AccUI {
 	protected void update_approval_N() {
 
 		try {
-			System.out.println("\n승인할 전표 번호?  ");
-			System.out.println(" => ");
+			System.out.println("\n⚜ 승인할 전표 번호 ?  ⚜");
+			System.out.print("⚜ => ");
 			AccDTO dto = dao.readAccount(Integer.parseInt(br.readLine()));
 
 			dto.setStateCon("승인");
@@ -314,7 +320,7 @@ public class AccUI {
 	}
 
 	protected void listapproval() {
-		System.out.println("\n승인 전표 목록 ");
+		System.out.println("\n⚜ 승인 전표 목록 ⚜");
 
 		try {
 
@@ -356,11 +362,11 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.println(" < 전표조회 > ");
-					System.out.println("-------------------------------------------------");
-					System.out.print("1. 전체 전표  2. 사원별 조회  3. 계정과목별 조회  4.[이전화면]\n");
-					System.out.println("-------------------------------------------------");
-					System.out.print("[메뉴 버튼] : ");
+					System.out.println("\n⚜ 전표조회 ⚜");
+					System.out.println("------------------------------------------------------");
+					System.out.println("⚜ [1] 전체 전표 [2] 사원별 조회 [3] 계정과목별 조회 [4] 돌아가기 ");
+					System.out.println("------------------------------------------------------");
+					System.out.print("⚜ => ");
 
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 4);
@@ -388,7 +394,8 @@ public class AccUI {
 	}
 
 	protected void listAll() {
-		System.out.println("\n전체 전표 조회 ");
+		System.out.println("\n⚜ 전체 전표 조회 ⚜");
+		
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = dao.listAccount();
@@ -414,12 +421,14 @@ public class AccUI {
 	}
 
 	protected void findByempNo() {
-		System.out.println("\n사원별 전표 조회 ");
+		System.out.println("\n⚜ 사원별 전표 조회 ⚜");
+		
 		String empNo;
 
 		try {
-			System.out.print("검색할 사원 코드 ? ");
-			System.out.println(" => ");
+			System.out.println("\n⚜ 검색할 사원 코드 ?  ⚜");
+			System.out.print("⚜ => ");
+			
 			empNo = br.readLine();
 
 			List<AccDTO> findByempNo = dao.listAccount_emp(empNo);
@@ -454,11 +463,13 @@ public class AccUI {
 	}
 
 	protected void findByasub_name() {
-		System.out.println("\n계정과목 별 전표 조회 ");
+	
 		String asub_name;
 
 		try {
-			System.out.print("계정과목명을 입력하세요. ");
+			System.out.println("\n⚜ 조회할 계정과목명 ?  ⚜");
+			System.out.print("⚜ => ");
+			
 			asub_name = br.readLine();
 
 			List<AccDTO> findByasub_name = dao.listAccount_subNo(asub_name);
@@ -496,11 +507,13 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.println(" < 기간별 매입/매출 조회 및 거래처 관리 > ");
-					System.out.println("-------------------------------------------------");
-					System.out.print("1. 월별 매입매출 조회    2. 거래처 관리     3.[이전화면] \n");
-					System.out.println("-------------------------------------------------");
-					System.out.print("[메뉴 버튼] : ");
+					System.out.println("\n⚜ 기간별 매입/매출 조회 및 거래처 관리 ⚜");
+					System.out.println("---------------------------------------------");
+					System.out.println("⚜ [1] 월별 매입매출 조회 [2] 거래처 관리 [3] 돌아가기 ");
+					System.out.println("---------------------------------------------");
+					System.out.print("⚜ => ");
+
+		
 
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 3);
@@ -526,8 +539,12 @@ public class AccUI {
 	}
 
 	protected void findBycateg_Name() {
-		System.out.println("\n월별 매입/매출 조회 ");
+		System.out.println("\n⚜ 월별 매입/매출 조회 ⚜");
+		
 		try {
+			System.out.println("\n⚜ 조회할 월 ?  ⚜");
+			System.out.print("⚜ => ");
+			
 			BuyDAO bdao = new BuyDAOImpl();
 			List<BuyDTO> list = bdao.listBuy();
 
@@ -554,7 +571,8 @@ public class AccUI {
 
 	protected void findBycustomer() {
 
-		System.out.println("\n 전체 거래처 조회 ");
+		System.out.println("\n⚜ 전체 거래처 조회 ⚜");
+		
 		BuyDAO bdao = new BuyDAOImpl();
 		List<BuyDTO> list = bdao.listShop();
 
@@ -580,11 +598,12 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.println(" < 은행계좌관리 > ");
-					System.out.println("-------------------------------------------------");
-					System.out.print("1. 계좌등록  2. 계좌수정  3. 계좌삭제  4.계좌리스트 5.[이전화면] \n");
-					System.out.println("-------------------------------------------------");
-					System.out.print("[메뉴 버튼] : ");
+					System.out.println("\n⚜ 은행계좌관리 ⚜");
+					System.out.println("---------------------------------------------------------");
+					System.out.println("⚜ [1] 계좌등록 [2] 계좌수정 [3] 계좌삭제 [4] 계좌리스트 [5] 돌아가기 ");
+					System.out.println("---------------------------------------------------------");
+					System.out.print("⚜ => ");
+
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 5);
 				System.out.println();
@@ -617,7 +636,7 @@ public class AccUI {
 	}
 
 	protected void insertAccountNo() {
-		System.out.println("\n계좌 등록 ");
+		System.out.println("\n⚜ 계좌 등록 ⚜");
 
 		try {
 			AccDTO adto = new AccDTO();
@@ -650,13 +669,13 @@ public class AccUI {
 	}
 
 	protected void updateAccountNo() {
-		System.out.println("\n계좌 수정 ");
-
+		System.out.println("\n⚜ 계좌 수정 ⚜");
+		
 		try {
 			AccDTO adto = new AccDTO();
 
-			System.out.println("수정할 계좌코드 ? ");
-			System.out.println(" => ");
+			System.out.println("\n⚜ 수정할 계좌코드 ?  ⚜");
+			System.out.print("⚜ => ");
 			adto.setAccountNo((br.readLine()));
 
 			System.out.print("은행명 : ");
@@ -684,12 +703,12 @@ public class AccUI {
 	}
 
 	protected void deleteAccountNo() {
-		System.out.println("\n계좌 삭제 ");
+		System.out.println("\n⚜ 계좌 삭제 ⚜");
 		int accountNo;
 
 		try {
-			System.out.print("삭제할 계좌코드 ? ");
-			System.out.println(" => ");
+			System.out.println("\n⚜ 삭제할 계좌코드 ?  ⚜");
+			System.out.print("⚜ => ");
 			accountNo = Integer.parseInt(br.readLine());
 
 			sdao.deleteAccountNo(accountNo);
@@ -703,7 +722,8 @@ public class AccUI {
 	}
 
 	protected void listaccountNo() {
-		System.out.println("\n 전체 계좌 조회 ");
+		System.out.println("\n⚜ 전체 계좌 조회 ⚜");
+		
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = sdao.listAccountNo();
@@ -730,11 +750,12 @@ public class AccUI {
 		while (true) {
 			try {
 				do {
-					System.out.println(" < 계정과목관리 > ");
-					System.out.println("---------------------------------------------------------------");
-					System.out.print("1. 계정과목 등록 2. 계정과목 수정 3. 계정과목 삭제 4. 계정과목 조회 5.[이전화면] \n");
-					System.out.println("---------------------------------------------------------------");
-					System.out.print("[메뉴 버튼] : ");
+					System.out.println("\n⚜ 계정과목관리 ⚜");
+					System.out.println("----------------------------------------------------------------------");
+					System.out.println("⚜ [1] 계정과목 등록 [2] 계정과목 수정 [3] 계정과목 삭제 [4] 계정과목 조회 [5] 돌아가기 ");
+					System.out.println("----------------------------------------------------------------------");
+					System.out.print("⚜ => ");
+					
 					ch = Integer.parseInt(br.readLine());
 				} while (ch < 1 || ch > 5);
 				System.out.println();
@@ -767,7 +788,7 @@ public class AccUI {
 	}
 
 	protected void insertAccSub() {
-		System.out.println("\n계정과목 등록 ");
+		System.out.println("\n⚜ 계정과목 등록 ⚜");
 
 		try {
 			AccDTO sdto = new AccDTO();
@@ -791,13 +812,14 @@ public class AccUI {
 	}
 
 	protected void updateAccSub() {
-		System.out.println("\n계정과목 수정 ");
+		
+		System.out.println("\n⚜ 계정과목 수정 ⚜");
 
 		try {
 			AccDTO sdto = new AccDTO();
 
-			System.out.print("수정할 계정 코드 ? ");
-			System.out.println(" => ");
+			System.out.println("\n⚜ 수정할 계정코드 ?  ⚜");
+			System.out.print("⚜ => ");
 			sdto.setAccountSubNo(br.readLine());
 
 			System.out.print("계정과목명 : ");
@@ -816,12 +838,12 @@ public class AccUI {
 	}
 
 	protected void deleteAccSub() {
-		System.out.println("\n계정과목 삭제 ");
+		System.out.println("\n⚜ 계정과목 삭제 ⚜");
 		int accountNo;
 
 		try {
-			System.out.print("삭제할 계정과목 코드 ? ");
-			System.out.println(" => ");
+			System.out.println("\n⚜ 삭제할 계좌코드 ?  ⚜");
+			System.out.print("⚜ => ");
 			accountNo = Integer.parseInt(br.readLine());
 
 			sdao.deleteAccSub(accountNo);
@@ -835,7 +857,7 @@ public class AccUI {
 	}
 
 	protected void listAccSub() {
-		System.out.println("\n <전체 계정과목 조회> ");
+		System.out.println("\n⚜ 전체 계정과목 조회 ⚜");
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = sdao.listAccSub();

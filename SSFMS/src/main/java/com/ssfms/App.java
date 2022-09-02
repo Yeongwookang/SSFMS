@@ -1,10 +1,7 @@
 package com.ssfms;
 
 import java.io.BufferedReader;
-
 import java.io.InputStreamReader;
-
-// import com.util.DBConn;
 
 public class App {
 	private static EmpDTO LOGIN_EMP;
@@ -16,11 +13,19 @@ public class App {
 	public void logout() {
 		LOGIN_EMP = null;
 	}
+<<<<<<< HEAD
+=======
+	
+	public static void main(String[] args) {
+>>>>>>> branch 'main' of https://github.com/Yeongwookang/SSFMS.git
 
+<<<<<<< HEAD
 	public static void main(String[] args) {
 		// MainUI ui = new MainUI();
 		// ui.startmenu();
 
+=======
+>>>>>>> branch 'main' of https://github.com/Yeongwookang/SSFMS.git
 		int ch = 0;
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		EmpDAO edao = new EmpDAOImpl();
@@ -127,10 +132,18 @@ class Administrator {
 				App.main(null);
 				break;
 			}
+<<<<<<< HEAD
 		} catch (Exception e) {
 
+=======
+		} catch (Exception e) {
+>>>>>>> branch 'main' of https://github.com/Yeongwookang/SSFMS.git
 			e.printStackTrace();
 		}
+<<<<<<< HEAD
+=======
+
+>>>>>>> branch 'main' of https://github.com/Yeongwookang/SSFMS.git
 
 	}
 }

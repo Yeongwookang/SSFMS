@@ -26,7 +26,7 @@ public class SalesDAOImpl implements SalesDAO {
 			for (SalesDTO dto : list) {
 			sql = "INSERT INTO estimate (estimateNo, companyName, comRegiNo, tel, orderCom, name, orderComTel, eDate, "
 					+ "productNo, productName, num, eCost, ePrice, note)"
-					+ " VALUES (estimate_no_seq.NEXTVAL, '쌍용IT제조', '021-4567-893', '02-345-6789', "
+					+ " VALUES (estimate_no_seq.NEXTVAL, '(주)쌍용IT제조', '021-3456-789', '02-123-4567', "
 					+ "?, ?, ?, SYSDATE, ?, ?, ?, ?, ?, ?) ";
 
 			pstmt = conn.prepareStatement(sql);
@@ -122,11 +122,11 @@ public class SalesDAOImpl implements SalesDAO {
 				dto.setComTel(rs.getString("comTel"));
 				dto.setProductNo(rs.getString("productNo"));
 				dto.setProductName(rs.getString("productName"));
-				dto.setNum(rs.getInt("num"));
+				dto.setOrderNum(rs.getInt("num"));
 				dto.setoCost(rs.getInt("oCost"));
 				dto.setoPrice(rs.getInt("oPrice"));
 				dto.setTotal(rs.getInt("total"));
-				dto.setNote(rs.getString("note"));
+				dto.setOrderNote(rs.getString("note"));
 
 				list.add(dto);
 			}
@@ -146,7 +146,7 @@ public class SalesDAOImpl implements SalesDAO {
 		
 		try {
 			
-			sql = "DELETE FROM shop WHERE shop_No = ?";
+			sql = "DELETE FROM orderBill WHERE orderNo = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getOrderNo());
@@ -551,6 +551,105 @@ public class SalesDAOImpl implements SalesDAO {
 	}
 
 	@Override
+	public int salesAccountInsert2(EmpDTO empdto, AccDTO accdto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		int result = 0;
+		
+		try {
+			
+			
+			conn.setAutoCommit(false);
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL, ?, ?, '412', ?, ?, '', '미승인', ?) ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, accdto.getAmount());
+			pstmt.setString(4, accdto.getDetail());
+			pstmt.setString(5, accdto.getStateDate());
+			
+			
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt = null;
+			
+			
+			
+			sql = "INSERT INTO accounting (stateNo, empNo, accountNo, accountSubNo, amount, detail, cancellation, stateCon, stateDate)"
+					+ " VALUES (ACCOUNTING_SEQ.NEXTVAL , ?, ?, '120', ?, ?, '', '미승인', ?) ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, empdto.getEmpNo());
+			pstmt.setString(2, accdto.getAccountNo());
+			pstmt.setInt(3, accdto.getAmount());
+			pstmt.setString(4, accdto.getDetail());
+			pstmt.setString(5, accdto.getStateDate());
+			
+			result = pstmt.executeUpdate();
+			
+			conn.commit();
+			
+	
+			
+		} catch (SQLIntegrityConstraintViolationException e) {
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			
+			if(e.getErrorCode() == 1) {
+				System.out.println("중복 데이터로 등록이 불가능합니다.");	
+			}else if (e.getErrorCode() == 1400) {
+				System.out.println("필수 입력 사항을 입력 하지 않았습니다.");
+			}else {
+				System.out.println(e.toString());
+			}
+			throw e;
+			
+		} catch (SQLDataException e) {
+			
+			try {
+				conn.rollback();
+			} catch (Exception e2) {
+			}
+			
+			if(e.getErrorCode() == 1840 || e.getErrorCode()==1861) {
+				System.out.println("날짜 입력 형식 오류입니다.");
+			}else {
+				System.out.println(e.toString());
+			}
+			throw e;
+			
+		} catch (SQLException e) {
+			conn.rollback();
+			throw e;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			try {
+				conn.setAutoCommit(true);
+			} catch (Exception e2) {
+			}
+		}
+		
+		
+		return result;
+	}
+
+
+	@Override
 	public List<AccDTO> listSalesAccountInsert() {
 		List<AccDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
@@ -561,7 +660,7 @@ public class SalesDAOImpl implements SalesDAO {
 			sql = "SELECT stateNo, c.t_account , accountNo, b.asub_name, amount, cancellation, stateCon, stateDate, empNo "
 					+ " FROM accounting a " + " JOIN accountsub b ON a.accountSubNo = b.accountSubNo "
 					+ " JOIN CATEGORY c ON c.categNo = b.categNo "
-					+ " WHERE A.accountSubNo = '412' OR A.accountSubNo = '108' ";
+					+ " WHERE A.accountSubNo = '412' OR A.accountSubNo = '108' OR A.accountSubNo = '120'";
 
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
@@ -605,40 +704,63 @@ public class SalesDAOImpl implements SalesDAO {
 	}
 	
 	@Override
-	public List<SalesDTO> listOperatingProfit() {
-		List<SalesDTO> list = new ArrayList<>();
+	public SalesDTO listOperatingProfit() {
+		SalesDTO dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
-		try {
-			sql = "SELECT NVL(sum(amount), 0) AS 매출총합 FROM accounting WHERE accountSubNo = '412'";
-			
-			sql = "SELECT NVL(sum(amount), 0) AS 매출원가총합 FROM accounting WHERE accountSubNo = '451' OR accountSubNo = '455'";
-			
-			sql = "SELECT NVL(sum(amount), 0) AS 판매비및관리비총합 FROM accounting WHERE accountSubNo = '503' OR accountSubNo = '504'"
-					+ "    OR accountSubNo = '505' OR accountSubNo = '510' OR accountSubNo = '511' OR accountSubNo = '512'"
-					+ "    OR accountSubNo = '513'";		
-			
-			sql = "SELECT NVL(sum(amount), 0) AS 영업이익 FROM accounting";			
+		try {					
+			sql = "SELECT NVL(sum(amount), 0) AS salesTotal FROM accounting WHERE accountSubNo = '412' ";
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.executeUpdate();
 			rs = pstmt.executeQuery();
 			
-			while (rs.next()) {
-				SalesDTO dto = new SalesDTO();
-
+			dto = new SalesDTO();
+			if (rs.next()) {
+				dto.setSalesTotal(rs.getInt("salesTotal"));
+			}
+			rs.close();
+			pstmt.close();
+			
+			sql = "SELECT NVL(sum(amount), 0) AS salesOriginTotal FROM accounting WHERE accountSubNo = '451' OR accountSubNo = '455'";
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				dto.setSalesOriginTotal(rs.getInt("salesOriginTotal"));
+			}
+			rs.close();
+			pstmt.close();
+			
+			sql = "SELECT NVL(sum(amount), 0) AS othersTotal FROM accounting WHERE accountSubNo = '503' OR accountSubNo = '504'"
+					+ "    OR accountSubNo = '505' OR accountSubNo = '510' OR accountSubNo = '511' OR accountSubNo = '512'"
+					+ "    OR accountSubNo = '513'";	
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				dto.setOthersTotal(rs.getInt("othersTotal"));
+			}
+			
+			sql = "SELECT NVL(sum(amount), 0) AS operatingProfit FROM accounting";	
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
 				dto.setOperatingProfit(rs.getInt("operatingProfit"));
-
-				list.add(dto);
-			}			
+			}
+			rs.close();
+			pstmt.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} 
 		
-		return list;
+		return dto;
 	}
 
 	@Override

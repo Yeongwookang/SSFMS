@@ -35,7 +35,7 @@ public class SalesUI {
 					release();
 					break;
 				case 3:
-					banpum();
+					refund();
 					break;
 				case 4:
 					shippingManagement();
@@ -64,7 +64,7 @@ public class SalesUI {
 
 	}
 
-	protected void orderProcessing() {
+	public void orderProcessing() {
 		int ch;
 		while (true) {
 			try {
@@ -102,13 +102,13 @@ public class SalesUI {
 		}
 	}
 
-	private void estimateInsert() {
+	protected void estimateInsert() {
 		char ch;
 
 		List<SalesDTO> list = new ArrayList<>();
 
 		System.out.println("⚜[견적서 입력하세요]⚜");
-		// 견적서는 입력과 조회만 가능. 입력후 30일까지만 보관하고 30일이 지나면 삭제
+		// 견적서는 입력과 조회만 가능.
 
 		try {
 			String orderCom, name, orderComTel, note;
@@ -167,7 +167,7 @@ public class SalesUI {
 
 	}
 
-	private void estimateCheck() {
+	protected void estimateCheck() {
 		System.out.println("⚜[견적서 조회]⚜");
 		System.out.println(
 				"-------------------------------------------------------------------------------------------------------------------"
@@ -200,7 +200,7 @@ public class SalesUI {
 		System.out.println();
 	}
 
-	private void orderCheck() {
+	protected void orderCheck() {
 		System.out.println("⚜[주문서 조회]⚜");
 		System.out.println(
 				"-------------------------------------------------------------------------------------------------------------------------"
@@ -239,7 +239,7 @@ public class SalesUI {
 		System.out.println();
 	}
 
-	private void manage() {
+	protected void manage() {
 		System.out.println("---------------");
 		System.out.println("⚜[주문서 관리]⚜");
 		System.out.println("---------------");
@@ -261,7 +261,7 @@ public class SalesUI {
 
 	}
 
-	protected void release() {
+	public void release() {
 		int ch;
 
 		try {
@@ -291,7 +291,7 @@ public class SalesUI {
 
 	}
 
-	private void releaseInsert() {
+	protected void releaseInsert() {
 
 		System.out.println("⚜[출고등록]⚜");
 
@@ -312,7 +312,7 @@ public class SalesUI {
 
 	}
 
-	private void releaseCheck() {
+	protected void releaseCheck() {
 		System.out.println("⚜[출고조회]⚜");
 		System.out.println("----------------------------------------------------------------------");
 		System.out.println("출고번호\t주문서일련번호\t출고여부\t\t날짜");
@@ -331,7 +331,7 @@ public class SalesUI {
 
 	}
 
-	protected void banpum() {
+	public void refund() {
 		int ch;
 
 		try {
@@ -360,7 +360,7 @@ public class SalesUI {
 		}
 	}
 
-	private void refundInsert() {
+	protected void refundInsert() {
 		System.out.println("⚜[환불등록]⚜");
 
 		try {
@@ -384,7 +384,7 @@ public class SalesUI {
 
 	}
 
-	private void refundChenk() {
+	protected void refundChenk() {
 		System.out.println("⚜[환불조회]⚜");
 		System.out.println("-------------------------------------------------------------------------------");
 		System.out.println("환불일련번호\t주문서일련번호\t환불날짜\t비고");
@@ -402,7 +402,7 @@ public class SalesUI {
 		System.out.println();
 	}
 
-	protected void shippingManagement() {
+	public void shippingManagement() {
 		int ch;
 		while (true) {
 			try {
@@ -431,7 +431,7 @@ public class SalesUI {
 		}
 	}
 
-	private void shipInsert() {
+	protected void shipInsert() {
 
 		System.out.println("⚜[배송등록]⚜");
 
@@ -454,7 +454,7 @@ public class SalesUI {
 
 	}
 
-	private void shipChenk() {
+	protected void shipChenk() {
 		System.out.println("⚜[배송조회]⚜");
 		System.out.println("--------------------------------------------------------------------------------");
 		System.out.println("출고번호\t주문서일련번호\t출고여부\t날짜");
@@ -473,7 +473,7 @@ public class SalesUI {
 
 	}
 
-	protected void operatingProfit() {
+	public void operatingProfit() {
 		int ch;
 
 		while (true) {
@@ -513,7 +513,7 @@ public class SalesUI {
 		}
 	}
 
-	private void salesInsert() throws IOException {
+	protected void salesInsert() throws IOException {
 		System.out.println("⚜[매출입력(※전표번호가 있어야 입력이 가능합니다※)]⚜");
 				
 		try {
@@ -551,7 +551,7 @@ public class SalesUI {
 
 	}
 
-	private void salesCheck() {
+	protected void salesCheck() {
 		System.out.println("⚜[매출입력조회]⚜");
 		System.out.println("--------------------------------------------------------------------------------");
 		System.out.println("매출번호\t\t전표일련번호\t제품코드\t거래처\t매출액\t수량\t거래일시");
@@ -572,7 +572,7 @@ public class SalesUI {
 
 	}
 	
-	protected void salesAccount() {
+	public void salesAccount() {
 		int ch;
 
 		while (true) {
@@ -605,7 +605,7 @@ public class SalesUI {
 		}
 	}
 
-	private void salesAccountInsert1() {
+	protected void salesAccountInsert1() {
 		System.out.println("⚜[수금매출전표입력(차변/대변)]⚜");
 
 		try {
@@ -640,7 +640,7 @@ public class SalesUI {
 
 	}
 	
-	private void salesAccountInsert2() {
+	protected void salesAccountInsert2() {
 		System.out.println("⚜[미수금매출전표입력(차변/대변)]⚜");
 
 		try {
@@ -675,7 +675,7 @@ public class SalesUI {
 
 	}
 
-	private void salesAccountCheck() {
+	protected void salesAccountCheck() {
 		System.out.println("⚜[매출전표조회]⚜");
 
 		try {
@@ -709,7 +709,7 @@ public class SalesUI {
 
 	}
 
-	private void operatingProfitCheck() {
+	protected void operatingProfitCheck() {
 
 		System.out.println("⚜[영업이익조회]⚜");
 		// 영업이익조회 = 매출-매출원가-판매비와 관리비
@@ -733,7 +733,7 @@ public class SalesUI {
 		System.out.println();
 	}
 
-	protected void taxBill() {
+	public void taxBill() {
 		int ch;
 
 		while (true) {
@@ -763,7 +763,7 @@ public class SalesUI {
 		}
 	}
 
-	private void taxBillInsert() {
+	protected void taxBillInsert() {
 		System.out.println("⚜[세금계산서 입력]⚜");
 
 		try {
@@ -818,7 +818,7 @@ public class SalesUI {
 
 	}
 
-	private void taxBillCheck() {
+	protected void taxBillCheck() {
 		System.out.println("⚜[세금계산서 조회]⚜");
 		System.out.println("-------------------------------------------------------------------------------------------------------"
 				+ "------------------------------------------------------------------------------------------");
@@ -849,7 +849,7 @@ public class SalesUI {
 
 	}
 
-	protected void moneyBondManage() {
+	public void moneyBondManage() {
 		int ch;
 		while (true) {
 			try {
@@ -879,7 +879,7 @@ public class SalesUI {
 		}
 	}
 
-	private void money() {
+	protected void money() {
 		System.out.println("⚜[수금/채권 조회]⚜");
 
 		try {

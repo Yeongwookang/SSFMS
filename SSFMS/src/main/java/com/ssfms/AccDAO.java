@@ -16,6 +16,10 @@ public interface AccDAO {
 	public List<AccDTO> listAccount_subNo(String accountSubNo)throws SQLException;
 	public List<AccDTO> listNapproval()throws SQLException;
 	public List<AccDTO> listapproval()throws SQLException;
+	public void ListApproval(List<AccDTO> list) throws SQLException; 
+		
+	
+	
 
 	// 계좌관련
 	public int insertAccountNo(AccDTO adto) throws SQLException;
@@ -32,6 +36,8 @@ public interface AccDAO {
 	
 	public AccDTO readAccSub(int accountSubNo)throws SQLException;
 	public List<AccDTO> listAccSub()throws SQLException;
+	
+	public List<AccDTO> sblist(int month) throws SQLException;
 } 
 
 

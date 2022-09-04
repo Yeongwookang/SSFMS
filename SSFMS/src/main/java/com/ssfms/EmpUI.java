@@ -573,7 +573,7 @@ public class EmpUI {
 			accdto.setAccountNo(br.readLine());
 
 			System.out.print("비고 : ");
-			empdto.setDetail(br.readLine());
+			accdto.setDetail(br.readLine());
 
 			int kSal = rSal + empdto.getBonus();
 			accdto.setAmount(kSal);

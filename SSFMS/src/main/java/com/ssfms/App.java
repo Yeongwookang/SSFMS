@@ -1,21 +1,19 @@
 package com.ssfms;
 
 import java.io.BufferedReader;
-
 import java.io.InputStreamReader;
-
- import com.util.DBConn;
 
 public class App {
 	private static EmpDTO LOGIN_EMP;
+
 	public static EmpDTO loginEmp() {
 		return LOGIN_EMP;
 	}
-	
+
 	public void logout() {
 		LOGIN_EMP = null;
 	}
-	
+
 	public static void main(String[] args) {
 
 		int ch = 0;
@@ -51,18 +49,18 @@ public class App {
 			}
 			if (ch == 1) {
 				try {
-					
+
 					System.out.print("⚜ ID: ");
 					String id = br.readLine();
 					System.out.print("⚜ PW: ");
 					String pwd = br.readLine();
 					edto = edao.readEmp(id);
-					
+
 					if (edto.getPwd().equals(pwd)) {
 						System.out.println("\t     ･ﾟ✧ " + edto.getName() + "님, 환영합니다! ･ﾟ✧\t     ");
 						System.out.println("\t      ⚜ 로그인 되었습니다. ⚜");
 						edto = edao.readMember(id);
-						LOGIN_EMP= edto;
+						LOGIN_EMP = edto;
 					} else {
 						System.out.println("\t     ⚜ 로그인에 실패 했습니다. ⚜");
 						return;
@@ -125,11 +123,9 @@ class Administrator {
 				App.main(null);
 				break;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
+		} catch (Exception e) {
 
 		}
 	}
-
+}

@@ -141,7 +141,7 @@ public class AccDAOImpl implements AccDAO {
 			e.printStackTrace();
 			try {
 				conn.rollback();
-				
+
 			} catch (Exception e2) {
 				e.printStackTrace();
 			}
@@ -149,9 +149,9 @@ public class AccDAOImpl implements AccDAO {
 		} finally {
 			try {
 				conn.setAutoCommit(true);
-				
+
 			} catch (Exception e2) {
-				
+
 			}
 		}
 
@@ -521,44 +521,26 @@ public class AccDAOImpl implements AccDAO {
 
 		return list;
 	}
-
-// 한번에 승인
-	public void producing(List<AccDTO> listNapproval) throws SQLException {
-		PreparedStatement pstmt = null;
-		String sql;
-		conn.setAutoCommit(false);
-
-		try {
-			sql = "UPDATE INTO accounting (StateCon)" + " VALUES(?)";
-
-			pstmt = conn.prepareStatement(sql);
-			for (AccDTO dto : listNapproval) {
-				pstmt.setString(1, dto.getStateCon());
-				pstmt.executeUpdate();
-				pstmt.close();
-
-			}
-			pstmt.close();
-
-			conn.commit();
-			conn.setAutoCommit(true);
-		} catch (
-
-		SQLException e) {
-			conn.rollback();
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (Exception e) {
-				}
-
-			}
-		}
-	}
+	/*
+	 * // 한번에 승인 public List<AccDTO> listapprovaALL() throws SQLException {
+	 * PreparedStatement pstmt = null; String sql; conn.setAutoCommit(false);
+	 * ResultSet rs = null; try { sql =
+	 * "UPDATE accounting set stateCon = '승인' WHERE stateCon = '미승인' ";
+	 * 
+	 * pstmt = conn.prepareStatement(sql); for (AccDTO dto : ) {
+	 * 
+	 * pstmt.executeUpdate(); pstmt.close();
+	 * 
+	 * } pstmt.close();
+	 * 
+	 * conn.commit(); conn.setAutoCommit(true); } catch (
+	 * 
+	 * SQLException e) { conn.rollback(); e.printStackTrace(); } catch (Exception e)
+	 * { e.printStackTrace(); } finally { if (pstmt != null) { try { pstmt.close();
+	 * } catch (Exception e) { }
+	 * 
+	 * } } }
+	 */
 
 //==================================================================================
 	// 계좌등록
@@ -577,7 +559,7 @@ public class AccDAOImpl implements AccDAO {
 			pstmt.setString(2, adto.getBankName());
 			pstmt.setString(3, adto.getAccountNum());
 			pstmt.setString(4, adto.getName());
-			pstmt.setInt(5, adto.getAmount());
+			pstmt.setInt(5, adto.getBusAmount());
 			pstmt.setInt(6, adto.getBalance());
 
 			pstmt.executeUpdate();
@@ -707,6 +689,7 @@ public class AccDAOImpl implements AccDAO {
 				adto = new AccDTO();
 
 				adto.setStateNo(rs.getInt("setAccountNo"));
+				
 				pstmt.setString(1, adto.getAccountNo());
 				pstmt.setString(2, adto.getBankName());
 				pstmt.setString(3, adto.getAccountNum());
@@ -997,6 +980,82 @@ public class AccDAOImpl implements AccDAO {
 				}
 			}
 
+		}
+
+		return list;
+	}
+
+	// 승인
+	@Override
+	public void ListApproval(List<AccDTO> list) throws SQLException {
+		for (AccDTO dto : list) {
+			PreparedStatement pstmt = null;
+			String sql;
+			try {
+				sql = " UPDATE accounting SET stateCon = '승인' WHERE stateNo = ? ";
+
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, dto.getStateNo());
+				pstmt.executeUpdate();
+
+				System.out.println("전표 " + dto.getStateNo() + "번이 승인 되었습니다.");
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (pstmt != null) {
+
+					try {
+						pstmt.close();
+					} catch (Exception e2) {
+
+					}
+				}
+			}
+
+		}
+
+	}
+
+	// 월별 매출
+	@Override
+	public List<AccDTO> sblist(int month) throws SQLException {
+		List<AccDTO> list = new ArrayList<>();
+
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			sql = "SELECT * FROM state_view "
+					+ " WHERE TO_CHAR(sysdate, 'YYYY')= TO_CHAR(statedate, 'YYYY') AND TO_CHAR(statedate, 'MM') = ? ";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, month);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				AccDTO dto = new AccDTO();
+
+				dto.setStateNo(rs.getInt("stateNo"));
+				dto.setT_account(rs.getString("t_account"));
+				dto.setEmpNo(rs.getString("empNo"));
+				dto.setAccountNo(rs.getString("accountNo"));
+				dto.setAsub_name(rs.getString("asub_name"));
+				dto.setAmount(rs.getInt("amount"));
+				dto.setDetail(rs.getString("detail"));
+				dto.setCancellation(rs.getString("cancellation"));
+				dto.setStateCon(rs.getString("stateCon"));
+				dto.setStateDate(rs.getString("stateDate"));
+				dto.setDep(rs.getString("dep"));
+				dto.setRank(rs.getString("rank"));
+				dto.setName(rs.getString("name"));
+
+				list.add(dto);
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return list;

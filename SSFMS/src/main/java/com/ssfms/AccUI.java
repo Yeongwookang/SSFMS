@@ -137,8 +137,8 @@ public class AccUI {
 		try {
 			AccDTO dto = new AccDTO();
 
-			System.out.println("수정할 전표 번호 ? ");
-			System.out.println(" => ");
+			System.out.println("⚜ 수정할 전표 번호 ? ⚜");
+			System.out.println("⚜ => ");
 			
 			dto.setStateNo(Integer.parseInt(br.readLine()));
 
@@ -178,8 +178,8 @@ public class AccUI {
 
 		try {
 			
-			System.out.print("삭제할 전표 번호 ? ");
-			System.out.println(" => ");
+			System.out.println("⚜ 삭제할 전표 번호 ? ⚜");
+			System.out.println("⚜ => ");
 			stateNo = Integer.parseInt(br.readLine());
 
 			dao.deleteAccount(stateNo);
@@ -199,17 +199,17 @@ public class AccUI {
 			try {
 				do {
 					System.out.println("\n⚜ 승인관리 ⚜");
-					System.out.println("---------------------------------------------");
-					System.out.println("⚜ [1] 미승인전표 출력 [2] 승인처리 [3] 돌아가기 ");
-					System.out.println("---------------------------------------------");
+					System.out.println("---------------------------------------------------------");
+					System.out.println("⚜ [1] 미승인전표 조회 [2] 승인처리 [3] 승인된전표 조회 [4] 돌아가기 ⚜");
+					System.out.println("---------------------------------------------------------");
 					System.out.print("⚜ => ");
 					
 				
 					ch = Integer.parseInt(br.readLine());
-				} while (ch < 1 || ch > 3);
+				} while (ch < 1 || ch > 4);
 				System.out.println();
 
-				if (ch == 3) {
+				if (ch == 4) {
 					new AccUI().menu();
 				}
 
@@ -217,8 +217,11 @@ public class AccUI {
 				case 1:
 					listNapproval();
 					break;
-				case 2:
+				case 2: 
 					update_approval();
+					break;
+				case 3:
+					listapproval();
 					break;
 				}
 			} catch (Exception e) {
@@ -263,65 +266,37 @@ public class AccUI {
 		System.out.println();
 	}
 
+	//승인하기
 	protected void update_approval() {
-		int ch;
-		while (true) {
+		List<AccDTO>list = new ArrayList<>();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			try {
-				do {
-					System.out.println("\n⚜ 승인관리 ⚜");
-					System.out.println("------------------------------------------------------");
-					System.out.println("⚜ [1] 승인할 전표 [2] 전체승인 [3] 승인된 전표 목록 [4] 돌아가기");
-					System.out.println("------------------------------------------------------");
-					System.out.print("⚜ => ");
+				AccDTO dto = new AccDTO();
+				
+				while(true) {
+					System.out.println("\n⚜ 승인할 전표 번호 ?  [0 : 종료] ⚜");
+					System.out.println("⚜ => ");
+					int stateNo = Integer.parseInt(br.readLine());
 					
-					ch = Integer.parseInt(br.readLine());
-				} while (ch < 1 || ch > 4);
-				System.out.println();
-
-				if (ch == 4) {
-					new AccUI().menu2();
-				}
-
-				switch (ch) {
-				case 1:
-					update_approval_N();
-					break;
-				case 2:
-					update_approval_All();
-					break;
-				case 3:
-					listapproval();
-					break;
-				}
-
+					if(stateNo == 0) {
+						break;
+					}
+				
+					dto = dao.readAccount(stateNo);
+					list.add(dto);
+				}	
+				
+				dao.ListApproval(list);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+			
+		
 	}
-
-	protected void update_approval_N() {
-
-		try {
-			System.out.println("\n⚜ 승인할 전표 번호 ?  ⚜");
-			System.out.print("⚜ => ");
-			AccDTO dto = dao.readAccount(Integer.parseInt(br.readLine()));
-
-			dto.setStateCon("승인");
-
-			dao.updateAccount(dto);
-
-			System.out.println("전표가 승인 되었습니다.");
-
-		} catch (Exception e) {
-			System.out.println("승인 실패");
-		}
-	}
+	
 
 // 한번에 승인
-	protected void update_approval_All() {
-
-	}
 
 	protected void listapproval() {
 		System.out.println("\n⚜ 승인 전표 목록 ⚜");
@@ -403,13 +378,14 @@ public class AccUI {
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = dao.listAccount();
-			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름");
+			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t비고\t승인일시\t\t사번\t부서\t직급\t이름");
 			for (AccDTO dto : list) {
 				System.out.print(dto.getStateNo() + "\t");
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
 				System.out.printf("%10d\t", dto.getAmount());
+				System.out.print(dto.getDetail() + "\t");
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -442,13 +418,14 @@ public class AccUI {
 				return;
 			}
 
-			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름");
+			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t비고\t승인일시\t\t사번\t부서\t직급\t이름");
 			for (AccDTO dto : findByempNo) {
 				System.out.print(dto.getStateNo() + "\t");
 				System.out.print(dto.getT_account() + "\t");
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
 				System.out.printf("%10d\t", dto.getAmount());
+				System.out.print(dto.getDetail() + "\t");
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -482,7 +459,7 @@ public class AccUI {
 				return;
 			}
 
-			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t승인일시\t\t사번\t부서\t직급\t이름");
+			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t비고\t승인일시\t\t사번\t부서\t직급\t이름");
 			for (AccDTO dto : findByasub_name) {
 
 				System.out.print(dto.getStateNo() + "\t");
@@ -490,6 +467,7 @@ public class AccUI {
 				System.out.print(dto.getAccountNo() + "\t");
 				System.out.print(dto.getAsub_name() + "\t");
 				System.out.printf("%10d\t", dto.getAmount());
+				System.out.print(dto.getDetail() + "\t");
 				System.out.print(dto.getCancellation() + "\t");
 				System.out.print(dto.getStateCon() + "\t");
 				System.out.print(dto.getStateDate() + "\t");
@@ -544,25 +522,34 @@ public class AccUI {
 
 	protected void findBycateg_Name() {
 		System.out.println("\n⚜ 월별 매입/매출 조회 ⚜");
-		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
 		try {
 			System.out.println("\n⚜ 조회할 월 ?  ⚜");
 			System.out.print("⚜ => ");
+			int month = Integer.parseInt(br.readLine());
 			
-			BuyDAO bdao = new BuyDAOImpl();
-			List<BuyDTO> list = bdao.listBuy();
+			List<AccDTO> list = dao.sblist(month);
+			
+			System.out.println("전표번호\t차대\t계좌코드\t계정과목명\t금액\t\t취소\t전표상태\t비고\t승인일시\t\t사번\t부서\t직급\t이름");
+			System.out.println("=============================================================================");
 
-			for (BuyDTO bdto : list) {
+			for (AccDTO dto : list) {
 
-				System.out.print(bdto.getBuy_No() + "\t");
-				System.out.print(bdto.getStateNo() + "\t");
-				System.out.print(bdto.getPartNo() + "\t");
-				System.out.print(bdto.getPart_name() + "\t");
-				System.out.print(bdto.getBuy_Date() + "\t");
-				System.out.print(bdto.getBuy_qty() + "\t");
-				System.out.print(bdto.getBuy_price() + "\t");
-				System.out.print(bdto.getShop_No() + "\t");
-
+				System.out.print(dto.getStateNo() + "\t");
+				System.out.print(dto.getT_account() + "\t");
+				System.out.print(dto.getAccountNo() + "\t");
+				System.out.print(dto.getAsub_name() + "\t");
+				System.out.print(dto.getAmount() + "\t");
+				System.out.print(dto.getDetail() + "\t");
+				System.out.print(dto.getCancellation() + "\t");
+				System.out.print(dto.getStateCon() + "\t");
+				System.out.print(dto.getStateDate() + "\t");
+				System.out.print(dto.getEmpNo() + "\t");
+				System.out.print(dto.getDep() + "\t");
+				System.out.print(dto.getRank() + "\t");
+				System.out.println(dto.getName() + "\t");
+				
 			}
 			System.out.println();
 
@@ -580,6 +567,8 @@ public class AccUI {
 		BuyDAO bdao = new BuyDAOImpl();
 		List<BuyDTO> list = bdao.listShop();
 
+		System.out.println("매입처코드\t사업자등록번호\t상호명\t\t대표명\t전화번호\t\t우편번호\t주소\t\t\t등록일자\t");
+		
 		for (BuyDTO bdto : list) {
 
 			System.out.print(bdto.getShop_No() + "\t");
@@ -731,13 +720,13 @@ public class AccUI {
 		try {
 			List<AccDTO> list = new ArrayList<>();
 			list = sdao.listAccountNo();
-			System.out.println("계좌코드\t은행명\t계좌번호\t예금주\t거래액\t잔액");
+			System.out.println("계좌코드\t은행명\t\t 계좌번호 \t\t예금주\t거래액\t잔액");
 			for (AccDTO adto : list) {
 				System.out.print(adto.getAccountNo() + "\t");
 				System.out.print(adto.getBankName() + "\t");
-				System.out.print(adto.getAccountNum() + "\t");
+				System.out.printf("%20s\t",adto.getAccountNum());
 				System.out.print(adto.getName() + "\t");
-				System.out.print(adto.getBusAmount() + "\t\t");
+				System.out.print(adto.getBusAmount() + "\t");
 				System.out.println(adto.getBalance() + "\t");
 
 			}

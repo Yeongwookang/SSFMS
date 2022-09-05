@@ -21,7 +21,6 @@ public interface EmpDAO {
 	public int updateAsal(EmpDTO adto) throws SQLException;
 	public List<EmpDTO> listAsal();
 	// 급여관리
-	// public int insertSett(EmpDTO dto) throws SQLException;
 	public int insertSett(AccDTO accdto, EmpDTO empdto) throws SQLException;
 	public int deleteSett(AccDTO accdto, EmpDTO dto) throws SQLException;
 	public List<EmpDTO> listSett();

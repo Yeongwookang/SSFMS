@@ -2,8 +2,8 @@ package com.ssfms;
 
 import java.io.BufferedReader;
 
+
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.util.DBConn;
@@ -12,7 +12,6 @@ import com.util.DBConn;
 public class BuyUI {
 	private BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private BuyDAO buydao = new BuyDAOImpl();
-	private AccDAO accdao = new AccDAOImpl();
 
 	
 	// 구매 관리 전체 메뉴
